@@ -1,7 +1,9 @@
 (* lexer.mll -*- tuareg -*- *)
 {
   open Parser
+  open Lexing
   let get = Lexing.lexeme
+  let pos = Lexing.lexeme_start_p
 }
 
 (* Helpers *)
@@ -25,7 +27,14 @@
   let escaped_char     = '\\' ( "a" | "b" | "f" | "n" | "r" | "t" | "v" | '\\' | "'" )
   let unicode_value    = _ | little_u_value | big_u_value | escaped_char
   let byte_value       = octal_byte_value | hex_byte_value
-  
+  let runeLiteral      = '''( unicode_value | byte_value )'''
+
+  let decIntLiteral    = '0' | (['1'-'9'] decDigit*)
+  let binIntLiteral    = "0b" ('0' | ('1' binDigit*))
+  let octIntLiteral    = "0o" ('0' | (['1'-'7'] octDigit*))
+  let hexIntLiteral    = "0x" ('0' | (['1'-'7'] hexDigit*))
+
+  let floatLiteral     = ('0' | (['1'-'9'] decDigit*))?'.'decDigit*
 
 (* Tokens *)
 
@@ -123,20 +132,21 @@ rule token = parse
   | ("//"_*eol)                 { let c = get lexbuf in COMMENT (String.trim(String.sub c 2 ((String.length c) - 1))) }
   | ("/*"_*"*/")                { let c = get lexbuf in BLOCKCOMMENT (String.sub c 2 ((String.length c) - 3)) }
 
-  | '0' | (['1'-'9'] decDigit*)         { DECINTLITERAL (get lexbuf) }
-  | "0b" ('0' | ('1' binDigit*))        { let c = get lexbuf in BININTLITERAL (String.sub c 2 ((String.length c) - 1)) }
-  | "0o" ('0' | (['1'-'7'] octDigit*))  { let c = get lexbuf in OCTINTLITERAL (String.sub c 2 ((String.length c) - 1)) }
-  | "0x" ('0' | (['1'-'7'] hexDigit*))  { let c = get lexbuf in HEXINTLITERAL (String.sub c 2 ((String.length c) - 1)) }
+  | decIntLiteral               { DECINTLITERAL (get lexbuf) }
+  | binIntLiteral               { let c = get lexbuf in BININTLITERAL (String.sub c 2 ((String.length c) - 1)) }
+  | octIntLiteral               { let c = get lexbuf in OCTINTLITERAL (String.sub c 2 ((String.length c) - 1)) }
+  | hexIntLiteral               { let c = get lexbuf in HEXINTLITERAL (String.sub c 2 ((String.length c) - 1)) }
 
   | ("true" | "false")          { BOOLLITERAL (bool_of_string (get lexbuf)) }
 
-  | ('0' | (['1'-'9'] decDigit*))?'.'decDigit*  { FLOATLITERAL (float_of_string (get lexbuf)) }
+  | floatLiteral                { FLOATLITERAL (float_of_string (get lexbuf)) }
 
-  | '''( unicode_value | byte_value )'''      { let c = get lexbuf in RUNELITERAL (String.sub c 1 ((String.length c) - 2)) }
+  | runeLiteral                 { let c = get lexbuf in RUNELITERAL (String.sub c 1 ((String.length c) - 2)) }
 
   | '`'([^'''] | "\'")*'`'      { let c = get lexbuf in RAWSTRINGLITERAL (String.sub c 1 ((String.length c) - 2)) }
   | '"'([^'"'] | "\\\"")*'"'    { let c = get lexbuf in STRINGLITERAL (String.sub c 1 ((String.length c) - 2)) }
 
+  | _                           { let p = pos lexbuf in failwith ("Unexpected char '" ^ (get lexbuf) ^ "' in line " ^ (string_of_int p.pos_lnum) ^ " at position " ^ (string_of_int p.pos_bol)) }
 
 
 
