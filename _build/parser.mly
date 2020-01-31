@@ -1,9 +1,44 @@
 %{ %}
 
 %token EOF
-%token PLUS MINUS STAR SLASH
 %token LPAR RPAR
+%token LCURLY RCURLY
+%token LSQUARE RSQUARE
+%token COLON SEMICOLON
+
+%token COMMA DOT THREEDOT
+
+%token PLUS MINUS MULT DIV BINAND BINOR BINXOR BINANDNOT RSHIFT LSHIFT MOD
+%token PLUSEQ MINUSEQ MULTEQ DIVEQ BINANDEQ BINOREQ BINXOREQ BINANDNOTEQ RSHIFTEQ LSHIFTEQ MODEQ
+%token PLUSPLUS MINUSMINUS
+
+%token BOOLAND BOOLOR BOOLNOT
+
+%token ASSIGN SHORTASSIGN
+
+%token RECEIVE
+
+%token EQ LT LEQ GT GEQ
+
 %token <string>IDENTIFIER
+
+%token BREAK DEFAULT FUNC INTERFACE SELECT CASE DEFER GO
+%token MAP STRUCT CHAN ELSE GOTO PACKAGE SWITCH CONS FALLTHROUGH
+%token IF RANGE TYPE CONTINUE FOR IMPORT RETURN VAR
+%token PRINT PRINTLN APPEND LEN CAP
+
+%token <string>COMMENT
+%token <string>BLOCKCOMMENT
+
+%token <string>DECINTLITERAL
+%token <string>OCTINTLITERAL
+%token <string>BININTLITERAL
+%token <string>HEXINTLITERAL
+%token <bool>BOOLLITERAL
+%token <float>FLOATLITERAL
+%token <string>RUNELITERAL
+%token <string>STRINGLITERAL
+%token <string>RAWSTRINGLITERAL
 
 %start <Ast.exp> start
 %%
@@ -17,8 +52,8 @@ expr
   |  term              { $1 };
 
 term
-  :  term STAR factor  { Ast.Binop($1,Ast.Mul,$3) }
-  |  term SLASH factor { Ast.Binop($1,Ast.Div,$3) }
+  :  term MULT factor  { Ast.Binop($1,Ast.Mul,$3) }
+  |  term DIV factor { Ast.Binop($1,Ast.Div,$3) }
   |  factor            { $1 };
 
 factor
