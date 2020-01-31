@@ -8,7 +8,7 @@ start' -> . start [ # ]
 -- On expr shift to state 16
 
 State 1:
-factor -> LPAR . expr RPAR [ STAR SLASH RPAR PLUS MINUS EOF ]
+factor -> LPAR . expr RPAR [ RPAR PLUS MULT MINUS EOF DIV ]
 -- On LPAR shift to state 1
 -- On IDENTIFIER shift to state 2
 -- On term shift to state 3
@@ -16,80 +16,80 @@ factor -> LPAR . expr RPAR [ STAR SLASH RPAR PLUS MINUS EOF ]
 -- On expr shift to state 9
 
 State 2:
-factor -> IDENTIFIER . [ STAR SLASH RPAR PLUS MINUS EOF ]
--- On STAR reduce production factor -> IDENTIFIER 
--- On SLASH reduce production factor -> IDENTIFIER 
+factor -> IDENTIFIER . [ RPAR PLUS MULT MINUS EOF DIV ]
 -- On RPAR reduce production factor -> IDENTIFIER 
 -- On PLUS reduce production factor -> IDENTIFIER 
+-- On MULT reduce production factor -> IDENTIFIER 
 -- On MINUS reduce production factor -> IDENTIFIER 
 -- On EOF reduce production factor -> IDENTIFIER 
+-- On DIV reduce production factor -> IDENTIFIER 
 
 State 3:
 expr -> term . [ RPAR PLUS MINUS EOF ]
-term -> term . STAR factor [ STAR SLASH RPAR PLUS MINUS EOF ]
-term -> term . SLASH factor [ STAR SLASH RPAR PLUS MINUS EOF ]
--- On STAR shift to state 4
--- On SLASH shift to state 6
+term -> term . MULT factor [ RPAR PLUS MULT MINUS EOF DIV ]
+term -> term . DIV factor [ RPAR PLUS MULT MINUS EOF DIV ]
+-- On MULT shift to state 4
+-- On DIV shift to state 6
 -- On RPAR reduce production expr -> term 
 -- On PLUS reduce production expr -> term 
 -- On MINUS reduce production expr -> term 
 -- On EOF reduce production expr -> term 
 
 State 4:
-term -> term STAR . factor [ STAR SLASH RPAR PLUS MINUS EOF ]
+term -> term MULT . factor [ RPAR PLUS MULT MINUS EOF DIV ]
 -- On LPAR shift to state 1
 -- On IDENTIFIER shift to state 2
 -- On factor shift to state 5
 
 State 5:
-term -> term STAR factor . [ STAR SLASH RPAR PLUS MINUS EOF ]
--- On STAR reduce production term -> term STAR factor 
--- On SLASH reduce production term -> term STAR factor 
--- On RPAR reduce production term -> term STAR factor 
--- On PLUS reduce production term -> term STAR factor 
--- On MINUS reduce production term -> term STAR factor 
--- On EOF reduce production term -> term STAR factor 
+term -> term MULT factor . [ RPAR PLUS MULT MINUS EOF DIV ]
+-- On RPAR reduce production term -> term MULT factor 
+-- On PLUS reduce production term -> term MULT factor 
+-- On MULT reduce production term -> term MULT factor 
+-- On MINUS reduce production term -> term MULT factor 
+-- On EOF reduce production term -> term MULT factor 
+-- On DIV reduce production term -> term MULT factor 
 
 State 6:
-term -> term SLASH . factor [ STAR SLASH RPAR PLUS MINUS EOF ]
+term -> term DIV . factor [ RPAR PLUS MULT MINUS EOF DIV ]
 -- On LPAR shift to state 1
 -- On IDENTIFIER shift to state 2
 -- On factor shift to state 7
 
 State 7:
-term -> term SLASH factor . [ STAR SLASH RPAR PLUS MINUS EOF ]
--- On STAR reduce production term -> term SLASH factor 
--- On SLASH reduce production term -> term SLASH factor 
--- On RPAR reduce production term -> term SLASH factor 
--- On PLUS reduce production term -> term SLASH factor 
--- On MINUS reduce production term -> term SLASH factor 
--- On EOF reduce production term -> term SLASH factor 
+term -> term DIV factor . [ RPAR PLUS MULT MINUS EOF DIV ]
+-- On RPAR reduce production term -> term DIV factor 
+-- On PLUS reduce production term -> term DIV factor 
+-- On MULT reduce production term -> term DIV factor 
+-- On MINUS reduce production term -> term DIV factor 
+-- On EOF reduce production term -> term DIV factor 
+-- On DIV reduce production term -> term DIV factor 
 
 State 8:
-term -> factor . [ STAR SLASH RPAR PLUS MINUS EOF ]
--- On STAR reduce production term -> factor 
--- On SLASH reduce production term -> factor 
+term -> factor . [ RPAR PLUS MULT MINUS EOF DIV ]
 -- On RPAR reduce production term -> factor 
 -- On PLUS reduce production term -> factor 
+-- On MULT reduce production term -> factor 
 -- On MINUS reduce production term -> factor 
 -- On EOF reduce production term -> factor 
+-- On DIV reduce production term -> factor 
 
 State 9:
 expr -> expr . PLUS term [ RPAR PLUS MINUS ]
 expr -> expr . MINUS term [ RPAR PLUS MINUS ]
-factor -> LPAR expr . RPAR [ STAR SLASH RPAR PLUS MINUS EOF ]
+factor -> LPAR expr . RPAR [ RPAR PLUS MULT MINUS EOF DIV ]
 -- On RPAR shift to state 10
 -- On PLUS shift to state 11
 -- On MINUS shift to state 13
 
 State 10:
-factor -> LPAR expr RPAR . [ STAR SLASH RPAR PLUS MINUS EOF ]
--- On STAR reduce production factor -> LPAR expr RPAR 
--- On SLASH reduce production factor -> LPAR expr RPAR 
+factor -> LPAR expr RPAR . [ RPAR PLUS MULT MINUS EOF DIV ]
 -- On RPAR reduce production factor -> LPAR expr RPAR 
 -- On PLUS reduce production factor -> LPAR expr RPAR 
+-- On MULT reduce production factor -> LPAR expr RPAR 
 -- On MINUS reduce production factor -> LPAR expr RPAR 
 -- On EOF reduce production factor -> LPAR expr RPAR 
+-- On DIV reduce production factor -> LPAR expr RPAR 
 
 State 11:
 expr -> expr PLUS . term [ RPAR PLUS MINUS EOF ]
@@ -100,10 +100,10 @@ expr -> expr PLUS . term [ RPAR PLUS MINUS EOF ]
 
 State 12:
 expr -> expr PLUS term . [ RPAR PLUS MINUS EOF ]
-term -> term . STAR factor [ STAR SLASH RPAR PLUS MINUS EOF ]
-term -> term . SLASH factor [ STAR SLASH RPAR PLUS MINUS EOF ]
--- On STAR shift to state 4
--- On SLASH shift to state 6
+term -> term . MULT factor [ RPAR PLUS MULT MINUS EOF DIV ]
+term -> term . DIV factor [ RPAR PLUS MULT MINUS EOF DIV ]
+-- On MULT shift to state 4
+-- On DIV shift to state 6
 -- On RPAR reduce production expr -> expr PLUS term 
 -- On PLUS reduce production expr -> expr PLUS term 
 -- On MINUS reduce production expr -> expr PLUS term 
@@ -118,10 +118,10 @@ expr -> expr MINUS . term [ RPAR PLUS MINUS EOF ]
 
 State 14:
 expr -> expr MINUS term . [ RPAR PLUS MINUS EOF ]
-term -> term . STAR factor [ STAR SLASH RPAR PLUS MINUS EOF ]
-term -> term . SLASH factor [ STAR SLASH RPAR PLUS MINUS EOF ]
--- On STAR shift to state 4
--- On SLASH shift to state 6
+term -> term . MULT factor [ RPAR PLUS MULT MINUS EOF DIV ]
+term -> term . DIV factor [ RPAR PLUS MULT MINUS EOF DIV ]
+-- On MULT shift to state 4
+-- On DIV shift to state 6
 -- On RPAR reduce production expr -> expr MINUS term 
 -- On PLUS reduce production expr -> expr MINUS term 
 -- On MINUS reduce production expr -> expr MINUS term 
