@@ -7,10 +7,12 @@ type token =
   | THREEDOT
   | SWITCH
   | STRUCT
+  | STRINGTYPE
   | STRINGLITERAL of (string)
   | SHORTASSIGN of (int)
   | SEMICOLON
   | SELECT
+  | RUNETYPE
   | RUNELITERAL of (string)
   | RSQUARE
   | RSHIFTEQ of (int)
@@ -44,6 +46,7 @@ type token =
   | LEQ of (int)
   | LEN of (int)
   | LCURLY
+  | INTTYPE
   | INTERFACE
   | IMPORT
   | IF
@@ -55,6 +58,7 @@ type token =
   | GEQ of (int)
   | FUNC
   | FOR
+  | FLOATTYPE
   | FLOATLITERAL of (float)
   | FALLTHROUGH
   | EQ of (int)
@@ -75,6 +79,7 @@ type token =
   | CASE
   | CAP of (int)
   | BREAK
+  | BOOLTYPE
   | BOOLOR of (int)
   | BOOLNOT of (int)
   | BOOLLITERAL of (bool)
@@ -98,4 +103,4 @@ exception Error
 
 (* The monolithic API. *)
 
-val start: (Lexing.lexbuf -> token) -> Lexing.lexbuf -> (Ast.exp)
+val start: (Lexing.lexbuf -> token) -> Lexing.lexbuf -> (Ast.package_clause)

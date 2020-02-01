@@ -54,6 +54,8 @@
 
   let floatLiteral     = ('0' | (['1'-'9'] decDigit*))?'.'decDigit*
 
+  let unsuportedType = ("int8" | "int16" | "int32" | "int64" | "uint" | "uint8" | "uint16" | "uint32" | "uint64" | "uintptr" | "complex64" | "complex128" | "float64")
+
 (* Tokens *)
 
 rule token = parse
@@ -144,6 +146,12 @@ rule token = parse
   | "append"                    { APPEND (get_line_num lexbuf) }
   | "len"                       { LEN (get_line_num lexbuf) }
   | "cap"                       { CAP (get_line_num lexbuf) }
+
+  | "int"                       { INTTYPE }
+  | "float32"                   { FLOATTYPE }
+  | "rune"                      { RUNETYPE }
+  | "string"                    { STRINGTYPE }
+  | unsuportedType              { failwith ("The type " ^ get lexbuf ^ " is unsuported in GoLite") }
 
   | identifier                  { IDENTIFIER (get lexbuf, get_line_num lexbuf) }
 

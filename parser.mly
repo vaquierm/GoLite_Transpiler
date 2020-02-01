@@ -43,22 +43,63 @@
 %token <string>STRINGLITERAL
 %token <string>RAWSTRINGLITERAL
 
-%start <Ast.exp> start
+%token INTTYPE BOOLTYPE STRINGTYPE RUNETYPE FLOATTYPE
+
+%start <Ast.package_clause> start
 %%
 
 /* Productions */
-start : expr EOF       { $1 };
+start : package_clause import_decls top_level_decls EOF       { $1 };
 
-expr
-  :  expr PLUS term    { Ast.Binop ($1,Ast.Add,$3) }
-  |  expr MINUS term   { Ast.Binop ($1,Ast.Sub,$3) }
-  |  term              { $1 };
+package_clause
+  : PACKAGE IDENTIFIER SEMICOLON { Ast.Package (fst $2) }
 
-term
-  :  term MULT factor  { Ast.Binop($1,Ast.Mul,$3) }
-  |  term DIV factor { Ast.Binop($1,Ast.Div,$3) }
-  |  factor            { $1 };
+import_decls
+  :                     { () }
+  | IMPORT              { failwith "Packages are not supported in GoLite."}
 
-factor
-  :  IDENTIFIER        { Ast.Var (fst $1) }
-  |  LPAR expr RPAR    { $2 };
+top_level_decls
+  :                     { [] }
+  | top_level_decls type_decls { $2 @ $1 }
+
+type_decls
+  : TYPE type_spec                      { [$2] }
+  | TYPE LPAR type_specs RPAR SEMICOLON { $3 }
+
+type_specs
+  :                       { [] }
+  | type_specs type_spec  { $2::$1 }
+
+type_spec
+  : IDENTIFIER ASSIGN typeT SEMICOLON { failwith "Type aliases not supported in GoLite" }
+  | IDENTIFIER typeT        SEMICOLON { Ast.TypeDecl ($2, (fst $1)) }
+
+typeT
+  : LPAR typeT RPAR   { $2 }
+  | IDENTIFIER        { failwith "TODO keep track of underlying types" }
+  | LSQUARE exp RSQUARE typeT { Ast.ArrayType ($4, $2) }
+  | LSQUARE RSQUARE typeT { Ast.SliceType $3 }
+  | MULT typeT        { Ast.PointerType $2 }
+  | MAP RSQUARE typeT RSQUARE typeT { failwith "Map types are not suppoted in GoLite" }
+  | INTERFACE         { failwith "Interface types are not suppoted in GoLite" }
+  | CHAN              { failwith "Channel types are not suppoted in GoLite" }
+  | STRUCT LCURLY field_decls RCURLY            { Ast.StructType $3 }
+  | INTTYPE           { Ast.IntType }
+  | FLOATTYPE         { Ast.FloatType }
+  | STRINGTYPE        { Ast.StrType }
+  | RUNETYPE          { Ast.RuneType }
+
+field_decls
+  :                 { [] }
+  | field_decls ident_list typeT SEMICOLON  {
+      let f = $2 in
+        let ft = List.map (fun f -> (f, $3)) f in
+          $1 @ ft
+   }
+
+ident_list
+  :                               { [] } 
+  | ident_list COMMA IDENTIFIER   { (fst $3)::$1 }
+
+exp
+  : FLOATLITERAL    { Ast.Float ($1) }
