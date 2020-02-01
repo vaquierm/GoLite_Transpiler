@@ -4,6 +4,23 @@
   open Lexing
   let get = Lexing.lexeme
   let pos = Lexing.lexeme_start_p
+
+  (*
+  This reference keeps track of the last token
+  We can then use it to determine if we wwant to insert a semicilon in the sream
+  *)
+  let previous_token = ref SEMICOLON
+
+  (*
+  Check if the token at the end of the line requires a semicolon
+  inserted into the token stream
+  *)
+  let is_semicolon_required = function
+    | RSQUARE | RPAR | RCURLY | BREAK | CONTINUE | FALLTHROUGH | RETURN
+    | DECINTLITERAL _ | BININTLITERAL _ | OCTINTLITERAL _ | HEXINTLITERAL _
+    | BOOLLITERAL _ | FLOATLITERAL _ | RUNELITERAL _ | STRINGLITERAL _ | RAWSTRINGLITERAL _ 
+    | PLUSPLUS | MINUSMINUS -> true
+    | _ -> false
 }
 
 (* Helpers *)
@@ -39,7 +56,7 @@
 (* Tokens *)
 
 rule token = parse
-  | eol                         { token lexbuf }
+  | eol                         { if is_semicolon_required !previous_token then SEMICOLON else token lexbuf }
   | (' ' | tab)                 { token lexbuf }
   | eof                         { EOF }
 

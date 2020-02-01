@@ -5,7 +5,24 @@
   let get = Lexing.lexeme
   let pos = Lexing.lexeme_start_p
 
-# 9 "lexer.ml"
+  (*
+  This reference keeps track of the last token
+  We can then use it to determine if we wwant to insert a semicilon in the sream
+  *)
+  let previous_token = ref SEMICOLON
+
+  (*
+  Check if the token at the end of the line requires a semicolon
+  inserted into the token stream
+  *)
+  let is_semicolon_required = function
+    | RSQUARE | RPAR | RCURLY | BREAK | CONTINUE | FALLTHROUGH | RETURN
+    | DECINTLITERAL _ | BININTLITERAL _ | OCTINTLITERAL _ | HEXINTLITERAL _
+    | BOOLLITERAL _ | FLOATLITERAL _ | RUNELITERAL _ | STRINGLITERAL _ | RAWSTRINGLITERAL _ 
+    | PLUSPLUS | MINUSMINUS -> true
+    | _ -> false
+
+# 26 "lexer.ml"
 let __ocaml_lex_tables = {
   Lexing.lex_base =
    "\000\000\164\255\058\000\030\000\035\000\082\000\083\000\160\000\
@@ -2833,464 +2850,464 @@ let rec token lexbuf =
 and __ocaml_lex_token_rec lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
-# 42 "lexer.mll"
-                                ( token lexbuf )
-# 2839 "lexer.ml"
+# 59 "lexer.mll"
+                                ( if is_semicolon_required !previous_token then SEMICOLON else token lexbuf )
+# 2856 "lexer.ml"
 
   | 1 ->
-# 43 "lexer.mll"
+# 60 "lexer.mll"
                                 ( token lexbuf )
-# 2844 "lexer.ml"
+# 2861 "lexer.ml"
 
   | 2 ->
-# 44 "lexer.mll"
+# 61 "lexer.mll"
                                 ( EOF )
-# 2849 "lexer.ml"
+# 2866 "lexer.ml"
 
   | 3 ->
-# 46 "lexer.mll"
+# 63 "lexer.mll"
                                 ( LPAR )
-# 2854 "lexer.ml"
+# 2871 "lexer.ml"
 
   | 4 ->
-# 47 "lexer.mll"
+# 64 "lexer.mll"
                                 ( RPAR )
-# 2859 "lexer.ml"
+# 2876 "lexer.ml"
 
   | 5 ->
-# 48 "lexer.mll"
+# 65 "lexer.mll"
                                 ( LCURLY )
-# 2864 "lexer.ml"
+# 2881 "lexer.ml"
 
   | 6 ->
-# 49 "lexer.mll"
+# 66 "lexer.mll"
                                 ( RCURLY )
-# 2869 "lexer.ml"
+# 2886 "lexer.ml"
 
   | 7 ->
-# 50 "lexer.mll"
+# 67 "lexer.mll"
                                 ( LSQUARE )
-# 2874 "lexer.ml"
+# 2891 "lexer.ml"
 
   | 8 ->
-# 51 "lexer.mll"
+# 68 "lexer.mll"
                                 ( RSQUARE )
-# 2879 "lexer.ml"
+# 2896 "lexer.ml"
 
   | 9 ->
-# 52 "lexer.mll"
+# 69 "lexer.mll"
                                 ( COLON )
-# 2884 "lexer.ml"
+# 2901 "lexer.ml"
 
   | 10 ->
-# 53 "lexer.mll"
+# 70 "lexer.mll"
                                 ( SEMICOLON )
-# 2889 "lexer.ml"
+# 2906 "lexer.ml"
 
   | 11 ->
-# 54 "lexer.mll"
+# 71 "lexer.mll"
                                 ( COMMA )
-# 2894 "lexer.ml"
+# 2911 "lexer.ml"
 
   | 12 ->
-# 55 "lexer.mll"
+# 72 "lexer.mll"
                                 ( DOT )
-# 2899 "lexer.ml"
+# 2916 "lexer.ml"
 
   | 13 ->
-# 56 "lexer.mll"
+# 73 "lexer.mll"
                                 ( THREEDOT )
-# 2904 "lexer.ml"
+# 2921 "lexer.ml"
 
   | 14 ->
-# 58 "lexer.mll"
+# 75 "lexer.mll"
                                 ( PLUS )
-# 2909 "lexer.ml"
+# 2926 "lexer.ml"
 
   | 15 ->
-# 59 "lexer.mll"
+# 76 "lexer.mll"
                                 ( MINUS )
-# 2914 "lexer.ml"
+# 2931 "lexer.ml"
 
   | 16 ->
-# 60 "lexer.mll"
+# 77 "lexer.mll"
                                 ( MULT )
-# 2919 "lexer.ml"
+# 2936 "lexer.ml"
 
   | 17 ->
-# 61 "lexer.mll"
+# 78 "lexer.mll"
                                 ( DIV )
-# 2924 "lexer.ml"
+# 2941 "lexer.ml"
 
   | 18 ->
-# 62 "lexer.mll"
+# 79 "lexer.mll"
                                 ( BINAND )
-# 2929 "lexer.ml"
+# 2946 "lexer.ml"
 
   | 19 ->
-# 63 "lexer.mll"
+# 80 "lexer.mll"
                                 ( BINOR )
-# 2934 "lexer.ml"
+# 2951 "lexer.ml"
 
   | 20 ->
-# 64 "lexer.mll"
+# 81 "lexer.mll"
                                 ( BINXOR )
-# 2939 "lexer.ml"
+# 2956 "lexer.ml"
 
   | 21 ->
-# 65 "lexer.mll"
+# 82 "lexer.mll"
                                 ( BINANDNOT )
-# 2944 "lexer.ml"
+# 2961 "lexer.ml"
 
   | 22 ->
-# 66 "lexer.mll"
+# 83 "lexer.mll"
                                 ( RSHIFT )
-# 2949 "lexer.ml"
+# 2966 "lexer.ml"
 
   | 23 ->
-# 67 "lexer.mll"
+# 84 "lexer.mll"
                                 ( LSHIFT )
-# 2954 "lexer.ml"
+# 2971 "lexer.ml"
 
   | 24 ->
-# 68 "lexer.mll"
+# 85 "lexer.mll"
                                 ( MOD )
-# 2959 "lexer.ml"
+# 2976 "lexer.ml"
 
   | 25 ->
-# 69 "lexer.mll"
+# 86 "lexer.mll"
                                 ( PLUSEQ )
-# 2964 "lexer.ml"
+# 2981 "lexer.ml"
 
   | 26 ->
-# 70 "lexer.mll"
+# 87 "lexer.mll"
                                 ( MINUSEQ )
-# 2969 "lexer.ml"
+# 2986 "lexer.ml"
 
   | 27 ->
-# 71 "lexer.mll"
+# 88 "lexer.mll"
                                 ( MULTEQ )
-# 2974 "lexer.ml"
+# 2991 "lexer.ml"
 
   | 28 ->
-# 72 "lexer.mll"
+# 89 "lexer.mll"
                                 ( DIVEQ )
-# 2979 "lexer.ml"
+# 2996 "lexer.ml"
 
   | 29 ->
-# 73 "lexer.mll"
+# 90 "lexer.mll"
                                 ( BINANDEQ )
-# 2984 "lexer.ml"
+# 3001 "lexer.ml"
 
   | 30 ->
-# 74 "lexer.mll"
+# 91 "lexer.mll"
                                 ( BINOREQ )
-# 2989 "lexer.ml"
+# 3006 "lexer.ml"
 
   | 31 ->
-# 75 "lexer.mll"
+# 92 "lexer.mll"
                                 ( BINXOREQ )
-# 2994 "lexer.ml"
+# 3011 "lexer.ml"
 
   | 32 ->
-# 76 "lexer.mll"
+# 93 "lexer.mll"
                                 ( BINANDNOTEQ )
-# 2999 "lexer.ml"
+# 3016 "lexer.ml"
 
   | 33 ->
-# 77 "lexer.mll"
+# 94 "lexer.mll"
                                 ( RSHIFTEQ )
-# 3004 "lexer.ml"
+# 3021 "lexer.ml"
 
   | 34 ->
-# 78 "lexer.mll"
+# 95 "lexer.mll"
                                 ( LSHIFTEQ )
-# 3009 "lexer.ml"
+# 3026 "lexer.ml"
 
   | 35 ->
-# 79 "lexer.mll"
+# 96 "lexer.mll"
                                 ( MODEQ )
-# 3014 "lexer.ml"
+# 3031 "lexer.ml"
 
   | 36 ->
-# 81 "lexer.mll"
+# 98 "lexer.mll"
                                 ( PLUSPLUS )
-# 3019 "lexer.ml"
+# 3036 "lexer.ml"
 
   | 37 ->
-# 82 "lexer.mll"
+# 99 "lexer.mll"
                                 ( MINUSMINUS )
-# 3024 "lexer.ml"
+# 3041 "lexer.ml"
 
   | 38 ->
-# 84 "lexer.mll"
+# 101 "lexer.mll"
                                 ( BOOLAND )
-# 3029 "lexer.ml"
+# 3046 "lexer.ml"
 
   | 39 ->
-# 85 "lexer.mll"
+# 102 "lexer.mll"
                                 ( BOOLOR )
-# 3034 "lexer.ml"
+# 3051 "lexer.ml"
 
   | 40 ->
-# 86 "lexer.mll"
+# 103 "lexer.mll"
                                 ( BOOLNOT )
-# 3039 "lexer.ml"
+# 3056 "lexer.ml"
 
   | 41 ->
-# 88 "lexer.mll"
+# 105 "lexer.mll"
                                 ( ASSIGN )
-# 3044 "lexer.ml"
+# 3061 "lexer.ml"
 
   | 42 ->
-# 89 "lexer.mll"
+# 106 "lexer.mll"
                                 ( SHORTASSIGN )
-# 3049 "lexer.ml"
+# 3066 "lexer.ml"
 
   | 43 ->
-# 91 "lexer.mll"
+# 108 "lexer.mll"
                                 ( RECEIVE )
-# 3054 "lexer.ml"
+# 3071 "lexer.ml"
 
   | 44 ->
-# 93 "lexer.mll"
+# 110 "lexer.mll"
                                 ( EQ )
-# 3059 "lexer.ml"
+# 3076 "lexer.ml"
 
   | 45 ->
-# 94 "lexer.mll"
+# 111 "lexer.mll"
                                 ( LT )
-# 3064 "lexer.ml"
+# 3081 "lexer.ml"
 
   | 46 ->
-# 95 "lexer.mll"
+# 112 "lexer.mll"
                                 ( LEQ )
-# 3069 "lexer.ml"
+# 3086 "lexer.ml"
 
   | 47 ->
-# 96 "lexer.mll"
+# 113 "lexer.mll"
                                 ( GT )
-# 3074 "lexer.ml"
+# 3091 "lexer.ml"
 
   | 48 ->
-# 97 "lexer.mll"
+# 114 "lexer.mll"
                                 ( GEQ )
-# 3079 "lexer.ml"
+# 3096 "lexer.ml"
 
   | 49 ->
-# 99 "lexer.mll"
+# 116 "lexer.mll"
                                 ( BREAK )
-# 3084 "lexer.ml"
+# 3101 "lexer.ml"
 
   | 50 ->
-# 100 "lexer.mll"
+# 117 "lexer.mll"
                                 ( DEFAULT )
-# 3089 "lexer.ml"
+# 3106 "lexer.ml"
 
   | 51 ->
-# 101 "lexer.mll"
+# 118 "lexer.mll"
                                 ( FUNC )
-# 3094 "lexer.ml"
+# 3111 "lexer.ml"
 
   | 52 ->
-# 102 "lexer.mll"
+# 119 "lexer.mll"
                                 ( INTERFACE )
-# 3099 "lexer.ml"
+# 3116 "lexer.ml"
 
   | 53 ->
-# 103 "lexer.mll"
+# 120 "lexer.mll"
                                 ( SELECT )
-# 3104 "lexer.ml"
+# 3121 "lexer.ml"
 
   | 54 ->
-# 104 "lexer.mll"
+# 121 "lexer.mll"
                                 ( CASE )
-# 3109 "lexer.ml"
+# 3126 "lexer.ml"
 
   | 55 ->
-# 105 "lexer.mll"
+# 122 "lexer.mll"
                                 ( DEFER )
-# 3114 "lexer.ml"
+# 3131 "lexer.ml"
 
   | 56 ->
-# 106 "lexer.mll"
+# 123 "lexer.mll"
                                 ( GO )
-# 3119 "lexer.ml"
+# 3136 "lexer.ml"
 
   | 57 ->
-# 107 "lexer.mll"
+# 124 "lexer.mll"
                                 ( MAP )
-# 3124 "lexer.ml"
+# 3141 "lexer.ml"
 
   | 58 ->
-# 108 "lexer.mll"
+# 125 "lexer.mll"
                                 ( STRUCT )
-# 3129 "lexer.ml"
+# 3146 "lexer.ml"
 
   | 59 ->
-# 109 "lexer.mll"
+# 126 "lexer.mll"
                                 ( CHAN )
-# 3134 "lexer.ml"
+# 3151 "lexer.ml"
 
   | 60 ->
-# 110 "lexer.mll"
+# 127 "lexer.mll"
                                 ( ELSE )
-# 3139 "lexer.ml"
+# 3156 "lexer.ml"
 
   | 61 ->
-# 111 "lexer.mll"
+# 128 "lexer.mll"
                                 ( GOTO )
-# 3144 "lexer.ml"
+# 3161 "lexer.ml"
 
   | 62 ->
-# 112 "lexer.mll"
+# 129 "lexer.mll"
                                 ( PACKAGE )
-# 3149 "lexer.ml"
+# 3166 "lexer.ml"
 
   | 63 ->
-# 113 "lexer.mll"
+# 130 "lexer.mll"
                                 ( SWITCH )
-# 3154 "lexer.ml"
+# 3171 "lexer.ml"
 
   | 64 ->
-# 114 "lexer.mll"
+# 131 "lexer.mll"
                                 ( CONS )
-# 3159 "lexer.ml"
+# 3176 "lexer.ml"
 
   | 65 ->
-# 115 "lexer.mll"
+# 132 "lexer.mll"
                                 ( FALLTHROUGH )
-# 3164 "lexer.ml"
+# 3181 "lexer.ml"
 
   | 66 ->
-# 116 "lexer.mll"
+# 133 "lexer.mll"
                                 ( IF )
-# 3169 "lexer.ml"
+# 3186 "lexer.ml"
 
   | 67 ->
-# 117 "lexer.mll"
+# 134 "lexer.mll"
                                 ( RANGE )
-# 3174 "lexer.ml"
+# 3191 "lexer.ml"
 
   | 68 ->
-# 118 "lexer.mll"
+# 135 "lexer.mll"
                                 ( TYPE )
-# 3179 "lexer.ml"
+# 3196 "lexer.ml"
 
   | 69 ->
-# 119 "lexer.mll"
+# 136 "lexer.mll"
                                 ( CONTINUE )
-# 3184 "lexer.ml"
+# 3201 "lexer.ml"
 
   | 70 ->
-# 120 "lexer.mll"
+# 137 "lexer.mll"
                                 ( FOR )
-# 3189 "lexer.ml"
+# 3206 "lexer.ml"
 
   | 71 ->
-# 121 "lexer.mll"
+# 138 "lexer.mll"
                                 ( IMPORT )
-# 3194 "lexer.ml"
+# 3211 "lexer.ml"
 
   | 72 ->
-# 122 "lexer.mll"
+# 139 "lexer.mll"
                                 ( RETURN )
-# 3199 "lexer.ml"
+# 3216 "lexer.ml"
 
   | 73 ->
-# 123 "lexer.mll"
+# 140 "lexer.mll"
                                 ( VAR )
-# 3204 "lexer.ml"
+# 3221 "lexer.ml"
 
   | 74 ->
-# 124 "lexer.mll"
+# 141 "lexer.mll"
                                 ( PRINT )
-# 3209 "lexer.ml"
+# 3226 "lexer.ml"
 
   | 75 ->
-# 125 "lexer.mll"
+# 142 "lexer.mll"
                                 ( PRINTLN )
-# 3214 "lexer.ml"
+# 3231 "lexer.ml"
 
   | 76 ->
-# 126 "lexer.mll"
+# 143 "lexer.mll"
                                 ( APPEND )
-# 3219 "lexer.ml"
+# 3236 "lexer.ml"
 
   | 77 ->
-# 127 "lexer.mll"
+# 144 "lexer.mll"
                                 ( LEN )
-# 3224 "lexer.ml"
+# 3241 "lexer.ml"
 
   | 78 ->
-# 128 "lexer.mll"
+# 145 "lexer.mll"
                                 ( CAP )
-# 3229 "lexer.ml"
+# 3246 "lexer.ml"
 
   | 79 ->
-# 130 "lexer.mll"
+# 147 "lexer.mll"
                                 ( IDENTIFIER (get lexbuf) )
-# 3234 "lexer.ml"
+# 3251 "lexer.ml"
 
   | 80 ->
-# 132 "lexer.mll"
+# 149 "lexer.mll"
                                 ( let c = get lexbuf in COMMENT (String.trim(String.sub c 2 ((String.length c) - 1))) )
-# 3239 "lexer.ml"
+# 3256 "lexer.ml"
 
   | 81 ->
-# 133 "lexer.mll"
+# 150 "lexer.mll"
                                 ( let c = get lexbuf in BLOCKCOMMENT (String.sub c 2 ((String.length c) - 3)) )
-# 3244 "lexer.ml"
+# 3261 "lexer.ml"
 
   | 82 ->
-# 135 "lexer.mll"
+# 152 "lexer.mll"
                                 ( DECINTLITERAL (get lexbuf) )
-# 3249 "lexer.ml"
+# 3266 "lexer.ml"
 
   | 83 ->
-# 136 "lexer.mll"
+# 153 "lexer.mll"
                                 ( let c = get lexbuf in BININTLITERAL (String.sub c 2 ((String.length c) - 1)) )
-# 3254 "lexer.ml"
+# 3271 "lexer.ml"
 
   | 84 ->
-# 137 "lexer.mll"
+# 154 "lexer.mll"
                                 ( let c = get lexbuf in OCTINTLITERAL (String.sub c 2 ((String.length c) - 1)) )
-# 3259 "lexer.ml"
+# 3276 "lexer.ml"
 
   | 85 ->
-# 138 "lexer.mll"
+# 155 "lexer.mll"
                                 ( let c = get lexbuf in HEXINTLITERAL (String.sub c 2 ((String.length c) - 1)) )
-# 3264 "lexer.ml"
+# 3281 "lexer.ml"
 
   | 86 ->
-# 140 "lexer.mll"
+# 157 "lexer.mll"
                                 ( BOOLLITERAL (bool_of_string (get lexbuf)) )
-# 3269 "lexer.ml"
+# 3286 "lexer.ml"
 
   | 87 ->
-# 142 "lexer.mll"
+# 159 "lexer.mll"
                                 ( FLOATLITERAL (float_of_string (get lexbuf)) )
-# 3274 "lexer.ml"
+# 3291 "lexer.ml"
 
   | 88 ->
-# 144 "lexer.mll"
+# 161 "lexer.mll"
                                 ( let c = get lexbuf in RUNELITERAL (String.sub c 1 ((String.length c) - 2)) )
-# 3279 "lexer.ml"
+# 3296 "lexer.ml"
 
   | 89 ->
-# 146 "lexer.mll"
+# 163 "lexer.mll"
                                 ( let c = get lexbuf in RAWSTRINGLITERAL (String.sub c 1 ((String.length c) - 2)) )
-# 3284 "lexer.ml"
+# 3301 "lexer.ml"
 
   | 90 ->
-# 147 "lexer.mll"
+# 164 "lexer.mll"
                                 ( let c = get lexbuf in STRINGLITERAL (String.sub c 1 ((String.length c) - 2)) )
-# 3289 "lexer.ml"
+# 3306 "lexer.ml"
 
   | 91 ->
-# 149 "lexer.mll"
+# 166 "lexer.mll"
                                 ( let p = pos lexbuf in failwith ("Unexpected char '" ^ (get lexbuf) ^ "' in line " ^ (string_of_int p.pos_lnum) ^ " at position " ^ (string_of_int p.pos_bol)) )
-# 3294 "lexer.ml"
+# 3311 "lexer.ml"
 
   | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf;
       __ocaml_lex_token_rec lexbuf __ocaml_lex_state

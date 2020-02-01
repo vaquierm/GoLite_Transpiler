@@ -34,5 +34,5 @@ menhir -v --ocamlc /usr/bin/ocamlc.opt --infer parser.mly # cached
 # Target: parser.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:parser.cmo, file:parser.ml, implem, ocaml, quiet }
 /usr/bin/ocamlc.opt -c -o parser.cmo parser.ml # cached
 # Target: main.byte, tags: { byte, dont_link_with, extension:byte, file:main.byte, link, ocaml, program, quiet }
-/usr/bin/ocamlc.opt ast.cmo eval.cmo parser.cmo lexer.cmo pprint.cmo main.cmo -o main.byte
+/usr/bin/ocamlc.opt ast.cmo eval.cmo parser.cmo lexer.cmo pprint.cmo main.cmo -o main.byte # cached
 # Compilation successful.

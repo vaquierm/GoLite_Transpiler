@@ -1,4 +1,7 @@
-%{ %}
+%{ 
+  open Lexing
+
+%}
 
 %token EOF
 %token LPAR RPAR
