@@ -8,61 +8,61 @@ type token =
   | SWITCH
   | STRUCT
   | STRINGLITERAL of (string)
-  | SHORTASSIGN
+  | SHORTASSIGN of (int)
   | SEMICOLON
   | SELECT
   | RUNELITERAL of (string)
   | RSQUARE
-  | RSHIFTEQ
-  | RSHIFT
+  | RSHIFTEQ of (int)
+  | RSHIFT of (int)
   | RPAR
   | RETURN
-  | RECEIVE
+  | RECEIVE of (int)
   | RCURLY
   | RAWSTRINGLITERAL of (string)
   | RANGE
-  | PRINTLN
-  | PRINT
-  | PLUSPLUS
-  | PLUSEQ
-  | PLUS
+  | PRINTLN of (int)
+  | PRINT of (int)
+  | PLUSPLUS of (int)
+  | PLUSEQ of (int)
+  | PLUS of (int)
   | PACKAGE
   | OCTINTLITERAL of (string)
-  | MULTEQ
-  | MULT
-  | MODEQ
-  | MOD
-  | MINUSMINUS
-  | MINUSEQ
-  | MINUS
+  | MULTEQ of (int)
+  | MULT of (int)
+  | MODEQ of (int)
+  | MOD of (int)
+  | MINUSMINUS of (int)
+  | MINUSEQ of (int)
+  | MINUS of (int)
   | MAP
-  | LT
+  | LT of (int)
   | LSQUARE
-  | LSHIFTEQ
-  | LSHIFT
+  | LSHIFTEQ of (int)
+  | LSHIFT of (int)
   | LPAR
-  | LEQ
-  | LEN
+  | LEQ of (int)
+  | LEN of (int)
   | LCURLY
   | INTERFACE
   | IMPORT
   | IF
-  | IDENTIFIER of (string)
+  | IDENTIFIER of (string * int)
   | HEXINTLITERAL of (string)
-  | GT
+  | GT of (int)
   | GOTO
   | GO
-  | GEQ
+  | GEQ of (int)
   | FUNC
   | FOR
   | FLOATLITERAL of (float)
   | FALLTHROUGH
-  | EQ
+  | EQ of (int)
   | EOF
   | ELSE
   | DOT
-  | DIVEQ
-  | DIV
+  | DIVEQ of (int)
+  | DIV of (int)
   | DEFER
   | DEFAULT
   | DECINTLITERAL of (string)
@@ -73,24 +73,24 @@ type token =
   | COLON
   | CHAN
   | CASE
-  | CAP
+  | CAP of (int)
   | BREAK
-  | BOOLOR
-  | BOOLNOT
+  | BOOLOR of (int)
+  | BOOLNOT of (int)
   | BOOLLITERAL of (bool)
-  | BOOLAND
+  | BOOLAND of (int)
   | BLOCKCOMMENT of (string)
-  | BINXOREQ
-  | BINXOR
-  | BINOREQ
-  | BINOR
+  | BINXOREQ of (int)
+  | BINXOR of (int)
+  | BINOREQ of (int)
+  | BINOR of (int)
   | BININTLITERAL of (string)
-  | BINANDNOTEQ
-  | BINANDNOT
-  | BINANDEQ
-  | BINAND
-  | ASSIGN
-  | APPEND
+  | BINANDNOTEQ of (int)
+  | BINANDNOT of (int)
+  | BINANDEQ of (int)
+  | BINAND of (int)
+  | ASSIGN of (int)
+  | APPEND of (int)
 
 (* This exception is raised by the monolithic API functions. *)
 

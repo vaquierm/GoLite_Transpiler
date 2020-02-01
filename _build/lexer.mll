@@ -4,6 +4,7 @@
   open Lexing
   let get = Lexing.lexeme
   let pos = Lexing.lexeme_start_p
+  let get_line_num buf = let p = pos buf in p.pos_lnum
 
   (*
   This reference keeps track of the last token
@@ -19,7 +20,7 @@
     | RSQUARE | RPAR | RCURLY | BREAK | CONTINUE | FALLTHROUGH | RETURN
     | DECINTLITERAL _ | BININTLITERAL _ | OCTINTLITERAL _ | HEXINTLITERAL _
     | BOOLLITERAL _ | FLOATLITERAL _ | RUNELITERAL _ | STRINGLITERAL _ | RAWSTRINGLITERAL _ 
-    | PLUSPLUS | MINUSMINUS -> true
+    | PLUSPLUS _ | MINUSMINUS _ -> true
     | _ -> false
 }
 
@@ -72,46 +73,46 @@ rule token = parse
   | '.'                         { DOT }
   | "..."                       { THREEDOT }
 
-  | '+'                         { PLUS }
-  | '-'                         { MINUS }
-  | '*'                         { MULT }
-  | '/'                         { DIV }
-  | '&'                         { BINAND }
-  | '|'                         { BINOR }
-  | '^'                         { BINXOR }
-  | "&^"                        { BINANDNOT }
-  | ">>"                        { RSHIFT }
-  | "<<"                        { LSHIFT }
-  | '%'                         { MOD }
-  | "+="                        { PLUSEQ }
-  | "-="                        { MINUSEQ }
-  | "*="                        { MULTEQ }
-  | "/="                        { DIVEQ }
-  | "&="                        { BINANDEQ }
-  | "|="                        { BINOREQ }
-  | "^="                        { BINXOREQ }
-  | "&^="                       { BINANDNOTEQ }
-  | ">>="                       { RSHIFTEQ }
-  | "<<="                       { LSHIFTEQ }
-  | "%="                        { MODEQ }
+  | '+'                         { PLUS (get_line_num lexbuf) }
+  | '-'                         { MINUS (get_line_num lexbuf) }
+  | '*'                         { MULT (get_line_num lexbuf) }
+  | '/'                         { DIV (get_line_num lexbuf) }
+  | '&'                         { BINAND (get_line_num lexbuf) }
+  | '|'                         { BINOR (get_line_num lexbuf) }
+  | '^'                         { BINXOR (get_line_num lexbuf) }
+  | "&^"                        { BINANDNOT (get_line_num lexbuf) }
+  | ">>"                        { RSHIFT (get_line_num lexbuf) }
+  | "<<"                        { LSHIFT (get_line_num lexbuf) }
+  | '%'                         { MOD (get_line_num lexbuf) }
+  | "+="                        { PLUSEQ (get_line_num lexbuf) }
+  | "-="                        { MINUSEQ (get_line_num lexbuf) }
+  | "*="                        { MULTEQ (get_line_num lexbuf) }
+  | "/="                        { DIVEQ (get_line_num lexbuf) }
+  | "&="                        { BINANDEQ (get_line_num lexbuf) }
+  | "|="                        { BINOREQ (get_line_num lexbuf) }
+  | "^="                        { BINXOREQ (get_line_num lexbuf) }
+  | "&^="                       { BINANDNOTEQ (get_line_num lexbuf) }
+  | ">>="                       { RSHIFTEQ (get_line_num lexbuf) }
+  | "<<="                       { LSHIFTEQ (get_line_num lexbuf) }
+  | "%="                        { MODEQ (get_line_num lexbuf) }
 
-  | "++"                        { PLUSPLUS }
-  | "--"                        { MINUSMINUS }
+  | "++"                        { PLUSPLUS (get_line_num lexbuf) }
+  | "--"                        { MINUSMINUS (get_line_num lexbuf) }
 
-  | "&&"                        { BOOLAND }
-  | "||"                        { BOOLOR }
-  | "!"                         { BOOLNOT }
+  | "&&"                        { BOOLAND (get_line_num lexbuf) }
+  | "||"                        { BOOLOR (get_line_num lexbuf) }
+  | "!"                         { BOOLNOT (get_line_num lexbuf) }
 
-  | '='                         { ASSIGN }
-  | ":="                        { SHORTASSIGN }
+  | '='                         { ASSIGN (get_line_num lexbuf) }
+  | ":="                        { SHORTASSIGN (get_line_num lexbuf) }
 
-  | "<-"                        { RECEIVE }
+  | "<-"                        { RECEIVE (get_line_num lexbuf) }
 
-  | "=="                        { EQ }
-  | '<'                         { LT }
-  | "<="                        { LEQ }
-  | '>'                         { GT }
-  | ">="                        { GEQ }
+  | "=="                        { EQ (get_line_num lexbuf) }
+  | '<'                         { LT (get_line_num lexbuf) }
+  | "<="                        { LEQ (get_line_num lexbuf) }
+  | '>'                         { GT (get_line_num lexbuf) }
+  | ">="                        { GEQ (get_line_num lexbuf) }
 
   | "break"                     { BREAK }
   | "default"                   { DEFAULT }
@@ -138,13 +139,13 @@ rule token = parse
   | "import"                    { IMPORT }
   | "return"                    { RETURN }
   | "var"                       { VAR }
-  | "print"                     { PRINT }
-  | "println"                   { PRINTLN }
-  | "append"                    { APPEND }
-  | "len"                       { LEN }
-  | "cap"                       { CAP }
+  | "print"                     { PRINT (get_line_num lexbuf) }
+  | "println"                   { PRINTLN (get_line_num lexbuf) }
+  | "append"                    { APPEND (get_line_num lexbuf) }
+  | "len"                       { LEN (get_line_num lexbuf) }
+  | "cap"                       { CAP (get_line_num lexbuf) }
 
-  | identifier                  { IDENTIFIER (get lexbuf) }
+  | identifier                  { IDENTIFIER (get lexbuf, get_line_num lexbuf) }
 
   | ("//"_*eol)                 { let c = get lexbuf in COMMENT (String.trim(String.sub c 2 ((String.length c) - 1))) }
   | ("/*"_*"*/")                { let c = get lexbuf in BLOCKCOMMENT (String.sub c 2 ((String.length c) - 3)) }

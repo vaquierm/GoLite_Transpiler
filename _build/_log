@@ -28,11 +28,11 @@ menhir -v --ocamlc /usr/bin/ocamlc.opt --infer parser.mly # cached
 # Target: lexer.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:lexer.cmo, file:lexer.ml, implem, ocaml, quiet }
 /usr/bin/ocamlc.opt -c -o lexer.cmo lexer.ml
 # Target: main.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet }
-/usr/bin/ocamlc.opt -c -o main.cmo main.ml # cached
+/usr/bin/ocamlc.opt -c -o main.cmo main.ml
 # Target: parser.ml.depends, tags: { extension:ml, file:parser.ml, ocaml, ocamldep, quiet }
-/usr/bin/ocamldep.opt -modules parser.ml > parser.ml.depends # cached
+/usr/bin/ocamldep.opt -modules parser.ml > parser.ml.depends
 # Target: parser.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:parser.cmo, file:parser.ml, implem, ocaml, quiet }
-/usr/bin/ocamlc.opt -c -o parser.cmo parser.ml # cached
+/usr/bin/ocamlc.opt -c -o parser.cmo parser.ml
 # Target: main.byte, tags: { byte, dont_link_with, extension:byte, file:main.byte, link, ocaml, program, quiet }
-/usr/bin/ocamlc.opt ast.cmo eval.cmo parser.cmo lexer.cmo pprint.cmo main.cmo -o main.byte # cached
+/usr/bin/ocamlc.opt ast.cmo eval.cmo parser.cmo lexer.cmo pprint.cmo main.cmo -o main.byte
 # Compilation successful.
