@@ -111,6 +111,7 @@ rule token = parse
   | "<-"                        { RECEIVE (get_line_num lexbuf) }
 
   | "=="                        { EQ (get_line_num lexbuf) }
+  | "!="                        { NEQ (get_line_num lexbuf) }
   | '<'                         { LT (get_line_num lexbuf) }
   | "<="                        { LEQ (get_line_num lexbuf) }
   | '>'                         { GT (get_line_num lexbuf) }

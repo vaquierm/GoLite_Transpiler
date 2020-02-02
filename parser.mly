@@ -21,7 +21,7 @@
 
 %token<int> RECEIVE
 
-%token<int> EQ LT LEQ GT GEQ
+%token<int> EQ NEQ LT LEQ GT GEQ
 
 %token <string * int>IDENTIFIER
 
@@ -44,6 +44,18 @@
 %token <string>RAWSTRINGLITERAL
 
 %token INTTYPE BOOLTYPE STRINGTYPE RUNETYPE FLOATTYPE
+
+
+%left BOOLOR
+%left BOOLAND
+%left GEQ LEQ LT GT EQ NEQ
+%left PLUS MINUS
+%left MOD
+%left LSHIFT RSHIFT BINAND BINOR BINXOR BINANDNOT
+%left MULT DIV
+%nonassoc __unary_precedence__
+%left LPAR
+%left DOT
 
 %start <Ast.package_clause> start
 %%
@@ -102,4 +114,35 @@ ident_list
   | ident_list COMMA IDENTIFIER   { (fst $3)::$1 }
 
 exp
-  : FLOATLITERAL    { Ast.Float ($1) }
+  : FLOATLITERAL                            { Ast.FloatLit ($1) }
+  | DECINTLITERAL                           { Ast.IntLit ($1, Ast.Dec) }
+  | BININTLITERAL                           { Ast.IntLit ($1, Ast.Bin) }
+  | OCTINTLITERAL                           { Ast.IntLit ($1, Ast.Oct) }
+  | HEXINTLITERAL                           { Ast.IntLit ($1, Ast.Hex) }
+  | RUNELITERAL                             { Ast.RuneLit ($1) }
+  | STRINGLITERAL                           { Ast.StrLit ($1) }
+  | exp PLUS exp                            { Ast.Binop ($1, Ast.BPlus, $3, $2) }
+  | exp MINUS exp                           { Ast.Binop ($1, Ast.BMinus, $3, $2) }
+  | exp MULT exp                            { Ast.Binop ($1, Ast.Mult, $3, $2) }
+  | exp DIV exp                             { Ast.Binop ($1, Ast.Div, $3, $2) }
+  | exp BINAND exp                          { Ast.Binop ($1, Ast.BinAND, $3, $2) }
+  | exp BINOR exp                           { Ast.Binop ($1, Ast.BinOR, $3, $2) }
+  | exp BINXOR exp                          { Ast.Binop ($1, Ast.BinXOR, $3, $2) }
+  | exp BINANDNOT exp                       { Ast.Binop ($1, Ast.BinANDNOT, $3, $2) }
+  | exp RSHIFT exp                          { Ast.Binop ($1, Ast.Rshift, $3, $2) }
+  | exp LSHIFT exp                          { Ast.Binop ($1, Ast.Lshift, $3, $2) }
+  | exp MOD exp                             { Ast.Binop ($1, Ast.Mod, $3, $2) }
+  | exp BOOLAND exp                         { Ast.Binop ($1, Ast.BoolAND, $3, $2) }
+  | exp BOOLOR exp                          { Ast.Binop ($1, Ast.BoolOR, $3, $2) }
+  | PLUS exp %prec __unary_precedence__     { $2 }
+  | MINUS exp %prec __unary_precedence__    { Ast.Urinary (Ast.UMinus, $2, $1) }
+  | BOOLNOT exp %prec __unary_precedence__  { Ast.Urinary (Ast.BoolNOT, $2, $1) }
+  | BINXOR exp %prec __unary_precedence__   { Ast.Urinary (Ast.UBinNOT, $2, $1) }
+  | RECEIVE exp %prec __unary_precedence__  { failwith ("Line: " ^ (string_of_int $1) ^ " Go lite does not support the type <-") }
+  | exp EQ exp                              { Ast.Binop ($1, Ast.EQ, $3, $2) }
+  | exp NEQ exp                             { Ast.Binop ($1, Ast.NEQ, $3, $2) }
+  | exp LT exp                              { Ast.Binop ($1, Ast.LT, $3, $2) }
+  | exp GT exp                              { Ast.Binop ($1, Ast.GT, $3, $2) }
+  | exp LEQ exp                             { Ast.Binop ($1, Ast.LEQ, $3, $2) }
+  | exp GEQ exp                             { Ast.Binop ($1, Ast.GEQ, $3, $2) }
+

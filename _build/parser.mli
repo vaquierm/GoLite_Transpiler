@@ -30,6 +30,7 @@ type token =
   | PLUS of (int)
   | PACKAGE
   | OCTINTLITERAL of (string)
+  | NEQ of (int)
   | MULTEQ of (int)
   | MULT of (int)
   | MODEQ of (int)

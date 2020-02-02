@@ -44,15 +44,15 @@ State 8:
 start -> package_clause import_decls top_level_decls . EOF [ # ]
 top_level_decls -> top_level_decls . type_decls [ TYPE EOF ]
 -- On TYPE shift to state 9
--- On EOF shift to state 55
--- On type_decls shift to state 56
+-- On EOF shift to state 109
+-- On type_decls shift to state 110
 
 State 9:
 type_decls -> TYPE . type_spec [ TYPE EOF ]
 type_decls -> TYPE . LPAR type_specs RPAR SEMICOLON [ TYPE EOF ]
 -- On LPAR shift to state 10
 -- On IDENTIFIER shift to state 14
--- On type_spec shift to state 54
+-- On type_spec shift to state 108
 
 State 10:
 type_decls -> TYPE LPAR . type_specs RPAR SEMICOLON [ TYPE EOF ]
@@ -65,7 +65,7 @@ type_decls -> TYPE LPAR type_specs . RPAR SEMICOLON [ TYPE EOF ]
 type_specs -> type_specs . type_spec [ RPAR IDENTIFIER ]
 -- On RPAR shift to state 12
 -- On IDENTIFIER shift to state 14
--- On type_spec shift to state 53
+-- On type_spec shift to state 107
 
 State 12:
 type_decls -> TYPE LPAR type_specs RPAR . SEMICOLON [ TYPE EOF ]
@@ -85,14 +85,14 @@ type_spec -> IDENTIFIER . typeT SEMICOLON [ TYPE RPAR IDENTIFIER EOF ]
 -- On MULT shift to state 22
 -- On MAP shift to state 23
 -- On LSQUARE shift to state 25
--- On LPAR shift to state 27
--- On INTTYPE shift to state 28
--- On INTERFACE shift to state 29
--- On IDENTIFIER shift to state 30
--- On FLOATTYPE shift to state 31
--- On CHAN shift to state 32
--- On ASSIGN shift to state 48
--- On typeT shift to state 51
+-- On LPAR shift to state 29
+-- On INTTYPE shift to state 30
+-- On INTERFACE shift to state 31
+-- On IDENTIFIER shift to state 32
+-- On FLOATTYPE shift to state 33
+-- On CHAN shift to state 34
+-- On ASSIGN shift to state 102
+-- On typeT shift to state 105
 
 State 15:
 typeT -> STRUCT . LCURLY field_decls RCURLY [ SEMICOLON RSQUARE RPAR ]
@@ -150,14 +150,14 @@ ident_list -> ident_list . COMMA IDENTIFIER [ STRUCT STRINGTYPE RUNETYPE MULT MA
 -- On MULT shift to state 22
 -- On MAP shift to state 23
 -- On LSQUARE shift to state 25
--- On LPAR shift to state 27
--- On INTTYPE shift to state 28
--- On INTERFACE shift to state 29
--- On IDENTIFIER shift to state 30
--- On FLOATTYPE shift to state 31
--- On COMMA shift to state 44
--- On CHAN shift to state 32
--- On typeT shift to state 46
+-- On LPAR shift to state 29
+-- On INTTYPE shift to state 30
+-- On INTERFACE shift to state 31
+-- On IDENTIFIER shift to state 32
+-- On FLOATTYPE shift to state 33
+-- On COMMA shift to state 98
+-- On CHAN shift to state 34
+-- On typeT shift to state 100
 
 State 20:
 typeT -> STRINGTYPE . [ SEMICOLON RSQUARE RPAR ]
@@ -179,13 +179,13 @@ typeT -> MULT . typeT [ SEMICOLON RSQUARE RPAR ]
 -- On MULT shift to state 22
 -- On MAP shift to state 23
 -- On LSQUARE shift to state 25
--- On LPAR shift to state 27
--- On INTTYPE shift to state 28
--- On INTERFACE shift to state 29
--- On IDENTIFIER shift to state 30
--- On FLOATTYPE shift to state 31
--- On CHAN shift to state 32
--- On typeT shift to state 43
+-- On LPAR shift to state 29
+-- On INTTYPE shift to state 30
+-- On INTERFACE shift to state 31
+-- On IDENTIFIER shift to state 32
+-- On FLOATTYPE shift to state 33
+-- On CHAN shift to state 34
+-- On typeT shift to state 97
 
 State 23:
 typeT -> MAP . RSQUARE typeT RSQUARE typeT [ SEMICOLON RSQUARE RPAR ]
@@ -199,22 +199,79 @@ typeT -> MAP RSQUARE . typeT RSQUARE typeT [ SEMICOLON RSQUARE RPAR ]
 -- On MULT shift to state 22
 -- On MAP shift to state 23
 -- On LSQUARE shift to state 25
--- On LPAR shift to state 27
--- On INTTYPE shift to state 28
--- On INTERFACE shift to state 29
--- On IDENTIFIER shift to state 30
--- On FLOATTYPE shift to state 31
--- On CHAN shift to state 32
--- On typeT shift to state 40
+-- On LPAR shift to state 29
+-- On INTTYPE shift to state 30
+-- On INTERFACE shift to state 31
+-- On IDENTIFIER shift to state 32
+-- On FLOATTYPE shift to state 33
+-- On CHAN shift to state 34
+-- On typeT shift to state 94
 
 State 25:
 typeT -> LSQUARE . exp RSQUARE typeT [ SEMICOLON RSQUARE RPAR ]
 typeT -> LSQUARE . RSQUARE typeT [ SEMICOLON RSQUARE RPAR ]
--- On RSQUARE shift to state 26
--- On FLOATLITERAL shift to state 36
--- On exp shift to state 37
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RSQUARE shift to state 28
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 53
 
 State 26:
+exp -> STRINGLITERAL . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSQUARE reduce production exp -> STRINGLITERAL 
+-- On RSHIFT reduce production exp -> STRINGLITERAL 
+-- On PLUS reduce production exp -> STRINGLITERAL 
+-- On NEQ reduce production exp -> STRINGLITERAL 
+-- On MULT reduce production exp -> STRINGLITERAL 
+-- On MOD reduce production exp -> STRINGLITERAL 
+-- On MINUS reduce production exp -> STRINGLITERAL 
+-- On LT reduce production exp -> STRINGLITERAL 
+-- On LSHIFT reduce production exp -> STRINGLITERAL 
+-- On LEQ reduce production exp -> STRINGLITERAL 
+-- On GT reduce production exp -> STRINGLITERAL 
+-- On GEQ reduce production exp -> STRINGLITERAL 
+-- On EQ reduce production exp -> STRINGLITERAL 
+-- On DIV reduce production exp -> STRINGLITERAL 
+-- On BOOLOR reduce production exp -> STRINGLITERAL 
+-- On BOOLAND reduce production exp -> STRINGLITERAL 
+-- On BINXOR reduce production exp -> STRINGLITERAL 
+-- On BINOR reduce production exp -> STRINGLITERAL 
+-- On BINANDNOT reduce production exp -> STRINGLITERAL 
+-- On BINAND reduce production exp -> STRINGLITERAL 
+
+State 27:
+exp -> RUNELITERAL . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSQUARE reduce production exp -> RUNELITERAL 
+-- On RSHIFT reduce production exp -> RUNELITERAL 
+-- On PLUS reduce production exp -> RUNELITERAL 
+-- On NEQ reduce production exp -> RUNELITERAL 
+-- On MULT reduce production exp -> RUNELITERAL 
+-- On MOD reduce production exp -> RUNELITERAL 
+-- On MINUS reduce production exp -> RUNELITERAL 
+-- On LT reduce production exp -> RUNELITERAL 
+-- On LSHIFT reduce production exp -> RUNELITERAL 
+-- On LEQ reduce production exp -> RUNELITERAL 
+-- On GT reduce production exp -> RUNELITERAL 
+-- On GEQ reduce production exp -> RUNELITERAL 
+-- On EQ reduce production exp -> RUNELITERAL 
+-- On DIV reduce production exp -> RUNELITERAL 
+-- On BOOLOR reduce production exp -> RUNELITERAL 
+-- On BOOLAND reduce production exp -> RUNELITERAL 
+-- On BINXOR reduce production exp -> RUNELITERAL 
+-- On BINOR reduce production exp -> RUNELITERAL 
+-- On BINANDNOT reduce production exp -> RUNELITERAL 
+-- On BINAND reduce production exp -> RUNELITERAL 
+
+State 28:
 typeT -> LSQUARE RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ]
 -- On STRUCT shift to state 15
 -- On STRINGTYPE shift to state 20
@@ -222,15 +279,15 @@ typeT -> LSQUARE RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ]
 -- On MULT shift to state 22
 -- On MAP shift to state 23
 -- On LSQUARE shift to state 25
--- On LPAR shift to state 27
--- On INTTYPE shift to state 28
--- On INTERFACE shift to state 29
--- On IDENTIFIER shift to state 30
--- On FLOATTYPE shift to state 31
--- On CHAN shift to state 32
--- On typeT shift to state 35
+-- On LPAR shift to state 29
+-- On INTTYPE shift to state 30
+-- On INTERFACE shift to state 31
+-- On IDENTIFIER shift to state 32
+-- On FLOATTYPE shift to state 33
+-- On CHAN shift to state 34
+-- On typeT shift to state 37
 
-State 27:
+State 29:
 typeT -> LPAR . typeT RPAR [ SEMICOLON RSQUARE RPAR ]
 -- On STRUCT shift to state 15
 -- On STRINGTYPE shift to state 20
@@ -238,69 +295,508 @@ typeT -> LPAR . typeT RPAR [ SEMICOLON RSQUARE RPAR ]
 -- On MULT shift to state 22
 -- On MAP shift to state 23
 -- On LSQUARE shift to state 25
--- On LPAR shift to state 27
--- On INTTYPE shift to state 28
--- On INTERFACE shift to state 29
--- On IDENTIFIER shift to state 30
--- On FLOATTYPE shift to state 31
--- On CHAN shift to state 32
--- On typeT shift to state 33
+-- On LPAR shift to state 29
+-- On INTTYPE shift to state 30
+-- On INTERFACE shift to state 31
+-- On IDENTIFIER shift to state 32
+-- On FLOATTYPE shift to state 33
+-- On CHAN shift to state 34
+-- On typeT shift to state 35
 
-State 28:
+State 30:
 typeT -> INTTYPE . [ SEMICOLON RSQUARE RPAR ]
 -- On SEMICOLON reduce production typeT -> INTTYPE 
 -- On RSQUARE reduce production typeT -> INTTYPE 
 -- On RPAR reduce production typeT -> INTTYPE 
 
-State 29:
+State 31:
 typeT -> INTERFACE . [ SEMICOLON RSQUARE RPAR ]
 -- On SEMICOLON reduce production typeT -> INTERFACE 
 -- On RSQUARE reduce production typeT -> INTERFACE 
 -- On RPAR reduce production typeT -> INTERFACE 
 
-State 30:
+State 32:
 typeT -> IDENTIFIER . [ SEMICOLON RSQUARE RPAR ]
 -- On SEMICOLON reduce production typeT -> IDENTIFIER 
 -- On RSQUARE reduce production typeT -> IDENTIFIER 
 -- On RPAR reduce production typeT -> IDENTIFIER 
 
-State 31:
+State 33:
 typeT -> FLOATTYPE . [ SEMICOLON RSQUARE RPAR ]
 -- On SEMICOLON reduce production typeT -> FLOATTYPE 
 -- On RSQUARE reduce production typeT -> FLOATTYPE 
 -- On RPAR reduce production typeT -> FLOATTYPE 
 
-State 32:
+State 34:
 typeT -> CHAN . [ SEMICOLON RSQUARE RPAR ]
 -- On SEMICOLON reduce production typeT -> CHAN 
 -- On RSQUARE reduce production typeT -> CHAN 
 -- On RPAR reduce production typeT -> CHAN 
 
-State 33:
+State 35:
 typeT -> LPAR typeT . RPAR [ SEMICOLON RSQUARE RPAR ]
--- On RPAR shift to state 34
+-- On RPAR shift to state 36
 
-State 34:
+State 36:
 typeT -> LPAR typeT RPAR . [ SEMICOLON RSQUARE RPAR ]
 -- On SEMICOLON reduce production typeT -> LPAR typeT RPAR 
 -- On RSQUARE reduce production typeT -> LPAR typeT RPAR 
 -- On RPAR reduce production typeT -> LPAR typeT RPAR 
 
-State 35:
+State 37:
 typeT -> LSQUARE RSQUARE typeT . [ SEMICOLON RSQUARE RPAR ]
 -- On SEMICOLON reduce production typeT -> LSQUARE RSQUARE typeT 
 -- On RSQUARE reduce production typeT -> LSQUARE RSQUARE typeT 
 -- On RPAR reduce production typeT -> LSQUARE RSQUARE typeT 
 
-State 36:
-exp -> FLOATLITERAL . [ RSQUARE ]
--- On RSQUARE reduce production exp -> FLOATLITERAL 
-
-State 37:
-typeT -> LSQUARE exp . RSQUARE typeT [ SEMICOLON RSQUARE RPAR ]
--- On RSQUARE shift to state 38
-
 State 38:
+exp -> RECEIVE . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 52
+
+State 39:
+exp -> PLUS . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 51
+
+State 40:
+exp -> OCTINTLITERAL . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSQUARE reduce production exp -> OCTINTLITERAL 
+-- On RSHIFT reduce production exp -> OCTINTLITERAL 
+-- On PLUS reduce production exp -> OCTINTLITERAL 
+-- On NEQ reduce production exp -> OCTINTLITERAL 
+-- On MULT reduce production exp -> OCTINTLITERAL 
+-- On MOD reduce production exp -> OCTINTLITERAL 
+-- On MINUS reduce production exp -> OCTINTLITERAL 
+-- On LT reduce production exp -> OCTINTLITERAL 
+-- On LSHIFT reduce production exp -> OCTINTLITERAL 
+-- On LEQ reduce production exp -> OCTINTLITERAL 
+-- On GT reduce production exp -> OCTINTLITERAL 
+-- On GEQ reduce production exp -> OCTINTLITERAL 
+-- On EQ reduce production exp -> OCTINTLITERAL 
+-- On DIV reduce production exp -> OCTINTLITERAL 
+-- On BOOLOR reduce production exp -> OCTINTLITERAL 
+-- On BOOLAND reduce production exp -> OCTINTLITERAL 
+-- On BINXOR reduce production exp -> OCTINTLITERAL 
+-- On BINOR reduce production exp -> OCTINTLITERAL 
+-- On BINANDNOT reduce production exp -> OCTINTLITERAL 
+-- On BINAND reduce production exp -> OCTINTLITERAL 
+
+State 41:
+exp -> MINUS . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 50
+
+State 42:
+exp -> HEXINTLITERAL . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSQUARE reduce production exp -> HEXINTLITERAL 
+-- On RSHIFT reduce production exp -> HEXINTLITERAL 
+-- On PLUS reduce production exp -> HEXINTLITERAL 
+-- On NEQ reduce production exp -> HEXINTLITERAL 
+-- On MULT reduce production exp -> HEXINTLITERAL 
+-- On MOD reduce production exp -> HEXINTLITERAL 
+-- On MINUS reduce production exp -> HEXINTLITERAL 
+-- On LT reduce production exp -> HEXINTLITERAL 
+-- On LSHIFT reduce production exp -> HEXINTLITERAL 
+-- On LEQ reduce production exp -> HEXINTLITERAL 
+-- On GT reduce production exp -> HEXINTLITERAL 
+-- On GEQ reduce production exp -> HEXINTLITERAL 
+-- On EQ reduce production exp -> HEXINTLITERAL 
+-- On DIV reduce production exp -> HEXINTLITERAL 
+-- On BOOLOR reduce production exp -> HEXINTLITERAL 
+-- On BOOLAND reduce production exp -> HEXINTLITERAL 
+-- On BINXOR reduce production exp -> HEXINTLITERAL 
+-- On BINOR reduce production exp -> HEXINTLITERAL 
+-- On BINANDNOT reduce production exp -> HEXINTLITERAL 
+-- On BINAND reduce production exp -> HEXINTLITERAL 
+
+State 43:
+exp -> FLOATLITERAL . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSQUARE reduce production exp -> FLOATLITERAL 
+-- On RSHIFT reduce production exp -> FLOATLITERAL 
+-- On PLUS reduce production exp -> FLOATLITERAL 
+-- On NEQ reduce production exp -> FLOATLITERAL 
+-- On MULT reduce production exp -> FLOATLITERAL 
+-- On MOD reduce production exp -> FLOATLITERAL 
+-- On MINUS reduce production exp -> FLOATLITERAL 
+-- On LT reduce production exp -> FLOATLITERAL 
+-- On LSHIFT reduce production exp -> FLOATLITERAL 
+-- On LEQ reduce production exp -> FLOATLITERAL 
+-- On GT reduce production exp -> FLOATLITERAL 
+-- On GEQ reduce production exp -> FLOATLITERAL 
+-- On EQ reduce production exp -> FLOATLITERAL 
+-- On DIV reduce production exp -> FLOATLITERAL 
+-- On BOOLOR reduce production exp -> FLOATLITERAL 
+-- On BOOLAND reduce production exp -> FLOATLITERAL 
+-- On BINXOR reduce production exp -> FLOATLITERAL 
+-- On BINOR reduce production exp -> FLOATLITERAL 
+-- On BINANDNOT reduce production exp -> FLOATLITERAL 
+-- On BINAND reduce production exp -> FLOATLITERAL 
+
+State 44:
+exp -> DECINTLITERAL . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSQUARE reduce production exp -> DECINTLITERAL 
+-- On RSHIFT reduce production exp -> DECINTLITERAL 
+-- On PLUS reduce production exp -> DECINTLITERAL 
+-- On NEQ reduce production exp -> DECINTLITERAL 
+-- On MULT reduce production exp -> DECINTLITERAL 
+-- On MOD reduce production exp -> DECINTLITERAL 
+-- On MINUS reduce production exp -> DECINTLITERAL 
+-- On LT reduce production exp -> DECINTLITERAL 
+-- On LSHIFT reduce production exp -> DECINTLITERAL 
+-- On LEQ reduce production exp -> DECINTLITERAL 
+-- On GT reduce production exp -> DECINTLITERAL 
+-- On GEQ reduce production exp -> DECINTLITERAL 
+-- On EQ reduce production exp -> DECINTLITERAL 
+-- On DIV reduce production exp -> DECINTLITERAL 
+-- On BOOLOR reduce production exp -> DECINTLITERAL 
+-- On BOOLAND reduce production exp -> DECINTLITERAL 
+-- On BINXOR reduce production exp -> DECINTLITERAL 
+-- On BINOR reduce production exp -> DECINTLITERAL 
+-- On BINANDNOT reduce production exp -> DECINTLITERAL 
+-- On BINAND reduce production exp -> DECINTLITERAL 
+
+State 45:
+exp -> BOOLNOT . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 49
+
+State 46:
+exp -> BINXOR . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 48
+
+State 47:
+exp -> BININTLITERAL . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSQUARE reduce production exp -> BININTLITERAL 
+-- On RSHIFT reduce production exp -> BININTLITERAL 
+-- On PLUS reduce production exp -> BININTLITERAL 
+-- On NEQ reduce production exp -> BININTLITERAL 
+-- On MULT reduce production exp -> BININTLITERAL 
+-- On MOD reduce production exp -> BININTLITERAL 
+-- On MINUS reduce production exp -> BININTLITERAL 
+-- On LT reduce production exp -> BININTLITERAL 
+-- On LSHIFT reduce production exp -> BININTLITERAL 
+-- On LEQ reduce production exp -> BININTLITERAL 
+-- On GT reduce production exp -> BININTLITERAL 
+-- On GEQ reduce production exp -> BININTLITERAL 
+-- On EQ reduce production exp -> BININTLITERAL 
+-- On DIV reduce production exp -> BININTLITERAL 
+-- On BOOLOR reduce production exp -> BININTLITERAL 
+-- On BOOLAND reduce production exp -> BININTLITERAL 
+-- On BINXOR reduce production exp -> BININTLITERAL 
+-- On BINOR reduce production exp -> BININTLITERAL 
+-- On BINANDNOT reduce production exp -> BININTLITERAL 
+-- On BINAND reduce production exp -> BININTLITERAL 
+
+State 48:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> BINXOR exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSQUARE reduce production exp -> BINXOR exp 
+-- On RSHIFT reduce production exp -> BINXOR exp 
+-- On PLUS reduce production exp -> BINXOR exp 
+-- On NEQ reduce production exp -> BINXOR exp 
+-- On MULT reduce production exp -> BINXOR exp 
+-- On MOD reduce production exp -> BINXOR exp 
+-- On MINUS reduce production exp -> BINXOR exp 
+-- On LT reduce production exp -> BINXOR exp 
+-- On LSHIFT reduce production exp -> BINXOR exp 
+-- On LEQ reduce production exp -> BINXOR exp 
+-- On GT reduce production exp -> BINXOR exp 
+-- On GEQ reduce production exp -> BINXOR exp 
+-- On EQ reduce production exp -> BINXOR exp 
+-- On DIV reduce production exp -> BINXOR exp 
+-- On BOOLOR reduce production exp -> BINXOR exp 
+-- On BOOLAND reduce production exp -> BINXOR exp 
+-- On BINXOR reduce production exp -> BINXOR exp 
+-- On BINOR reduce production exp -> BINXOR exp 
+-- On BINANDNOT reduce production exp -> BINXOR exp 
+-- On BINAND reduce production exp -> BINXOR exp 
+
+State 49:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> BOOLNOT exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSQUARE reduce production exp -> BOOLNOT exp 
+-- On RSHIFT reduce production exp -> BOOLNOT exp 
+-- On PLUS reduce production exp -> BOOLNOT exp 
+-- On NEQ reduce production exp -> BOOLNOT exp 
+-- On MULT reduce production exp -> BOOLNOT exp 
+-- On MOD reduce production exp -> BOOLNOT exp 
+-- On MINUS reduce production exp -> BOOLNOT exp 
+-- On LT reduce production exp -> BOOLNOT exp 
+-- On LSHIFT reduce production exp -> BOOLNOT exp 
+-- On LEQ reduce production exp -> BOOLNOT exp 
+-- On GT reduce production exp -> BOOLNOT exp 
+-- On GEQ reduce production exp -> BOOLNOT exp 
+-- On EQ reduce production exp -> BOOLNOT exp 
+-- On DIV reduce production exp -> BOOLNOT exp 
+-- On BOOLOR reduce production exp -> BOOLNOT exp 
+-- On BOOLAND reduce production exp -> BOOLNOT exp 
+-- On BINXOR reduce production exp -> BOOLNOT exp 
+-- On BINOR reduce production exp -> BOOLNOT exp 
+-- On BINANDNOT reduce production exp -> BOOLNOT exp 
+-- On BINAND reduce production exp -> BOOLNOT exp 
+
+State 50:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> MINUS exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSQUARE reduce production exp -> MINUS exp 
+-- On RSHIFT reduce production exp -> MINUS exp 
+-- On PLUS reduce production exp -> MINUS exp 
+-- On NEQ reduce production exp -> MINUS exp 
+-- On MULT reduce production exp -> MINUS exp 
+-- On MOD reduce production exp -> MINUS exp 
+-- On MINUS reduce production exp -> MINUS exp 
+-- On LT reduce production exp -> MINUS exp 
+-- On LSHIFT reduce production exp -> MINUS exp 
+-- On LEQ reduce production exp -> MINUS exp 
+-- On GT reduce production exp -> MINUS exp 
+-- On GEQ reduce production exp -> MINUS exp 
+-- On EQ reduce production exp -> MINUS exp 
+-- On DIV reduce production exp -> MINUS exp 
+-- On BOOLOR reduce production exp -> MINUS exp 
+-- On BOOLAND reduce production exp -> MINUS exp 
+-- On BINXOR reduce production exp -> MINUS exp 
+-- On BINOR reduce production exp -> MINUS exp 
+-- On BINANDNOT reduce production exp -> MINUS exp 
+-- On BINAND reduce production exp -> MINUS exp 
+
+State 51:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> PLUS exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSQUARE reduce production exp -> PLUS exp 
+-- On RSHIFT reduce production exp -> PLUS exp 
+-- On PLUS reduce production exp -> PLUS exp 
+-- On NEQ reduce production exp -> PLUS exp 
+-- On MULT reduce production exp -> PLUS exp 
+-- On MOD reduce production exp -> PLUS exp 
+-- On MINUS reduce production exp -> PLUS exp 
+-- On LT reduce production exp -> PLUS exp 
+-- On LSHIFT reduce production exp -> PLUS exp 
+-- On LEQ reduce production exp -> PLUS exp 
+-- On GT reduce production exp -> PLUS exp 
+-- On GEQ reduce production exp -> PLUS exp 
+-- On EQ reduce production exp -> PLUS exp 
+-- On DIV reduce production exp -> PLUS exp 
+-- On BOOLOR reduce production exp -> PLUS exp 
+-- On BOOLAND reduce production exp -> PLUS exp 
+-- On BINXOR reduce production exp -> PLUS exp 
+-- On BINOR reduce production exp -> PLUS exp 
+-- On BINANDNOT reduce production exp -> PLUS exp 
+-- On BINAND reduce production exp -> PLUS exp 
+
+State 52:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> RECEIVE exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSQUARE reduce production exp -> RECEIVE exp 
+-- On RSHIFT reduce production exp -> RECEIVE exp 
+-- On PLUS reduce production exp -> RECEIVE exp 
+-- On NEQ reduce production exp -> RECEIVE exp 
+-- On MULT reduce production exp -> RECEIVE exp 
+-- On MOD reduce production exp -> RECEIVE exp 
+-- On MINUS reduce production exp -> RECEIVE exp 
+-- On LT reduce production exp -> RECEIVE exp 
+-- On LSHIFT reduce production exp -> RECEIVE exp 
+-- On LEQ reduce production exp -> RECEIVE exp 
+-- On GT reduce production exp -> RECEIVE exp 
+-- On GEQ reduce production exp -> RECEIVE exp 
+-- On EQ reduce production exp -> RECEIVE exp 
+-- On DIV reduce production exp -> RECEIVE exp 
+-- On BOOLOR reduce production exp -> RECEIVE exp 
+-- On BOOLAND reduce production exp -> RECEIVE exp 
+-- On BINXOR reduce production exp -> RECEIVE exp 
+-- On BINOR reduce production exp -> RECEIVE exp 
+-- On BINANDNOT reduce production exp -> RECEIVE exp 
+-- On BINAND reduce production exp -> RECEIVE exp 
+
+State 53:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+typeT -> LSQUARE exp . RSQUARE typeT [ SEMICOLON RSQUARE RPAR ]
+-- On RSQUARE shift to state 54
+-- On RSHIFT shift to state 56
+-- On PLUS shift to state 62
+-- On NEQ shift to state 76
+-- On MULT shift to state 58
+-- On MOD shift to state 64
+-- On MINUS shift to state 78
+-- On LT shift to state 80
+-- On LSHIFT shift to state 66
+-- On LEQ shift to state 82
+-- On GT shift to state 84
+-- On GEQ shift to state 86
+-- On EQ shift to state 88
+-- On DIV shift to state 60
+-- On BOOLOR shift to state 90
+-- On BOOLAND shift to state 92
+-- On BINXOR shift to state 68
+-- On BINOR shift to state 70
+-- On BINANDNOT shift to state 72
+-- On BINAND shift to state 74
+
+State 54:
 typeT -> LSQUARE exp RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ]
 -- On STRUCT shift to state 15
 -- On STRINGTYPE shift to state 20
@@ -308,25 +804,1127 @@ typeT -> LSQUARE exp RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ]
 -- On MULT shift to state 22
 -- On MAP shift to state 23
 -- On LSQUARE shift to state 25
--- On LPAR shift to state 27
--- On INTTYPE shift to state 28
--- On INTERFACE shift to state 29
--- On IDENTIFIER shift to state 30
--- On FLOATTYPE shift to state 31
--- On CHAN shift to state 32
--- On typeT shift to state 39
+-- On LPAR shift to state 29
+-- On INTTYPE shift to state 30
+-- On INTERFACE shift to state 31
+-- On IDENTIFIER shift to state 32
+-- On FLOATTYPE shift to state 33
+-- On CHAN shift to state 34
+-- On typeT shift to state 55
 
-State 39:
+State 55:
 typeT -> LSQUARE exp RSQUARE typeT . [ SEMICOLON RSQUARE RPAR ]
 -- On SEMICOLON reduce production typeT -> LSQUARE exp RSQUARE typeT 
 -- On RSQUARE reduce production typeT -> LSQUARE exp RSQUARE typeT 
 -- On RPAR reduce production typeT -> LSQUARE exp RSQUARE typeT 
 
-State 40:
-typeT -> MAP RSQUARE typeT . RSQUARE typeT [ SEMICOLON RSQUARE RPAR ]
--- On RSQUARE shift to state 41
+State 56:
+exp -> exp RSHIFT . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 57
 
-State 41:
+State 57:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp RSHIFT exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On MULT shift to state 58
+-- On DIV shift to state 60
+-- On RSQUARE reduce production exp -> exp RSHIFT exp 
+-- On RSHIFT reduce production exp -> exp RSHIFT exp 
+-- On PLUS reduce production exp -> exp RSHIFT exp 
+-- On NEQ reduce production exp -> exp RSHIFT exp 
+-- On MOD reduce production exp -> exp RSHIFT exp 
+-- On MINUS reduce production exp -> exp RSHIFT exp 
+-- On LT reduce production exp -> exp RSHIFT exp 
+-- On LSHIFT reduce production exp -> exp RSHIFT exp 
+-- On LEQ reduce production exp -> exp RSHIFT exp 
+-- On GT reduce production exp -> exp RSHIFT exp 
+-- On GEQ reduce production exp -> exp RSHIFT exp 
+-- On EQ reduce production exp -> exp RSHIFT exp 
+-- On BOOLOR reduce production exp -> exp RSHIFT exp 
+-- On BOOLAND reduce production exp -> exp RSHIFT exp 
+-- On BINXOR reduce production exp -> exp RSHIFT exp 
+-- On BINOR reduce production exp -> exp RSHIFT exp 
+-- On BINANDNOT reduce production exp -> exp RSHIFT exp 
+-- On BINAND reduce production exp -> exp RSHIFT exp 
+
+State 58:
+exp -> exp MULT . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 59
+
+State 59:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp MULT exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSQUARE reduce production exp -> exp MULT exp 
+-- On RSHIFT reduce production exp -> exp MULT exp 
+-- On PLUS reduce production exp -> exp MULT exp 
+-- On NEQ reduce production exp -> exp MULT exp 
+-- On MULT reduce production exp -> exp MULT exp 
+-- On MOD reduce production exp -> exp MULT exp 
+-- On MINUS reduce production exp -> exp MULT exp 
+-- On LT reduce production exp -> exp MULT exp 
+-- On LSHIFT reduce production exp -> exp MULT exp 
+-- On LEQ reduce production exp -> exp MULT exp 
+-- On GT reduce production exp -> exp MULT exp 
+-- On GEQ reduce production exp -> exp MULT exp 
+-- On EQ reduce production exp -> exp MULT exp 
+-- On DIV reduce production exp -> exp MULT exp 
+-- On BOOLOR reduce production exp -> exp MULT exp 
+-- On BOOLAND reduce production exp -> exp MULT exp 
+-- On BINXOR reduce production exp -> exp MULT exp 
+-- On BINOR reduce production exp -> exp MULT exp 
+-- On BINANDNOT reduce production exp -> exp MULT exp 
+-- On BINAND reduce production exp -> exp MULT exp 
+
+State 60:
+exp -> exp DIV . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 61
+
+State 61:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp DIV exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSQUARE reduce production exp -> exp DIV exp 
+-- On RSHIFT reduce production exp -> exp DIV exp 
+-- On PLUS reduce production exp -> exp DIV exp 
+-- On NEQ reduce production exp -> exp DIV exp 
+-- On MULT reduce production exp -> exp DIV exp 
+-- On MOD reduce production exp -> exp DIV exp 
+-- On MINUS reduce production exp -> exp DIV exp 
+-- On LT reduce production exp -> exp DIV exp 
+-- On LSHIFT reduce production exp -> exp DIV exp 
+-- On LEQ reduce production exp -> exp DIV exp 
+-- On GT reduce production exp -> exp DIV exp 
+-- On GEQ reduce production exp -> exp DIV exp 
+-- On EQ reduce production exp -> exp DIV exp 
+-- On DIV reduce production exp -> exp DIV exp 
+-- On BOOLOR reduce production exp -> exp DIV exp 
+-- On BOOLAND reduce production exp -> exp DIV exp 
+-- On BINXOR reduce production exp -> exp DIV exp 
+-- On BINOR reduce production exp -> exp DIV exp 
+-- On BINANDNOT reduce production exp -> exp DIV exp 
+-- On BINAND reduce production exp -> exp DIV exp 
+
+State 62:
+exp -> exp PLUS . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 63
+
+State 63:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp PLUS exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSHIFT shift to state 56
+-- On MULT shift to state 58
+-- On MOD shift to state 64
+-- On LSHIFT shift to state 66
+-- On DIV shift to state 60
+-- On BINXOR shift to state 68
+-- On BINOR shift to state 70
+-- On BINANDNOT shift to state 72
+-- On BINAND shift to state 74
+-- On RSQUARE reduce production exp -> exp PLUS exp 
+-- On PLUS reduce production exp -> exp PLUS exp 
+-- On NEQ reduce production exp -> exp PLUS exp 
+-- On MINUS reduce production exp -> exp PLUS exp 
+-- On LT reduce production exp -> exp PLUS exp 
+-- On LEQ reduce production exp -> exp PLUS exp 
+-- On GT reduce production exp -> exp PLUS exp 
+-- On GEQ reduce production exp -> exp PLUS exp 
+-- On EQ reduce production exp -> exp PLUS exp 
+-- On BOOLOR reduce production exp -> exp PLUS exp 
+-- On BOOLAND reduce production exp -> exp PLUS exp 
+
+State 64:
+exp -> exp MOD . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 65
+
+State 65:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp MOD exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSHIFT shift to state 56
+-- On MULT shift to state 58
+-- On LSHIFT shift to state 66
+-- On DIV shift to state 60
+-- On BINXOR shift to state 68
+-- On BINOR shift to state 70
+-- On BINANDNOT shift to state 72
+-- On BINAND shift to state 74
+-- On RSQUARE reduce production exp -> exp MOD exp 
+-- On PLUS reduce production exp -> exp MOD exp 
+-- On NEQ reduce production exp -> exp MOD exp 
+-- On MOD reduce production exp -> exp MOD exp 
+-- On MINUS reduce production exp -> exp MOD exp 
+-- On LT reduce production exp -> exp MOD exp 
+-- On LEQ reduce production exp -> exp MOD exp 
+-- On GT reduce production exp -> exp MOD exp 
+-- On GEQ reduce production exp -> exp MOD exp 
+-- On EQ reduce production exp -> exp MOD exp 
+-- On BOOLOR reduce production exp -> exp MOD exp 
+-- On BOOLAND reduce production exp -> exp MOD exp 
+
+State 66:
+exp -> exp LSHIFT . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 67
+
+State 67:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp LSHIFT exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On MULT shift to state 58
+-- On DIV shift to state 60
+-- On RSQUARE reduce production exp -> exp LSHIFT exp 
+-- On RSHIFT reduce production exp -> exp LSHIFT exp 
+-- On PLUS reduce production exp -> exp LSHIFT exp 
+-- On NEQ reduce production exp -> exp LSHIFT exp 
+-- On MOD reduce production exp -> exp LSHIFT exp 
+-- On MINUS reduce production exp -> exp LSHIFT exp 
+-- On LT reduce production exp -> exp LSHIFT exp 
+-- On LSHIFT reduce production exp -> exp LSHIFT exp 
+-- On LEQ reduce production exp -> exp LSHIFT exp 
+-- On GT reduce production exp -> exp LSHIFT exp 
+-- On GEQ reduce production exp -> exp LSHIFT exp 
+-- On EQ reduce production exp -> exp LSHIFT exp 
+-- On BOOLOR reduce production exp -> exp LSHIFT exp 
+-- On BOOLAND reduce production exp -> exp LSHIFT exp 
+-- On BINXOR reduce production exp -> exp LSHIFT exp 
+-- On BINOR reduce production exp -> exp LSHIFT exp 
+-- On BINANDNOT reduce production exp -> exp LSHIFT exp 
+-- On BINAND reduce production exp -> exp LSHIFT exp 
+
+State 68:
+exp -> exp BINXOR . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 69
+
+State 69:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp BINXOR exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On MULT shift to state 58
+-- On DIV shift to state 60
+-- On RSQUARE reduce production exp -> exp BINXOR exp 
+-- On RSHIFT reduce production exp -> exp BINXOR exp 
+-- On PLUS reduce production exp -> exp BINXOR exp 
+-- On NEQ reduce production exp -> exp BINXOR exp 
+-- On MOD reduce production exp -> exp BINXOR exp 
+-- On MINUS reduce production exp -> exp BINXOR exp 
+-- On LT reduce production exp -> exp BINXOR exp 
+-- On LSHIFT reduce production exp -> exp BINXOR exp 
+-- On LEQ reduce production exp -> exp BINXOR exp 
+-- On GT reduce production exp -> exp BINXOR exp 
+-- On GEQ reduce production exp -> exp BINXOR exp 
+-- On EQ reduce production exp -> exp BINXOR exp 
+-- On BOOLOR reduce production exp -> exp BINXOR exp 
+-- On BOOLAND reduce production exp -> exp BINXOR exp 
+-- On BINXOR reduce production exp -> exp BINXOR exp 
+-- On BINOR reduce production exp -> exp BINXOR exp 
+-- On BINANDNOT reduce production exp -> exp BINXOR exp 
+-- On BINAND reduce production exp -> exp BINXOR exp 
+
+State 70:
+exp -> exp BINOR . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 71
+
+State 71:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp BINOR exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On MULT shift to state 58
+-- On DIV shift to state 60
+-- On RSQUARE reduce production exp -> exp BINOR exp 
+-- On RSHIFT reduce production exp -> exp BINOR exp 
+-- On PLUS reduce production exp -> exp BINOR exp 
+-- On NEQ reduce production exp -> exp BINOR exp 
+-- On MOD reduce production exp -> exp BINOR exp 
+-- On MINUS reduce production exp -> exp BINOR exp 
+-- On LT reduce production exp -> exp BINOR exp 
+-- On LSHIFT reduce production exp -> exp BINOR exp 
+-- On LEQ reduce production exp -> exp BINOR exp 
+-- On GT reduce production exp -> exp BINOR exp 
+-- On GEQ reduce production exp -> exp BINOR exp 
+-- On EQ reduce production exp -> exp BINOR exp 
+-- On BOOLOR reduce production exp -> exp BINOR exp 
+-- On BOOLAND reduce production exp -> exp BINOR exp 
+-- On BINXOR reduce production exp -> exp BINOR exp 
+-- On BINOR reduce production exp -> exp BINOR exp 
+-- On BINANDNOT reduce production exp -> exp BINOR exp 
+-- On BINAND reduce production exp -> exp BINOR exp 
+
+State 72:
+exp -> exp BINANDNOT . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 73
+
+State 73:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp BINANDNOT exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On MULT shift to state 58
+-- On DIV shift to state 60
+-- On RSQUARE reduce production exp -> exp BINANDNOT exp 
+-- On RSHIFT reduce production exp -> exp BINANDNOT exp 
+-- On PLUS reduce production exp -> exp BINANDNOT exp 
+-- On NEQ reduce production exp -> exp BINANDNOT exp 
+-- On MOD reduce production exp -> exp BINANDNOT exp 
+-- On MINUS reduce production exp -> exp BINANDNOT exp 
+-- On LT reduce production exp -> exp BINANDNOT exp 
+-- On LSHIFT reduce production exp -> exp BINANDNOT exp 
+-- On LEQ reduce production exp -> exp BINANDNOT exp 
+-- On GT reduce production exp -> exp BINANDNOT exp 
+-- On GEQ reduce production exp -> exp BINANDNOT exp 
+-- On EQ reduce production exp -> exp BINANDNOT exp 
+-- On BOOLOR reduce production exp -> exp BINANDNOT exp 
+-- On BOOLAND reduce production exp -> exp BINANDNOT exp 
+-- On BINXOR reduce production exp -> exp BINANDNOT exp 
+-- On BINOR reduce production exp -> exp BINANDNOT exp 
+-- On BINANDNOT reduce production exp -> exp BINANDNOT exp 
+-- On BINAND reduce production exp -> exp BINANDNOT exp 
+
+State 74:
+exp -> exp BINAND . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 75
+
+State 75:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp BINAND exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On MULT shift to state 58
+-- On DIV shift to state 60
+-- On RSQUARE reduce production exp -> exp BINAND exp 
+-- On RSHIFT reduce production exp -> exp BINAND exp 
+-- On PLUS reduce production exp -> exp BINAND exp 
+-- On NEQ reduce production exp -> exp BINAND exp 
+-- On MOD reduce production exp -> exp BINAND exp 
+-- On MINUS reduce production exp -> exp BINAND exp 
+-- On LT reduce production exp -> exp BINAND exp 
+-- On LSHIFT reduce production exp -> exp BINAND exp 
+-- On LEQ reduce production exp -> exp BINAND exp 
+-- On GT reduce production exp -> exp BINAND exp 
+-- On GEQ reduce production exp -> exp BINAND exp 
+-- On EQ reduce production exp -> exp BINAND exp 
+-- On BOOLOR reduce production exp -> exp BINAND exp 
+-- On BOOLAND reduce production exp -> exp BINAND exp 
+-- On BINXOR reduce production exp -> exp BINAND exp 
+-- On BINOR reduce production exp -> exp BINAND exp 
+-- On BINANDNOT reduce production exp -> exp BINAND exp 
+-- On BINAND reduce production exp -> exp BINAND exp 
+
+State 76:
+exp -> exp NEQ . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 77
+
+State 77:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp NEQ exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSHIFT shift to state 56
+-- On PLUS shift to state 62
+-- On MULT shift to state 58
+-- On MOD shift to state 64
+-- On MINUS shift to state 78
+-- On LSHIFT shift to state 66
+-- On DIV shift to state 60
+-- On BINXOR shift to state 68
+-- On BINOR shift to state 70
+-- On BINANDNOT shift to state 72
+-- On BINAND shift to state 74
+-- On RSQUARE reduce production exp -> exp NEQ exp 
+-- On NEQ reduce production exp -> exp NEQ exp 
+-- On LT reduce production exp -> exp NEQ exp 
+-- On LEQ reduce production exp -> exp NEQ exp 
+-- On GT reduce production exp -> exp NEQ exp 
+-- On GEQ reduce production exp -> exp NEQ exp 
+-- On EQ reduce production exp -> exp NEQ exp 
+-- On BOOLOR reduce production exp -> exp NEQ exp 
+-- On BOOLAND reduce production exp -> exp NEQ exp 
+
+State 78:
+exp -> exp MINUS . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 79
+
+State 79:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp MINUS exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSHIFT shift to state 56
+-- On MULT shift to state 58
+-- On MOD shift to state 64
+-- On LSHIFT shift to state 66
+-- On DIV shift to state 60
+-- On BINXOR shift to state 68
+-- On BINOR shift to state 70
+-- On BINANDNOT shift to state 72
+-- On BINAND shift to state 74
+-- On RSQUARE reduce production exp -> exp MINUS exp 
+-- On PLUS reduce production exp -> exp MINUS exp 
+-- On NEQ reduce production exp -> exp MINUS exp 
+-- On MINUS reduce production exp -> exp MINUS exp 
+-- On LT reduce production exp -> exp MINUS exp 
+-- On LEQ reduce production exp -> exp MINUS exp 
+-- On GT reduce production exp -> exp MINUS exp 
+-- On GEQ reduce production exp -> exp MINUS exp 
+-- On EQ reduce production exp -> exp MINUS exp 
+-- On BOOLOR reduce production exp -> exp MINUS exp 
+-- On BOOLAND reduce production exp -> exp MINUS exp 
+
+State 80:
+exp -> exp LT . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 81
+
+State 81:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp LT exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSHIFT shift to state 56
+-- On PLUS shift to state 62
+-- On MULT shift to state 58
+-- On MOD shift to state 64
+-- On MINUS shift to state 78
+-- On LSHIFT shift to state 66
+-- On DIV shift to state 60
+-- On BINXOR shift to state 68
+-- On BINOR shift to state 70
+-- On BINANDNOT shift to state 72
+-- On BINAND shift to state 74
+-- On RSQUARE reduce production exp -> exp LT exp 
+-- On NEQ reduce production exp -> exp LT exp 
+-- On LT reduce production exp -> exp LT exp 
+-- On LEQ reduce production exp -> exp LT exp 
+-- On GT reduce production exp -> exp LT exp 
+-- On GEQ reduce production exp -> exp LT exp 
+-- On EQ reduce production exp -> exp LT exp 
+-- On BOOLOR reduce production exp -> exp LT exp 
+-- On BOOLAND reduce production exp -> exp LT exp 
+
+State 82:
+exp -> exp LEQ . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 83
+
+State 83:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp LEQ exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSHIFT shift to state 56
+-- On PLUS shift to state 62
+-- On MULT shift to state 58
+-- On MOD shift to state 64
+-- On MINUS shift to state 78
+-- On LSHIFT shift to state 66
+-- On DIV shift to state 60
+-- On BINXOR shift to state 68
+-- On BINOR shift to state 70
+-- On BINANDNOT shift to state 72
+-- On BINAND shift to state 74
+-- On RSQUARE reduce production exp -> exp LEQ exp 
+-- On NEQ reduce production exp -> exp LEQ exp 
+-- On LT reduce production exp -> exp LEQ exp 
+-- On LEQ reduce production exp -> exp LEQ exp 
+-- On GT reduce production exp -> exp LEQ exp 
+-- On GEQ reduce production exp -> exp LEQ exp 
+-- On EQ reduce production exp -> exp LEQ exp 
+-- On BOOLOR reduce production exp -> exp LEQ exp 
+-- On BOOLAND reduce production exp -> exp LEQ exp 
+
+State 84:
+exp -> exp GT . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 85
+
+State 85:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp GT exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSHIFT shift to state 56
+-- On PLUS shift to state 62
+-- On MULT shift to state 58
+-- On MOD shift to state 64
+-- On MINUS shift to state 78
+-- On LSHIFT shift to state 66
+-- On DIV shift to state 60
+-- On BINXOR shift to state 68
+-- On BINOR shift to state 70
+-- On BINANDNOT shift to state 72
+-- On BINAND shift to state 74
+-- On RSQUARE reduce production exp -> exp GT exp 
+-- On NEQ reduce production exp -> exp GT exp 
+-- On LT reduce production exp -> exp GT exp 
+-- On LEQ reduce production exp -> exp GT exp 
+-- On GT reduce production exp -> exp GT exp 
+-- On GEQ reduce production exp -> exp GT exp 
+-- On EQ reduce production exp -> exp GT exp 
+-- On BOOLOR reduce production exp -> exp GT exp 
+-- On BOOLAND reduce production exp -> exp GT exp 
+
+State 86:
+exp -> exp GEQ . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 87
+
+State 87:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp GEQ exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSHIFT shift to state 56
+-- On PLUS shift to state 62
+-- On MULT shift to state 58
+-- On MOD shift to state 64
+-- On MINUS shift to state 78
+-- On LSHIFT shift to state 66
+-- On DIV shift to state 60
+-- On BINXOR shift to state 68
+-- On BINOR shift to state 70
+-- On BINANDNOT shift to state 72
+-- On BINAND shift to state 74
+-- On RSQUARE reduce production exp -> exp GEQ exp 
+-- On NEQ reduce production exp -> exp GEQ exp 
+-- On LT reduce production exp -> exp GEQ exp 
+-- On LEQ reduce production exp -> exp GEQ exp 
+-- On GT reduce production exp -> exp GEQ exp 
+-- On GEQ reduce production exp -> exp GEQ exp 
+-- On EQ reduce production exp -> exp GEQ exp 
+-- On BOOLOR reduce production exp -> exp GEQ exp 
+-- On BOOLAND reduce production exp -> exp GEQ exp 
+
+State 88:
+exp -> exp EQ . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 89
+
+State 89:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp EQ exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSHIFT shift to state 56
+-- On PLUS shift to state 62
+-- On MULT shift to state 58
+-- On MOD shift to state 64
+-- On MINUS shift to state 78
+-- On LSHIFT shift to state 66
+-- On DIV shift to state 60
+-- On BINXOR shift to state 68
+-- On BINOR shift to state 70
+-- On BINANDNOT shift to state 72
+-- On BINAND shift to state 74
+-- On RSQUARE reduce production exp -> exp EQ exp 
+-- On NEQ reduce production exp -> exp EQ exp 
+-- On LT reduce production exp -> exp EQ exp 
+-- On LEQ reduce production exp -> exp EQ exp 
+-- On GT reduce production exp -> exp EQ exp 
+-- On GEQ reduce production exp -> exp EQ exp 
+-- On EQ reduce production exp -> exp EQ exp 
+-- On BOOLOR reduce production exp -> exp EQ exp 
+-- On BOOLAND reduce production exp -> exp EQ exp 
+
+State 90:
+exp -> exp BOOLOR . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 91
+
+State 91:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp BOOLOR exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSHIFT shift to state 56
+-- On PLUS shift to state 62
+-- On NEQ shift to state 76
+-- On MULT shift to state 58
+-- On MOD shift to state 64
+-- On MINUS shift to state 78
+-- On LT shift to state 80
+-- On LSHIFT shift to state 66
+-- On LEQ shift to state 82
+-- On GT shift to state 84
+-- On GEQ shift to state 86
+-- On EQ shift to state 88
+-- On DIV shift to state 60
+-- On BOOLAND shift to state 92
+-- On BINXOR shift to state 68
+-- On BINOR shift to state 70
+-- On BINANDNOT shift to state 72
+-- On BINAND shift to state 74
+-- On RSQUARE reduce production exp -> exp BOOLOR exp 
+-- On BOOLOR reduce production exp -> exp BOOLOR exp 
+
+State 92:
+exp -> exp BOOLAND . exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 26
+-- On RUNELITERAL shift to state 27
+-- On RECEIVE shift to state 38
+-- On PLUS shift to state 39
+-- On OCTINTLITERAL shift to state 40
+-- On MINUS shift to state 41
+-- On HEXINTLITERAL shift to state 42
+-- On FLOATLITERAL shift to state 43
+-- On DECINTLITERAL shift to state 44
+-- On BOOLNOT shift to state 45
+-- On BINXOR shift to state 46
+-- On BININTLITERAL shift to state 47
+-- On exp shift to state 93
+
+State 93:
+exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp BOOLAND exp . [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On RSHIFT shift to state 56
+-- On PLUS shift to state 62
+-- On NEQ shift to state 76
+-- On MULT shift to state 58
+-- On MOD shift to state 64
+-- On MINUS shift to state 78
+-- On LT shift to state 80
+-- On LSHIFT shift to state 66
+-- On LEQ shift to state 82
+-- On GT shift to state 84
+-- On GEQ shift to state 86
+-- On EQ shift to state 88
+-- On DIV shift to state 60
+-- On BINXOR shift to state 68
+-- On BINOR shift to state 70
+-- On BINANDNOT shift to state 72
+-- On BINAND shift to state 74
+-- On RSQUARE reduce production exp -> exp BOOLAND exp 
+-- On BOOLOR reduce production exp -> exp BOOLAND exp 
+-- On BOOLAND reduce production exp -> exp BOOLAND exp 
+
+State 94:
+typeT -> MAP RSQUARE typeT . RSQUARE typeT [ SEMICOLON RSQUARE RPAR ]
+-- On RSQUARE shift to state 95
+
+State 95:
 typeT -> MAP RSQUARE typeT RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ]
 -- On STRUCT shift to state 15
 -- On STRINGTYPE shift to state 20
@@ -334,31 +1932,31 @@ typeT -> MAP RSQUARE typeT RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ]
 -- On MULT shift to state 22
 -- On MAP shift to state 23
 -- On LSQUARE shift to state 25
--- On LPAR shift to state 27
--- On INTTYPE shift to state 28
--- On INTERFACE shift to state 29
--- On IDENTIFIER shift to state 30
--- On FLOATTYPE shift to state 31
--- On CHAN shift to state 32
--- On typeT shift to state 42
+-- On LPAR shift to state 29
+-- On INTTYPE shift to state 30
+-- On INTERFACE shift to state 31
+-- On IDENTIFIER shift to state 32
+-- On FLOATTYPE shift to state 33
+-- On CHAN shift to state 34
+-- On typeT shift to state 96
 
-State 42:
+State 96:
 typeT -> MAP RSQUARE typeT RSQUARE typeT . [ SEMICOLON RSQUARE RPAR ]
 -- On SEMICOLON reduce production typeT -> MAP RSQUARE typeT RSQUARE typeT 
 -- On RSQUARE reduce production typeT -> MAP RSQUARE typeT RSQUARE typeT 
 -- On RPAR reduce production typeT -> MAP RSQUARE typeT RSQUARE typeT 
 
-State 43:
+State 97:
 typeT -> MULT typeT . [ SEMICOLON RSQUARE RPAR ]
 -- On SEMICOLON reduce production typeT -> MULT typeT 
 -- On RSQUARE reduce production typeT -> MULT typeT 
 -- On RPAR reduce production typeT -> MULT typeT 
 
-State 44:
+State 98:
 ident_list -> ident_list COMMA . IDENTIFIER [ STRUCT STRINGTYPE RUNETYPE MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ]
--- On IDENTIFIER shift to state 45
+-- On IDENTIFIER shift to state 99
 
-State 45:
+State 99:
 ident_list -> ident_list COMMA IDENTIFIER . [ STRUCT STRINGTYPE RUNETYPE MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ]
 -- On STRUCT reduce production ident_list -> ident_list COMMA IDENTIFIER 
 -- On STRINGTYPE reduce production ident_list -> ident_list COMMA IDENTIFIER 
@@ -374,11 +1972,11 @@ ident_list -> ident_list COMMA IDENTIFIER . [ STRUCT STRINGTYPE RUNETYPE MULT MA
 -- On COMMA reduce production ident_list -> ident_list COMMA IDENTIFIER 
 -- On CHAN reduce production ident_list -> ident_list COMMA IDENTIFIER 
 
-State 46:
+State 100:
 field_decls -> field_decls ident_list typeT . SEMICOLON [ STRUCT STRINGTYPE RUNETYPE RCURLY MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ]
--- On SEMICOLON shift to state 47
+-- On SEMICOLON shift to state 101
 
-State 47:
+State 101:
 field_decls -> field_decls ident_list typeT SEMICOLON . [ STRUCT STRINGTYPE RUNETYPE RCURLY MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ]
 -- On STRUCT reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
 -- On STRINGTYPE reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
@@ -395,7 +1993,7 @@ field_decls -> field_decls ident_list typeT SEMICOLON . [ STRUCT STRINGTYPE RUNE
 -- On COMMA reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
 -- On CHAN reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
 
-State 48:
+State 102:
 type_spec -> IDENTIFIER ASSIGN . typeT SEMICOLON [ TYPE RPAR IDENTIFIER EOF ]
 -- On STRUCT shift to state 15
 -- On STRINGTYPE shift to state 20
@@ -403,51 +2001,51 @@ type_spec -> IDENTIFIER ASSIGN . typeT SEMICOLON [ TYPE RPAR IDENTIFIER EOF ]
 -- On MULT shift to state 22
 -- On MAP shift to state 23
 -- On LSQUARE shift to state 25
--- On LPAR shift to state 27
--- On INTTYPE shift to state 28
--- On INTERFACE shift to state 29
--- On IDENTIFIER shift to state 30
--- On FLOATTYPE shift to state 31
--- On CHAN shift to state 32
--- On typeT shift to state 49
+-- On LPAR shift to state 29
+-- On INTTYPE shift to state 30
+-- On INTERFACE shift to state 31
+-- On IDENTIFIER shift to state 32
+-- On FLOATTYPE shift to state 33
+-- On CHAN shift to state 34
+-- On typeT shift to state 103
 
-State 49:
+State 103:
 type_spec -> IDENTIFIER ASSIGN typeT . SEMICOLON [ TYPE RPAR IDENTIFIER EOF ]
--- On SEMICOLON shift to state 50
+-- On SEMICOLON shift to state 104
 
-State 50:
+State 104:
 type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON . [ TYPE RPAR IDENTIFIER EOF ]
 -- On TYPE reduce production type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON 
 -- On RPAR reduce production type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON 
 -- On IDENTIFIER reduce production type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON 
 -- On EOF reduce production type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON 
 
-State 51:
+State 105:
 type_spec -> IDENTIFIER typeT . SEMICOLON [ TYPE RPAR IDENTIFIER EOF ]
--- On SEMICOLON shift to state 52
+-- On SEMICOLON shift to state 106
 
-State 52:
+State 106:
 type_spec -> IDENTIFIER typeT SEMICOLON . [ TYPE RPAR IDENTIFIER EOF ]
 -- On TYPE reduce production type_spec -> IDENTIFIER typeT SEMICOLON 
 -- On RPAR reduce production type_spec -> IDENTIFIER typeT SEMICOLON 
 -- On IDENTIFIER reduce production type_spec -> IDENTIFIER typeT SEMICOLON 
 -- On EOF reduce production type_spec -> IDENTIFIER typeT SEMICOLON 
 
-State 53:
+State 107:
 type_specs -> type_specs type_spec . [ RPAR IDENTIFIER ]
 -- On RPAR reduce production type_specs -> type_specs type_spec 
 -- On IDENTIFIER reduce production type_specs -> type_specs type_spec 
 
-State 54:
+State 108:
 type_decls -> TYPE type_spec . [ TYPE EOF ]
 -- On TYPE reduce production type_decls -> TYPE type_spec 
 -- On EOF reduce production type_decls -> TYPE type_spec 
 
-State 55:
+State 109:
 start -> package_clause import_decls top_level_decls EOF . [ # ]
 -- On # reduce production start -> package_clause import_decls top_level_decls EOF 
 
-State 56:
+State 110:
 top_level_decls -> top_level_decls type_decls . [ TYPE EOF ]
 -- On TYPE reduce production top_level_decls -> top_level_decls type_decls 
 -- On EOF reduce production top_level_decls -> top_level_decls type_decls 
