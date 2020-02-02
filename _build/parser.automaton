@@ -49,72 +49,32 @@ start -> package_clause import_decls top_level_decls . EOF [ # ]
 top_level_decls -> top_level_decls . type_decls [ VAR TYPE EOF ]
 top_level_decls -> top_level_decls . var_decls [ VAR TYPE EOF ]
 -- On VAR shift to state 9
--- On TYPE shift to state 114
--- On EOF shift to state 127
--- On var_decls shift to state 128
--- On type_decls shift to state 129
+-- On TYPE shift to state 116
+-- On EOF shift to state 129
+-- On var_decls shift to state 130
+-- On type_decls shift to state 131
 
 State 9:
 var_decls -> VAR . var_spec [ VAR TYPE EOF ]
 var_decls -> VAR . LPAR var_specs RPAR SEMICOLON [ VAR TYPE EOF ]
 -- On LPAR shift to state 10
--- On var_spec shift to state 113
--- On ident_list shift to state 15
--- On STRUCT reduce production ident_list -> 
--- On STRINGTYPE reduce production ident_list -> 
--- On RUNETYPE reduce production ident_list -> 
--- On MULT reduce production ident_list -> 
--- On MAP reduce production ident_list -> 
--- On LSQUARE reduce production ident_list -> 
--- On LPAR reduce production ident_list -> 
--- On INTTYPE reduce production ident_list -> 
--- On INTERFACE reduce production ident_list -> 
--- On IDENTIFIER reduce production ident_list -> 
--- On FLOATTYPE reduce production ident_list -> 
--- On COMMA reduce production ident_list -> 
--- On CHAN reduce production ident_list -> 
--- On ASSIGN reduce production ident_list -> 
-** Conflict on LPAR
+-- On IDENTIFIER shift to state 14
+-- On var_spec shift to state 115
+-- On ident_list shift to state 16
 
 State 10:
 var_decls -> VAR LPAR . var_specs RPAR SEMICOLON [ VAR TYPE EOF ]
 -- On var_specs shift to state 11
--- On STRUCT reduce production var_specs -> 
--- On STRINGTYPE reduce production var_specs -> 
--- On RUNETYPE reduce production var_specs -> 
 -- On RPAR reduce production var_specs -> 
--- On MULT reduce production var_specs -> 
--- On MAP reduce production var_specs -> 
--- On LSQUARE reduce production var_specs -> 
--- On LPAR reduce production var_specs -> 
--- On INTTYPE reduce production var_specs -> 
--- On INTERFACE reduce production var_specs -> 
 -- On IDENTIFIER reduce production var_specs -> 
--- On FLOATTYPE reduce production var_specs -> 
--- On COMMA reduce production var_specs -> 
--- On CHAN reduce production var_specs -> 
--- On ASSIGN reduce production var_specs -> 
 
 State 11:
 var_decls -> VAR LPAR var_specs . RPAR SEMICOLON [ VAR TYPE EOF ]
-var_specs -> var_specs . var_spec [ STRUCT STRINGTYPE RUNETYPE RPAR MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ASSIGN ]
+var_specs -> var_specs . var_spec [ RPAR IDENTIFIER ]
 -- On RPAR shift to state 12
--- On var_spec shift to state 14
--- On ident_list shift to state 15
--- On STRUCT reduce production ident_list -> 
--- On STRINGTYPE reduce production ident_list -> 
--- On RUNETYPE reduce production ident_list -> 
--- On MULT reduce production ident_list -> 
--- On MAP reduce production ident_list -> 
--- On LSQUARE reduce production ident_list -> 
--- On LPAR reduce production ident_list -> 
--- On INTTYPE reduce production ident_list -> 
--- On INTERFACE reduce production ident_list -> 
--- On IDENTIFIER reduce production ident_list -> 
--- On FLOATTYPE reduce production ident_list -> 
--- On COMMA reduce production ident_list -> 
--- On CHAN reduce production ident_list -> 
--- On ASSIGN reduce production ident_list -> 
+-- On IDENTIFIER shift to state 14
+-- On var_spec shift to state 15
+-- On ident_list shift to state 16
 
 State 12:
 var_decls -> VAR LPAR var_specs RPAR . SEMICOLON [ VAR TYPE EOF ]
@@ -127,179 +87,159 @@ var_decls -> VAR LPAR var_specs RPAR SEMICOLON . [ VAR TYPE EOF ]
 -- On EOF reduce production var_decls -> VAR LPAR var_specs RPAR SEMICOLON 
 
 State 14:
-var_specs -> var_specs var_spec . [ STRUCT STRINGTYPE RUNETYPE RPAR MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ASSIGN ]
--- On STRUCT reduce production var_specs -> var_specs var_spec 
--- On STRINGTYPE reduce production var_specs -> var_specs var_spec 
--- On RUNETYPE reduce production var_specs -> var_specs var_spec 
--- On RPAR reduce production var_specs -> var_specs var_spec 
--- On MULT reduce production var_specs -> var_specs var_spec 
--- On MAP reduce production var_specs -> var_specs var_spec 
--- On LSQUARE reduce production var_specs -> var_specs var_spec 
--- On LPAR reduce production var_specs -> var_specs var_spec 
--- On INTTYPE reduce production var_specs -> var_specs var_spec 
--- On INTERFACE reduce production var_specs -> var_specs var_spec 
--- On IDENTIFIER reduce production var_specs -> var_specs var_spec 
--- On FLOATTYPE reduce production var_specs -> var_specs var_spec 
--- On COMMA reduce production var_specs -> var_specs var_spec 
--- On CHAN reduce production var_specs -> var_specs var_spec 
--- On ASSIGN reduce production var_specs -> var_specs var_spec 
+ident_list -> IDENTIFIER . [ STRUCT STRINGTYPE RUNETYPE MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ASSIGN ]
+-- On STRUCT reduce production ident_list -> IDENTIFIER 
+-- On STRINGTYPE reduce production ident_list -> IDENTIFIER 
+-- On RUNETYPE reduce production ident_list -> IDENTIFIER 
+-- On MULT reduce production ident_list -> IDENTIFIER 
+-- On MAP reduce production ident_list -> IDENTIFIER 
+-- On LSQUARE reduce production ident_list -> IDENTIFIER 
+-- On LPAR reduce production ident_list -> IDENTIFIER 
+-- On INTTYPE reduce production ident_list -> IDENTIFIER 
+-- On INTERFACE reduce production ident_list -> IDENTIFIER 
+-- On IDENTIFIER reduce production ident_list -> IDENTIFIER 
+-- On FLOATTYPE reduce production ident_list -> IDENTIFIER 
+-- On COMMA reduce production ident_list -> IDENTIFIER 
+-- On CHAN reduce production ident_list -> IDENTIFIER 
+-- On ASSIGN reduce production ident_list -> IDENTIFIER 
 
 State 15:
-ident_list -> ident_list . COMMA IDENTIFIER [ STRUCT STRINGTYPE RUNETYPE MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ASSIGN ]
-var_spec -> ident_list . typeT SEMICOLON [ VAR TYPE STRUCT STRINGTYPE RUNETYPE RPAR MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE EOF COMMA CHAN ASSIGN ]
-var_spec -> ident_list . typeT ASSIGN exp_list SEMICOLON [ VAR TYPE STRUCT STRINGTYPE RUNETYPE RPAR MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE EOF COMMA CHAN ASSIGN ]
-var_spec -> ident_list . ASSIGN exp_list SEMICOLON [ VAR TYPE STRUCT STRINGTYPE RUNETYPE RPAR MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE EOF COMMA CHAN ASSIGN ]
--- On STRUCT shift to state 16
--- On STRINGTYPE shift to state 21
--- On RUNETYPE shift to state 22
--- On MULT shift to state 23
--- On MAP shift to state 24
--- On LSQUARE shift to state 26
--- On LPAR shift to state 30
--- On INTTYPE shift to state 31
--- On INTERFACE shift to state 32
--- On IDENTIFIER shift to state 33
--- On FLOATTYPE shift to state 34
--- On COMMA shift to state 99
--- On CHAN shift to state 35
--- On ASSIGN shift to state 103
--- On typeT shift to state 108
+var_specs -> var_specs var_spec . [ RPAR IDENTIFIER ]
+-- On RPAR reduce production var_specs -> var_specs var_spec 
+-- On IDENTIFIER reduce production var_specs -> var_specs var_spec 
 
 State 16:
-typeT -> STRUCT . LCURLY field_decls RCURLY [ SEMICOLON RSQUARE RPAR ASSIGN ]
--- On LCURLY shift to state 17
+ident_list -> ident_list . COMMA IDENTIFIER [ STRUCT STRINGTYPE RUNETYPE MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ASSIGN ]
+var_spec -> ident_list . typeT SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+var_spec -> ident_list . typeT ASSIGN exp_list SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+var_spec -> ident_list . ASSIGN exp_list SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+-- On STRUCT shift to state 17
+-- On STRINGTYPE shift to state 22
+-- On RUNETYPE shift to state 23
+-- On MULT shift to state 24
+-- On MAP shift to state 25
+-- On LSQUARE shift to state 27
+-- On LPAR shift to state 31
+-- On INTTYPE shift to state 32
+-- On INTERFACE shift to state 33
+-- On IDENTIFIER shift to state 34
+-- On FLOATTYPE shift to state 35
+-- On COMMA shift to state 100
+-- On CHAN shift to state 36
+-- On ASSIGN shift to state 104
+-- On typeT shift to state 110
 
 State 17:
-typeT -> STRUCT LCURLY . field_decls RCURLY [ SEMICOLON RSQUARE RPAR ASSIGN ]
--- On field_decls shift to state 18
--- On STRUCT reduce production field_decls -> 
--- On STRINGTYPE reduce production field_decls -> 
--- On RUNETYPE reduce production field_decls -> 
--- On RCURLY reduce production field_decls -> 
--- On MULT reduce production field_decls -> 
--- On MAP reduce production field_decls -> 
--- On LSQUARE reduce production field_decls -> 
--- On LPAR reduce production field_decls -> 
--- On INTTYPE reduce production field_decls -> 
--- On INTERFACE reduce production field_decls -> 
--- On IDENTIFIER reduce production field_decls -> 
--- On FLOATTYPE reduce production field_decls -> 
--- On COMMA reduce production field_decls -> 
--- On CHAN reduce production field_decls -> 
+typeT -> STRUCT . LCURLY field_decls RCURLY [ SEMICOLON RSQUARE RPAR ASSIGN ]
+-- On LCURLY shift to state 18
 
 State 18:
-field_decls -> field_decls . ident_list typeT SEMICOLON [ STRUCT STRINGTYPE RUNETYPE RCURLY MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ]
-typeT -> STRUCT LCURLY field_decls . RCURLY [ SEMICOLON RSQUARE RPAR ASSIGN ]
--- On RCURLY shift to state 19
--- On ident_list shift to state 20
--- On STRUCT reduce production ident_list -> 
--- On STRINGTYPE reduce production ident_list -> 
--- On RUNETYPE reduce production ident_list -> 
--- On MULT reduce production ident_list -> 
--- On MAP reduce production ident_list -> 
--- On LSQUARE reduce production ident_list -> 
--- On LPAR reduce production ident_list -> 
--- On INTTYPE reduce production ident_list -> 
--- On INTERFACE reduce production ident_list -> 
--- On IDENTIFIER reduce production ident_list -> 
--- On FLOATTYPE reduce production ident_list -> 
--- On COMMA reduce production ident_list -> 
--- On CHAN reduce production ident_list -> 
+typeT -> STRUCT LCURLY . field_decls RCURLY [ SEMICOLON RSQUARE RPAR ASSIGN ]
+-- On field_decls shift to state 19
+-- On RCURLY reduce production field_decls -> 
+-- On IDENTIFIER reduce production field_decls -> 
 
 State 19:
+field_decls -> field_decls . ident_list typeT SEMICOLON [ RCURLY IDENTIFIER ]
+typeT -> STRUCT LCURLY field_decls . RCURLY [ SEMICOLON RSQUARE RPAR ASSIGN ]
+-- On RCURLY shift to state 20
+-- On IDENTIFIER shift to state 14
+-- On ident_list shift to state 21
+
+State 20:
 typeT -> STRUCT LCURLY field_decls RCURLY . [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On SEMICOLON reduce production typeT -> STRUCT LCURLY field_decls RCURLY 
 -- On RSQUARE reduce production typeT -> STRUCT LCURLY field_decls RCURLY 
 -- On RPAR reduce production typeT -> STRUCT LCURLY field_decls RCURLY 
 -- On ASSIGN reduce production typeT -> STRUCT LCURLY field_decls RCURLY 
 
-State 20:
-field_decls -> field_decls ident_list . typeT SEMICOLON [ STRUCT STRINGTYPE RUNETYPE RCURLY MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ]
-ident_list -> ident_list . COMMA IDENTIFIER [ STRUCT STRINGTYPE RUNETYPE MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ]
--- On STRUCT shift to state 16
--- On STRINGTYPE shift to state 21
--- On RUNETYPE shift to state 22
--- On MULT shift to state 23
--- On MAP shift to state 24
--- On LSQUARE shift to state 26
--- On LPAR shift to state 30
--- On INTTYPE shift to state 31
--- On INTERFACE shift to state 32
--- On IDENTIFIER shift to state 33
--- On FLOATTYPE shift to state 34
--- On COMMA shift to state 99
--- On CHAN shift to state 35
--- On typeT shift to state 101
-
 State 21:
+field_decls -> field_decls ident_list . typeT SEMICOLON [ RCURLY IDENTIFIER ]
+ident_list -> ident_list . COMMA IDENTIFIER [ STRUCT STRINGTYPE RUNETYPE MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ]
+-- On STRUCT shift to state 17
+-- On STRINGTYPE shift to state 22
+-- On RUNETYPE shift to state 23
+-- On MULT shift to state 24
+-- On MAP shift to state 25
+-- On LSQUARE shift to state 27
+-- On LPAR shift to state 31
+-- On INTTYPE shift to state 32
+-- On INTERFACE shift to state 33
+-- On IDENTIFIER shift to state 34
+-- On FLOATTYPE shift to state 35
+-- On COMMA shift to state 100
+-- On CHAN shift to state 36
+-- On typeT shift to state 102
+
+State 22:
 typeT -> STRINGTYPE . [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On SEMICOLON reduce production typeT -> STRINGTYPE 
 -- On RSQUARE reduce production typeT -> STRINGTYPE 
 -- On RPAR reduce production typeT -> STRINGTYPE 
 -- On ASSIGN reduce production typeT -> STRINGTYPE 
 
-State 22:
+State 23:
 typeT -> RUNETYPE . [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On SEMICOLON reduce production typeT -> RUNETYPE 
 -- On RSQUARE reduce production typeT -> RUNETYPE 
 -- On RPAR reduce production typeT -> RUNETYPE 
 -- On ASSIGN reduce production typeT -> RUNETYPE 
 
-State 23:
-typeT -> MULT . typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
--- On STRUCT shift to state 16
--- On STRINGTYPE shift to state 21
--- On RUNETYPE shift to state 22
--- On MULT shift to state 23
--- On MAP shift to state 24
--- On LSQUARE shift to state 26
--- On LPAR shift to state 30
--- On INTTYPE shift to state 31
--- On INTERFACE shift to state 32
--- On IDENTIFIER shift to state 33
--- On FLOATTYPE shift to state 34
--- On CHAN shift to state 35
--- On typeT shift to state 98
-
 State 24:
-typeT -> MAP . RSQUARE typeT RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
--- On RSQUARE shift to state 25
+typeT -> MULT . typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+-- On STRUCT shift to state 17
+-- On STRINGTYPE shift to state 22
+-- On RUNETYPE shift to state 23
+-- On MULT shift to state 24
+-- On MAP shift to state 25
+-- On LSQUARE shift to state 27
+-- On LPAR shift to state 31
+-- On INTTYPE shift to state 32
+-- On INTERFACE shift to state 33
+-- On IDENTIFIER shift to state 34
+-- On FLOATTYPE shift to state 35
+-- On CHAN shift to state 36
+-- On typeT shift to state 99
 
 State 25:
-typeT -> MAP RSQUARE . typeT RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
--- On STRUCT shift to state 16
--- On STRINGTYPE shift to state 21
--- On RUNETYPE shift to state 22
--- On MULT shift to state 23
--- On MAP shift to state 24
--- On LSQUARE shift to state 26
--- On LPAR shift to state 30
--- On INTTYPE shift to state 31
--- On INTERFACE shift to state 32
--- On IDENTIFIER shift to state 33
--- On FLOATTYPE shift to state 34
--- On CHAN shift to state 35
--- On typeT shift to state 95
+typeT -> MAP . RSQUARE typeT RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+-- On RSQUARE shift to state 26
 
 State 26:
-typeT -> LSQUARE . exp RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
-typeT -> LSQUARE . RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RSQUARE shift to state 29
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 54
+typeT -> MAP RSQUARE . typeT RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+-- On STRUCT shift to state 17
+-- On STRINGTYPE shift to state 22
+-- On RUNETYPE shift to state 23
+-- On MULT shift to state 24
+-- On MAP shift to state 25
+-- On LSQUARE shift to state 27
+-- On LPAR shift to state 31
+-- On INTTYPE shift to state 32
+-- On INTERFACE shift to state 33
+-- On IDENTIFIER shift to state 34
+-- On FLOATTYPE shift to state 35
+-- On CHAN shift to state 36
+-- On typeT shift to state 96
 
 State 27:
+typeT -> LSQUARE . exp RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> LSQUARE . RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RSQUARE shift to state 30
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 55
+
+State 28:
 exp -> STRINGLITERAL . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 -- On SEMICOLON reduce production exp -> STRINGLITERAL 
 -- On RSQUARE reduce production exp -> STRINGLITERAL 
@@ -324,7 +264,7 @@ exp -> STRINGLITERAL . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSH
 -- On BINANDNOT reduce production exp -> STRINGLITERAL 
 -- On BINAND reduce production exp -> STRINGLITERAL 
 
-State 28:
+State 29:
 exp -> RUNELITERAL . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 -- On SEMICOLON reduce production exp -> RUNELITERAL 
 -- On RSQUARE reduce production exp -> RUNELITERAL 
@@ -349,124 +289,124 @@ exp -> RUNELITERAL . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BINANDNOT reduce production exp -> RUNELITERAL 
 -- On BINAND reduce production exp -> RUNELITERAL 
 
-State 29:
-typeT -> LSQUARE RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
--- On STRUCT shift to state 16
--- On STRINGTYPE shift to state 21
--- On RUNETYPE shift to state 22
--- On MULT shift to state 23
--- On MAP shift to state 24
--- On LSQUARE shift to state 26
--- On LPAR shift to state 30
--- On INTTYPE shift to state 31
--- On INTERFACE shift to state 32
--- On IDENTIFIER shift to state 33
--- On FLOATTYPE shift to state 34
--- On CHAN shift to state 35
--- On typeT shift to state 38
-
 State 30:
-typeT -> LPAR . typeT RPAR [ SEMICOLON RSQUARE RPAR ASSIGN ]
--- On STRUCT shift to state 16
--- On STRINGTYPE shift to state 21
--- On RUNETYPE shift to state 22
--- On MULT shift to state 23
--- On MAP shift to state 24
--- On LSQUARE shift to state 26
--- On LPAR shift to state 30
--- On INTTYPE shift to state 31
--- On INTERFACE shift to state 32
--- On IDENTIFIER shift to state 33
--- On FLOATTYPE shift to state 34
--- On CHAN shift to state 35
--- On typeT shift to state 36
+typeT -> LSQUARE RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+-- On STRUCT shift to state 17
+-- On STRINGTYPE shift to state 22
+-- On RUNETYPE shift to state 23
+-- On MULT shift to state 24
+-- On MAP shift to state 25
+-- On LSQUARE shift to state 27
+-- On LPAR shift to state 31
+-- On INTTYPE shift to state 32
+-- On INTERFACE shift to state 33
+-- On IDENTIFIER shift to state 34
+-- On FLOATTYPE shift to state 35
+-- On CHAN shift to state 36
+-- On typeT shift to state 39
 
 State 31:
+typeT -> LPAR . typeT RPAR [ SEMICOLON RSQUARE RPAR ASSIGN ]
+-- On STRUCT shift to state 17
+-- On STRINGTYPE shift to state 22
+-- On RUNETYPE shift to state 23
+-- On MULT shift to state 24
+-- On MAP shift to state 25
+-- On LSQUARE shift to state 27
+-- On LPAR shift to state 31
+-- On INTTYPE shift to state 32
+-- On INTERFACE shift to state 33
+-- On IDENTIFIER shift to state 34
+-- On FLOATTYPE shift to state 35
+-- On CHAN shift to state 36
+-- On typeT shift to state 37
+
+State 32:
 typeT -> INTTYPE . [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On SEMICOLON reduce production typeT -> INTTYPE 
 -- On RSQUARE reduce production typeT -> INTTYPE 
 -- On RPAR reduce production typeT -> INTTYPE 
 -- On ASSIGN reduce production typeT -> INTTYPE 
 
-State 32:
+State 33:
 typeT -> INTERFACE . [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On SEMICOLON reduce production typeT -> INTERFACE 
 -- On RSQUARE reduce production typeT -> INTERFACE 
 -- On RPAR reduce production typeT -> INTERFACE 
 -- On ASSIGN reduce production typeT -> INTERFACE 
 
-State 33:
+State 34:
 typeT -> IDENTIFIER . [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On SEMICOLON reduce production typeT -> IDENTIFIER 
 -- On RSQUARE reduce production typeT -> IDENTIFIER 
 -- On RPAR reduce production typeT -> IDENTIFIER 
 -- On ASSIGN reduce production typeT -> IDENTIFIER 
 
-State 34:
+State 35:
 typeT -> FLOATTYPE . [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On SEMICOLON reduce production typeT -> FLOATTYPE 
 -- On RSQUARE reduce production typeT -> FLOATTYPE 
 -- On RPAR reduce production typeT -> FLOATTYPE 
 -- On ASSIGN reduce production typeT -> FLOATTYPE 
 
-State 35:
+State 36:
 typeT -> CHAN . [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On SEMICOLON reduce production typeT -> CHAN 
 -- On RSQUARE reduce production typeT -> CHAN 
 -- On RPAR reduce production typeT -> CHAN 
 -- On ASSIGN reduce production typeT -> CHAN 
 
-State 36:
-typeT -> LPAR typeT . RPAR [ SEMICOLON RSQUARE RPAR ASSIGN ]
--- On RPAR shift to state 37
-
 State 37:
+typeT -> LPAR typeT . RPAR [ SEMICOLON RSQUARE RPAR ASSIGN ]
+-- On RPAR shift to state 38
+
+State 38:
 typeT -> LPAR typeT RPAR . [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On SEMICOLON reduce production typeT -> LPAR typeT RPAR 
 -- On RSQUARE reduce production typeT -> LPAR typeT RPAR 
 -- On RPAR reduce production typeT -> LPAR typeT RPAR 
 -- On ASSIGN reduce production typeT -> LPAR typeT RPAR 
 
-State 38:
+State 39:
 typeT -> LSQUARE RSQUARE typeT . [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On SEMICOLON reduce production typeT -> LSQUARE RSQUARE typeT 
 -- On RSQUARE reduce production typeT -> LSQUARE RSQUARE typeT 
 -- On RPAR reduce production typeT -> LSQUARE RSQUARE typeT 
 -- On ASSIGN reduce production typeT -> LSQUARE RSQUARE typeT 
 
-State 39:
-exp -> RECEIVE . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 53
-
 State 40:
-exp -> PLUS . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 52
+exp -> RECEIVE . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 54
 
 State 41:
+exp -> PLUS . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 53
+
+State 42:
 exp -> OCTINTLITERAL . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 -- On SEMICOLON reduce production exp -> OCTINTLITERAL 
 -- On RSQUARE reduce production exp -> OCTINTLITERAL 
@@ -491,23 +431,23 @@ exp -> OCTINTLITERAL . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSH
 -- On BINANDNOT reduce production exp -> OCTINTLITERAL 
 -- On BINAND reduce production exp -> OCTINTLITERAL 
 
-State 42:
-exp -> MINUS . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 51
-
 State 43:
+exp -> MINUS . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 52
+
+State 44:
 exp -> HEXINTLITERAL . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 -- On SEMICOLON reduce production exp -> HEXINTLITERAL 
 -- On RSQUARE reduce production exp -> HEXINTLITERAL 
@@ -532,7 +472,7 @@ exp -> HEXINTLITERAL . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSH
 -- On BINANDNOT reduce production exp -> HEXINTLITERAL 
 -- On BINAND reduce production exp -> HEXINTLITERAL 
 
-State 44:
+State 45:
 exp -> FLOATLITERAL . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 -- On SEMICOLON reduce production exp -> FLOATLITERAL 
 -- On RSQUARE reduce production exp -> FLOATLITERAL 
@@ -557,7 +497,7 @@ exp -> FLOATLITERAL . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHI
 -- On BINANDNOT reduce production exp -> FLOATLITERAL 
 -- On BINAND reduce production exp -> FLOATLITERAL 
 
-State 45:
+State 46:
 exp -> DECINTLITERAL . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 -- On SEMICOLON reduce production exp -> DECINTLITERAL 
 -- On RSQUARE reduce production exp -> DECINTLITERAL 
@@ -582,39 +522,39 @@ exp -> DECINTLITERAL . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSH
 -- On BINANDNOT reduce production exp -> DECINTLITERAL 
 -- On BINAND reduce production exp -> DECINTLITERAL 
 
-State 46:
-exp -> BOOLNOT . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 50
-
 State 47:
-exp -> BINXOR . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 49
+exp -> BOOLNOT . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 51
 
 State 48:
+exp -> BINXOR . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 50
+
+State 49:
 exp -> BININTLITERAL . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 -- On SEMICOLON reduce production exp -> BININTLITERAL 
 -- On RSQUARE reduce production exp -> BININTLITERAL 
@@ -639,7 +579,7 @@ exp -> BININTLITERAL . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSH
 -- On BINANDNOT reduce production exp -> BININTLITERAL 
 -- On BINAND reduce production exp -> BININTLITERAL 
 
-State 49:
+State 50:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -683,7 +623,7 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BINANDNOT reduce production exp -> BINXOR exp 
 -- On BINAND reduce production exp -> BINXOR exp 
 
-State 50:
+State 51:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -727,7 +667,7 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BINANDNOT reduce production exp -> BOOLNOT exp 
 -- On BINAND reduce production exp -> BOOLNOT exp 
 
-State 51:
+State 52:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -771,7 +711,7 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BINANDNOT reduce production exp -> MINUS exp 
 -- On BINAND reduce production exp -> MINUS exp 
 
-State 52:
+State 53:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -815,7 +755,7 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BINANDNOT reduce production exp -> PLUS exp 
 -- On BINAND reduce production exp -> PLUS exp 
 
-State 53:
+State 54:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -859,7 +799,7 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BINANDNOT reduce production exp -> RECEIVE exp 
 -- On BINAND reduce production exp -> RECEIVE exp 
 
-State 54:
+State 55:
 exp -> exp . PLUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -880,67 +820,67 @@ exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GE
 exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 typeT -> LSQUARE exp . RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
--- On RSQUARE shift to state 55
--- On RSHIFT shift to state 57
--- On PLUS shift to state 63
--- On NEQ shift to state 77
--- On MULT shift to state 59
--- On MOD shift to state 65
--- On MINUS shift to state 79
--- On LT shift to state 81
--- On LSHIFT shift to state 67
--- On LEQ shift to state 83
--- On GT shift to state 85
--- On GEQ shift to state 87
--- On EQ shift to state 89
--- On DIV shift to state 61
--- On BOOLOR shift to state 91
--- On BOOLAND shift to state 93
--- On BINXOR shift to state 69
--- On BINOR shift to state 71
--- On BINANDNOT shift to state 73
--- On BINAND shift to state 75
-
-State 55:
-typeT -> LSQUARE exp RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
--- On STRUCT shift to state 16
--- On STRINGTYPE shift to state 21
--- On RUNETYPE shift to state 22
--- On MULT shift to state 23
--- On MAP shift to state 24
--- On LSQUARE shift to state 26
--- On LPAR shift to state 30
--- On INTTYPE shift to state 31
--- On INTERFACE shift to state 32
--- On IDENTIFIER shift to state 33
--- On FLOATTYPE shift to state 34
--- On CHAN shift to state 35
--- On typeT shift to state 56
+-- On RSQUARE shift to state 56
+-- On RSHIFT shift to state 58
+-- On PLUS shift to state 64
+-- On NEQ shift to state 78
+-- On MULT shift to state 60
+-- On MOD shift to state 66
+-- On MINUS shift to state 80
+-- On LT shift to state 82
+-- On LSHIFT shift to state 68
+-- On LEQ shift to state 84
+-- On GT shift to state 86
+-- On GEQ shift to state 88
+-- On EQ shift to state 90
+-- On DIV shift to state 62
+-- On BOOLOR shift to state 92
+-- On BOOLAND shift to state 94
+-- On BINXOR shift to state 70
+-- On BINOR shift to state 72
+-- On BINANDNOT shift to state 74
+-- On BINAND shift to state 76
 
 State 56:
+typeT -> LSQUARE exp RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+-- On STRUCT shift to state 17
+-- On STRINGTYPE shift to state 22
+-- On RUNETYPE shift to state 23
+-- On MULT shift to state 24
+-- On MAP shift to state 25
+-- On LSQUARE shift to state 27
+-- On LPAR shift to state 31
+-- On INTTYPE shift to state 32
+-- On INTERFACE shift to state 33
+-- On IDENTIFIER shift to state 34
+-- On FLOATTYPE shift to state 35
+-- On CHAN shift to state 36
+-- On typeT shift to state 57
+
+State 57:
 typeT -> LSQUARE exp RSQUARE typeT . [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On SEMICOLON reduce production typeT -> LSQUARE exp RSQUARE typeT 
 -- On RSQUARE reduce production typeT -> LSQUARE exp RSQUARE typeT 
 -- On RPAR reduce production typeT -> LSQUARE exp RSQUARE typeT 
 -- On ASSIGN reduce production typeT -> LSQUARE exp RSQUARE typeT 
 
-State 57:
-exp -> exp RSHIFT . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 58
-
 State 58:
+exp -> exp RSHIFT . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 59
+
+State 59:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -961,8 +901,8 @@ exp -> exp . LT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT
 exp -> exp . GT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . LEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On MULT shift to state 59
--- On DIV shift to state 61
+-- On MULT shift to state 60
+-- On DIV shift to state 62
 -- On SEMICOLON reduce production exp -> exp RSHIFT exp 
 -- On RSQUARE reduce production exp -> exp RSHIFT exp 
 -- On RSHIFT reduce production exp -> exp RSHIFT exp 
@@ -984,23 +924,23 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BINANDNOT reduce production exp -> exp RSHIFT exp 
 -- On BINAND reduce production exp -> exp RSHIFT exp 
 
-State 59:
-exp -> exp MULT . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 60
-
 State 60:
+exp -> exp MULT . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 61
+
+State 61:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -1044,23 +984,23 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BINANDNOT reduce production exp -> exp MULT exp 
 -- On BINAND reduce production exp -> exp MULT exp 
 
-State 61:
-exp -> exp DIV . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 62
-
 State 62:
+exp -> exp DIV . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 63
+
+State 63:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -1104,23 +1044,23 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BINANDNOT reduce production exp -> exp DIV exp 
 -- On BINAND reduce production exp -> exp DIV exp 
 
-State 63:
-exp -> exp PLUS . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 64
-
 State 64:
+exp -> exp PLUS . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 65
+
+State 65:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp PLUS exp . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -1141,15 +1081,15 @@ exp -> exp . LT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT
 exp -> exp . GT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . LEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On RSHIFT shift to state 57
--- On MULT shift to state 59
--- On MOD shift to state 65
--- On LSHIFT shift to state 67
--- On DIV shift to state 61
--- On BINXOR shift to state 69
--- On BINOR shift to state 71
--- On BINANDNOT shift to state 73
--- On BINAND shift to state 75
+-- On RSHIFT shift to state 58
+-- On MULT shift to state 60
+-- On MOD shift to state 66
+-- On LSHIFT shift to state 68
+-- On DIV shift to state 62
+-- On BINXOR shift to state 70
+-- On BINOR shift to state 72
+-- On BINANDNOT shift to state 74
+-- On BINAND shift to state 76
 -- On SEMICOLON reduce production exp -> exp PLUS exp 
 -- On RSQUARE reduce production exp -> exp PLUS exp 
 -- On PLUS reduce production exp -> exp PLUS exp 
@@ -1164,23 +1104,23 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BOOLOR reduce production exp -> exp PLUS exp 
 -- On BOOLAND reduce production exp -> exp PLUS exp 
 
-State 65:
-exp -> exp MOD . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 66
-
 State 66:
+exp -> exp MOD . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 67
+
+State 67:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -1201,14 +1141,14 @@ exp -> exp . LT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT
 exp -> exp . GT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . LEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On RSHIFT shift to state 57
--- On MULT shift to state 59
--- On LSHIFT shift to state 67
--- On DIV shift to state 61
--- On BINXOR shift to state 69
--- On BINOR shift to state 71
--- On BINANDNOT shift to state 73
--- On BINAND shift to state 75
+-- On RSHIFT shift to state 58
+-- On MULT shift to state 60
+-- On LSHIFT shift to state 68
+-- On DIV shift to state 62
+-- On BINXOR shift to state 70
+-- On BINOR shift to state 72
+-- On BINANDNOT shift to state 74
+-- On BINAND shift to state 76
 -- On SEMICOLON reduce production exp -> exp MOD exp 
 -- On RSQUARE reduce production exp -> exp MOD exp 
 -- On PLUS reduce production exp -> exp MOD exp 
@@ -1224,23 +1164,23 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BOOLOR reduce production exp -> exp MOD exp 
 -- On BOOLAND reduce production exp -> exp MOD exp 
 
-State 67:
-exp -> exp LSHIFT . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 68
-
 State 68:
+exp -> exp LSHIFT . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 69
+
+State 69:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -1261,8 +1201,8 @@ exp -> exp . LT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT
 exp -> exp . GT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . LEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On MULT shift to state 59
--- On DIV shift to state 61
+-- On MULT shift to state 60
+-- On DIV shift to state 62
 -- On SEMICOLON reduce production exp -> exp LSHIFT exp 
 -- On RSQUARE reduce production exp -> exp LSHIFT exp 
 -- On RSHIFT reduce production exp -> exp LSHIFT exp 
@@ -1284,23 +1224,23 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BINANDNOT reduce production exp -> exp LSHIFT exp 
 -- On BINAND reduce production exp -> exp LSHIFT exp 
 
-State 69:
-exp -> exp BINXOR . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 70
-
 State 70:
+exp -> exp BINXOR . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 71
+
+State 71:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -1321,8 +1261,8 @@ exp -> exp . LT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT
 exp -> exp . GT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . LEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On MULT shift to state 59
--- On DIV shift to state 61
+-- On MULT shift to state 60
+-- On DIV shift to state 62
 -- On SEMICOLON reduce production exp -> exp BINXOR exp 
 -- On RSQUARE reduce production exp -> exp BINXOR exp 
 -- On RSHIFT reduce production exp -> exp BINXOR exp 
@@ -1344,23 +1284,23 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BINANDNOT reduce production exp -> exp BINXOR exp 
 -- On BINAND reduce production exp -> exp BINXOR exp 
 
-State 71:
-exp -> exp BINOR . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 72
-
 State 72:
+exp -> exp BINOR . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 73
+
+State 73:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -1381,8 +1321,8 @@ exp -> exp . LT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT
 exp -> exp . GT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . LEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On MULT shift to state 59
--- On DIV shift to state 61
+-- On MULT shift to state 60
+-- On DIV shift to state 62
 -- On SEMICOLON reduce production exp -> exp BINOR exp 
 -- On RSQUARE reduce production exp -> exp BINOR exp 
 -- On RSHIFT reduce production exp -> exp BINOR exp 
@@ -1404,23 +1344,23 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BINANDNOT reduce production exp -> exp BINOR exp 
 -- On BINAND reduce production exp -> exp BINOR exp 
 
-State 73:
-exp -> exp BINANDNOT . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 74
-
 State 74:
+exp -> exp BINANDNOT . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 75
+
+State 75:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -1441,8 +1381,8 @@ exp -> exp . LT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT
 exp -> exp . GT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . LEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On MULT shift to state 59
--- On DIV shift to state 61
+-- On MULT shift to state 60
+-- On DIV shift to state 62
 -- On SEMICOLON reduce production exp -> exp BINANDNOT exp 
 -- On RSQUARE reduce production exp -> exp BINANDNOT exp 
 -- On RSHIFT reduce production exp -> exp BINANDNOT exp 
@@ -1464,23 +1404,23 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BINANDNOT reduce production exp -> exp BINANDNOT exp 
 -- On BINAND reduce production exp -> exp BINANDNOT exp 
 
-State 75:
-exp -> exp BINAND . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 76
-
 State 76:
+exp -> exp BINAND . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 77
+
+State 77:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -1501,8 +1441,8 @@ exp -> exp . LT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT
 exp -> exp . GT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . LEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On MULT shift to state 59
--- On DIV shift to state 61
+-- On MULT shift to state 60
+-- On DIV shift to state 62
 -- On SEMICOLON reduce production exp -> exp BINAND exp 
 -- On RSQUARE reduce production exp -> exp BINAND exp 
 -- On RSHIFT reduce production exp -> exp BINAND exp 
@@ -1524,23 +1464,23 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BINANDNOT reduce production exp -> exp BINAND exp 
 -- On BINAND reduce production exp -> exp BINAND exp 
 
-State 77:
-exp -> exp NEQ . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 78
-
 State 78:
+exp -> exp NEQ . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 79
+
+State 79:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -1561,17 +1501,17 @@ exp -> exp . LT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT
 exp -> exp . GT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . LEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On RSHIFT shift to state 57
--- On PLUS shift to state 63
--- On MULT shift to state 59
--- On MOD shift to state 65
--- On MINUS shift to state 79
--- On LSHIFT shift to state 67
--- On DIV shift to state 61
--- On BINXOR shift to state 69
--- On BINOR shift to state 71
--- On BINANDNOT shift to state 73
--- On BINAND shift to state 75
+-- On RSHIFT shift to state 58
+-- On PLUS shift to state 64
+-- On MULT shift to state 60
+-- On MOD shift to state 66
+-- On MINUS shift to state 80
+-- On LSHIFT shift to state 68
+-- On DIV shift to state 62
+-- On BINXOR shift to state 70
+-- On BINOR shift to state 72
+-- On BINANDNOT shift to state 74
+-- On BINAND shift to state 76
 -- On SEMICOLON reduce production exp -> exp NEQ exp 
 -- On RSQUARE reduce production exp -> exp NEQ exp 
 -- On NEQ reduce production exp -> exp NEQ exp 
@@ -1584,23 +1524,23 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BOOLOR reduce production exp -> exp NEQ exp 
 -- On BOOLAND reduce production exp -> exp NEQ exp 
 
-State 79:
-exp -> exp MINUS . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 80
-
 State 80:
+exp -> exp MINUS . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 81
+
+State 81:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp MINUS exp . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -1621,15 +1561,15 @@ exp -> exp . LT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT
 exp -> exp . GT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . LEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On RSHIFT shift to state 57
--- On MULT shift to state 59
--- On MOD shift to state 65
--- On LSHIFT shift to state 67
--- On DIV shift to state 61
--- On BINXOR shift to state 69
--- On BINOR shift to state 71
--- On BINANDNOT shift to state 73
--- On BINAND shift to state 75
+-- On RSHIFT shift to state 58
+-- On MULT shift to state 60
+-- On MOD shift to state 66
+-- On LSHIFT shift to state 68
+-- On DIV shift to state 62
+-- On BINXOR shift to state 70
+-- On BINOR shift to state 72
+-- On BINANDNOT shift to state 74
+-- On BINAND shift to state 76
 -- On SEMICOLON reduce production exp -> exp MINUS exp 
 -- On RSQUARE reduce production exp -> exp MINUS exp 
 -- On PLUS reduce production exp -> exp MINUS exp 
@@ -1644,23 +1584,23 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BOOLOR reduce production exp -> exp MINUS exp 
 -- On BOOLAND reduce production exp -> exp MINUS exp 
 
-State 81:
-exp -> exp LT . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 82
-
 State 82:
+exp -> exp LT . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 83
+
+State 83:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -1681,17 +1621,17 @@ exp -> exp LT exp . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT
 exp -> exp . GT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . LEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On RSHIFT shift to state 57
--- On PLUS shift to state 63
--- On MULT shift to state 59
--- On MOD shift to state 65
--- On MINUS shift to state 79
--- On LSHIFT shift to state 67
--- On DIV shift to state 61
--- On BINXOR shift to state 69
--- On BINOR shift to state 71
--- On BINANDNOT shift to state 73
--- On BINAND shift to state 75
+-- On RSHIFT shift to state 58
+-- On PLUS shift to state 64
+-- On MULT shift to state 60
+-- On MOD shift to state 66
+-- On MINUS shift to state 80
+-- On LSHIFT shift to state 68
+-- On DIV shift to state 62
+-- On BINXOR shift to state 70
+-- On BINOR shift to state 72
+-- On BINANDNOT shift to state 74
+-- On BINAND shift to state 76
 -- On SEMICOLON reduce production exp -> exp LT exp 
 -- On RSQUARE reduce production exp -> exp LT exp 
 -- On NEQ reduce production exp -> exp LT exp 
@@ -1704,23 +1644,23 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BOOLOR reduce production exp -> exp LT exp 
 -- On BOOLAND reduce production exp -> exp LT exp 
 
-State 83:
-exp -> exp LEQ . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 84
-
 State 84:
+exp -> exp LEQ . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 85
+
+State 85:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -1741,17 +1681,17 @@ exp -> exp . GT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT
 exp -> exp . LEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp LEQ exp . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On RSHIFT shift to state 57
--- On PLUS shift to state 63
--- On MULT shift to state 59
--- On MOD shift to state 65
--- On MINUS shift to state 79
--- On LSHIFT shift to state 67
--- On DIV shift to state 61
--- On BINXOR shift to state 69
--- On BINOR shift to state 71
--- On BINANDNOT shift to state 73
--- On BINAND shift to state 75
+-- On RSHIFT shift to state 58
+-- On PLUS shift to state 64
+-- On MULT shift to state 60
+-- On MOD shift to state 66
+-- On MINUS shift to state 80
+-- On LSHIFT shift to state 68
+-- On DIV shift to state 62
+-- On BINXOR shift to state 70
+-- On BINOR shift to state 72
+-- On BINANDNOT shift to state 74
+-- On BINAND shift to state 76
 -- On SEMICOLON reduce production exp -> exp LEQ exp 
 -- On RSQUARE reduce production exp -> exp LEQ exp 
 -- On NEQ reduce production exp -> exp LEQ exp 
@@ -1764,23 +1704,23 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BOOLOR reduce production exp -> exp LEQ exp 
 -- On BOOLAND reduce production exp -> exp LEQ exp 
 
-State 85:
-exp -> exp GT . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 86
-
 State 86:
+exp -> exp GT . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 87
+
+State 87:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -1801,17 +1741,17 @@ exp -> exp . GT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT
 exp -> exp GT exp . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . LEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On RSHIFT shift to state 57
--- On PLUS shift to state 63
--- On MULT shift to state 59
--- On MOD shift to state 65
--- On MINUS shift to state 79
--- On LSHIFT shift to state 67
--- On DIV shift to state 61
--- On BINXOR shift to state 69
--- On BINOR shift to state 71
--- On BINANDNOT shift to state 73
--- On BINAND shift to state 75
+-- On RSHIFT shift to state 58
+-- On PLUS shift to state 64
+-- On MULT shift to state 60
+-- On MOD shift to state 66
+-- On MINUS shift to state 80
+-- On LSHIFT shift to state 68
+-- On DIV shift to state 62
+-- On BINXOR shift to state 70
+-- On BINOR shift to state 72
+-- On BINANDNOT shift to state 74
+-- On BINAND shift to state 76
 -- On SEMICOLON reduce production exp -> exp GT exp 
 -- On RSQUARE reduce production exp -> exp GT exp 
 -- On NEQ reduce production exp -> exp GT exp 
@@ -1824,23 +1764,23 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BOOLOR reduce production exp -> exp GT exp 
 -- On BOOLAND reduce production exp -> exp GT exp 
 
-State 87:
-exp -> exp GEQ . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 88
-
 State 88:
+exp -> exp GEQ . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 89
+
+State 89:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -1861,17 +1801,17 @@ exp -> exp . GT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT
 exp -> exp . LEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp GEQ exp . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On RSHIFT shift to state 57
--- On PLUS shift to state 63
--- On MULT shift to state 59
--- On MOD shift to state 65
--- On MINUS shift to state 79
--- On LSHIFT shift to state 67
--- On DIV shift to state 61
--- On BINXOR shift to state 69
--- On BINOR shift to state 71
--- On BINANDNOT shift to state 73
--- On BINAND shift to state 75
+-- On RSHIFT shift to state 58
+-- On PLUS shift to state 64
+-- On MULT shift to state 60
+-- On MOD shift to state 66
+-- On MINUS shift to state 80
+-- On LSHIFT shift to state 68
+-- On DIV shift to state 62
+-- On BINXOR shift to state 70
+-- On BINOR shift to state 72
+-- On BINANDNOT shift to state 74
+-- On BINAND shift to state 76
 -- On SEMICOLON reduce production exp -> exp GEQ exp 
 -- On RSQUARE reduce production exp -> exp GEQ exp 
 -- On NEQ reduce production exp -> exp GEQ exp 
@@ -1884,23 +1824,23 @@ exp -> exp GEQ exp . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BOOLOR reduce production exp -> exp GEQ exp 
 -- On BOOLAND reduce production exp -> exp GEQ exp 
 
-State 89:
-exp -> exp EQ . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 90
-
 State 90:
+exp -> exp EQ . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 91
+
+State 91:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -1921,17 +1861,17 @@ exp -> exp . LT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT
 exp -> exp . GT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . LEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On RSHIFT shift to state 57
--- On PLUS shift to state 63
--- On MULT shift to state 59
--- On MOD shift to state 65
--- On MINUS shift to state 79
--- On LSHIFT shift to state 67
--- On DIV shift to state 61
--- On BINXOR shift to state 69
--- On BINOR shift to state 71
--- On BINANDNOT shift to state 73
--- On BINAND shift to state 75
+-- On RSHIFT shift to state 58
+-- On PLUS shift to state 64
+-- On MULT shift to state 60
+-- On MOD shift to state 66
+-- On MINUS shift to state 80
+-- On LSHIFT shift to state 68
+-- On DIV shift to state 62
+-- On BINXOR shift to state 70
+-- On BINOR shift to state 72
+-- On BINANDNOT shift to state 74
+-- On BINAND shift to state 76
 -- On SEMICOLON reduce production exp -> exp EQ exp 
 -- On RSQUARE reduce production exp -> exp EQ exp 
 -- On NEQ reduce production exp -> exp EQ exp 
@@ -1944,23 +1884,23 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BOOLOR reduce production exp -> exp EQ exp 
 -- On BOOLAND reduce production exp -> exp EQ exp 
 
-State 91:
-exp -> exp BOOLOR . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 92
-
 State 92:
+exp -> exp BOOLOR . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 93
+
+State 93:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -1981,46 +1921,46 @@ exp -> exp . LT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT
 exp -> exp . GT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . LEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On RSHIFT shift to state 57
--- On PLUS shift to state 63
--- On NEQ shift to state 77
--- On MULT shift to state 59
--- On MOD shift to state 65
--- On MINUS shift to state 79
--- On LT shift to state 81
--- On LSHIFT shift to state 67
--- On LEQ shift to state 83
--- On GT shift to state 85
--- On GEQ shift to state 87
--- On EQ shift to state 89
--- On DIV shift to state 61
--- On BOOLAND shift to state 93
--- On BINXOR shift to state 69
--- On BINOR shift to state 71
--- On BINANDNOT shift to state 73
--- On BINAND shift to state 75
+-- On RSHIFT shift to state 58
+-- On PLUS shift to state 64
+-- On NEQ shift to state 78
+-- On MULT shift to state 60
+-- On MOD shift to state 66
+-- On MINUS shift to state 80
+-- On LT shift to state 82
+-- On LSHIFT shift to state 68
+-- On LEQ shift to state 84
+-- On GT shift to state 86
+-- On GEQ shift to state 88
+-- On EQ shift to state 90
+-- On DIV shift to state 62
+-- On BOOLAND shift to state 94
+-- On BINXOR shift to state 70
+-- On BINOR shift to state 72
+-- On BINANDNOT shift to state 74
+-- On BINAND shift to state 76
 -- On SEMICOLON reduce production exp -> exp BOOLOR exp 
 -- On RSQUARE reduce production exp -> exp BOOLOR exp 
 -- On COMMA reduce production exp -> exp BOOLOR exp 
 -- On BOOLOR reduce production exp -> exp BOOLOR exp 
 
-State 93:
-exp -> exp BOOLAND . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 94
-
 State 94:
+exp -> exp BOOLAND . exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 95
+
+State 95:
 exp -> exp . PLUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -2041,68 +1981,68 @@ exp -> exp . LT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT
 exp -> exp . GT exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . LEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
--- On RSHIFT shift to state 57
--- On PLUS shift to state 63
--- On NEQ shift to state 77
--- On MULT shift to state 59
--- On MOD shift to state 65
--- On MINUS shift to state 79
--- On LT shift to state 81
--- On LSHIFT shift to state 67
--- On LEQ shift to state 83
--- On GT shift to state 85
--- On GEQ shift to state 87
--- On EQ shift to state 89
--- On DIV shift to state 61
--- On BINXOR shift to state 69
--- On BINOR shift to state 71
--- On BINANDNOT shift to state 73
--- On BINAND shift to state 75
+-- On RSHIFT shift to state 58
+-- On PLUS shift to state 64
+-- On NEQ shift to state 78
+-- On MULT shift to state 60
+-- On MOD shift to state 66
+-- On MINUS shift to state 80
+-- On LT shift to state 82
+-- On LSHIFT shift to state 68
+-- On LEQ shift to state 84
+-- On GT shift to state 86
+-- On GEQ shift to state 88
+-- On EQ shift to state 90
+-- On DIV shift to state 62
+-- On BINXOR shift to state 70
+-- On BINOR shift to state 72
+-- On BINANDNOT shift to state 74
+-- On BINAND shift to state 76
 -- On SEMICOLON reduce production exp -> exp BOOLAND exp 
 -- On RSQUARE reduce production exp -> exp BOOLAND exp 
 -- On COMMA reduce production exp -> exp BOOLAND exp 
 -- On BOOLOR reduce production exp -> exp BOOLAND exp 
 -- On BOOLAND reduce production exp -> exp BOOLAND exp 
 
-State 95:
-typeT -> MAP RSQUARE typeT . RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
--- On RSQUARE shift to state 96
-
 State 96:
-typeT -> MAP RSQUARE typeT RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
--- On STRUCT shift to state 16
--- On STRINGTYPE shift to state 21
--- On RUNETYPE shift to state 22
--- On MULT shift to state 23
--- On MAP shift to state 24
--- On LSQUARE shift to state 26
--- On LPAR shift to state 30
--- On INTTYPE shift to state 31
--- On INTERFACE shift to state 32
--- On IDENTIFIER shift to state 33
--- On FLOATTYPE shift to state 34
--- On CHAN shift to state 35
--- On typeT shift to state 97
+typeT -> MAP RSQUARE typeT . RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+-- On RSQUARE shift to state 97
 
 State 97:
+typeT -> MAP RSQUARE typeT RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+-- On STRUCT shift to state 17
+-- On STRINGTYPE shift to state 22
+-- On RUNETYPE shift to state 23
+-- On MULT shift to state 24
+-- On MAP shift to state 25
+-- On LSQUARE shift to state 27
+-- On LPAR shift to state 31
+-- On INTTYPE shift to state 32
+-- On INTERFACE shift to state 33
+-- On IDENTIFIER shift to state 34
+-- On FLOATTYPE shift to state 35
+-- On CHAN shift to state 36
+-- On typeT shift to state 98
+
+State 98:
 typeT -> MAP RSQUARE typeT RSQUARE typeT . [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On SEMICOLON reduce production typeT -> MAP RSQUARE typeT RSQUARE typeT 
 -- On RSQUARE reduce production typeT -> MAP RSQUARE typeT RSQUARE typeT 
 -- On RPAR reduce production typeT -> MAP RSQUARE typeT RSQUARE typeT 
 -- On ASSIGN reduce production typeT -> MAP RSQUARE typeT RSQUARE typeT 
 
-State 98:
+State 99:
 typeT -> MULT typeT . [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On SEMICOLON reduce production typeT -> MULT typeT 
 -- On RSQUARE reduce production typeT -> MULT typeT 
 -- On RPAR reduce production typeT -> MULT typeT 
 -- On ASSIGN reduce production typeT -> MULT typeT 
 
-State 99:
-ident_list -> ident_list COMMA . IDENTIFIER [ STRUCT STRINGTYPE RUNETYPE MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ASSIGN ]
--- On IDENTIFIER shift to state 100
-
 State 100:
+ident_list -> ident_list COMMA . IDENTIFIER [ STRUCT STRINGTYPE RUNETYPE MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ASSIGN ]
+-- On IDENTIFIER shift to state 101
+
+State 101:
 ident_list -> ident_list COMMA IDENTIFIER . [ STRUCT STRINGTYPE RUNETYPE MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ASSIGN ]
 -- On STRUCT reduce production ident_list -> ident_list COMMA IDENTIFIER 
 -- On STRINGTYPE reduce production ident_list -> ident_list COMMA IDENTIFIER 
@@ -2119,77 +2059,63 @@ ident_list -> ident_list COMMA IDENTIFIER . [ STRUCT STRINGTYPE RUNETYPE MULT MA
 -- On CHAN reduce production ident_list -> ident_list COMMA IDENTIFIER 
 -- On ASSIGN reduce production ident_list -> ident_list COMMA IDENTIFIER 
 
-State 101:
-field_decls -> field_decls ident_list typeT . SEMICOLON [ STRUCT STRINGTYPE RUNETYPE RCURLY MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ]
--- On SEMICOLON shift to state 102
-
 State 102:
-field_decls -> field_decls ident_list typeT SEMICOLON . [ STRUCT STRINGTYPE RUNETYPE RCURLY MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ]
--- On STRUCT reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
--- On STRINGTYPE reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
--- On RUNETYPE reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
--- On RCURLY reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
--- On MULT reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
--- On MAP reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
--- On LSQUARE reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
--- On LPAR reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
--- On INTTYPE reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
--- On INTERFACE reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
--- On IDENTIFIER reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
--- On FLOATTYPE reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
--- On COMMA reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
--- On CHAN reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
+field_decls -> field_decls ident_list typeT . SEMICOLON [ RCURLY IDENTIFIER ]
+-- On SEMICOLON shift to state 103
 
 State 103:
-var_spec -> ident_list ASSIGN . exp_list SEMICOLON [ VAR TYPE STRUCT STRINGTYPE RUNETYPE RPAR MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE EOF COMMA CHAN ASSIGN ]
--- On exp_list shift to state 104
--- On SEMICOLON reduce production exp_list -> 
--- On COMMA reduce production exp_list -> 
+field_decls -> field_decls ident_list typeT SEMICOLON . [ RCURLY IDENTIFIER ]
+-- On RCURLY reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
+-- On IDENTIFIER reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
 
 State 104:
-exp_list -> exp_list . COMMA exp [ SEMICOLON COMMA ]
-var_spec -> ident_list ASSIGN exp_list . SEMICOLON [ VAR TYPE STRUCT STRINGTYPE RUNETYPE RPAR MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE EOF COMMA CHAN ASSIGN ]
--- On SEMICOLON shift to state 105
--- On COMMA shift to state 106
+var_spec -> ident_list ASSIGN . exp_list SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp_list shift to state 105
+-- On exp shift to state 109
 
 State 105:
-var_spec -> ident_list ASSIGN exp_list SEMICOLON . [ VAR TYPE STRUCT STRINGTYPE RUNETYPE RPAR MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE EOF COMMA CHAN ASSIGN ]
--- On VAR reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
--- On TYPE reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
--- On STRUCT reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
--- On STRINGTYPE reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
--- On RUNETYPE reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
--- On RPAR reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
--- On MULT reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
--- On MAP reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
--- On LSQUARE reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
--- On LPAR reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
--- On INTTYPE reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
--- On INTERFACE reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
--- On IDENTIFIER reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
--- On FLOATTYPE reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
--- On EOF reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
--- On COMMA reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
--- On CHAN reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
--- On ASSIGN reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
+exp_list -> exp_list . COMMA exp [ SEMICOLON COMMA ]
+var_spec -> ident_list ASSIGN exp_list . SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+-- On SEMICOLON shift to state 106
+-- On COMMA shift to state 107
 
 State 106:
-exp_list -> exp_list COMMA . exp [ SEMICOLON COMMA ]
--- On STRINGLITERAL shift to state 27
--- On RUNELITERAL shift to state 28
--- On RECEIVE shift to state 39
--- On PLUS shift to state 40
--- On OCTINTLITERAL shift to state 41
--- On MINUS shift to state 42
--- On HEXINTLITERAL shift to state 43
--- On FLOATLITERAL shift to state 44
--- On DECINTLITERAL shift to state 45
--- On BOOLNOT shift to state 46
--- On BINXOR shift to state 47
--- On BININTLITERAL shift to state 48
--- On exp shift to state 107
+var_spec -> ident_list ASSIGN exp_list SEMICOLON . [ VAR TYPE RPAR IDENTIFIER EOF ]
+-- On VAR reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
+-- On TYPE reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
+-- On RPAR reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
+-- On IDENTIFIER reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
+-- On EOF reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
 
 State 107:
+exp_list -> exp_list COMMA . exp [ SEMICOLON COMMA ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp shift to state 108
+
+State 108:
 exp -> exp . PLUS exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MINUS exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . MULT exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
@@ -2210,163 +2136,191 @@ exp -> exp . GT exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT 
 exp -> exp . LEQ exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp_list -> exp_list COMMA exp . [ SEMICOLON COMMA ]
--- On RSHIFT shift to state 57
--- On PLUS shift to state 63
--- On NEQ shift to state 77
--- On MULT shift to state 59
--- On MOD shift to state 65
--- On MINUS shift to state 79
--- On LT shift to state 81
--- On LSHIFT shift to state 67
--- On LEQ shift to state 83
--- On GT shift to state 85
--- On GEQ shift to state 87
--- On EQ shift to state 89
--- On DIV shift to state 61
--- On BOOLOR shift to state 91
--- On BOOLAND shift to state 93
--- On BINXOR shift to state 69
--- On BINOR shift to state 71
--- On BINANDNOT shift to state 73
--- On BINAND shift to state 75
+-- On RSHIFT shift to state 58
+-- On PLUS shift to state 64
+-- On NEQ shift to state 78
+-- On MULT shift to state 60
+-- On MOD shift to state 66
+-- On MINUS shift to state 80
+-- On LT shift to state 82
+-- On LSHIFT shift to state 68
+-- On LEQ shift to state 84
+-- On GT shift to state 86
+-- On GEQ shift to state 88
+-- On EQ shift to state 90
+-- On DIV shift to state 62
+-- On BOOLOR shift to state 92
+-- On BOOLAND shift to state 94
+-- On BINXOR shift to state 70
+-- On BINOR shift to state 72
+-- On BINANDNOT shift to state 74
+-- On BINAND shift to state 76
 -- On SEMICOLON reduce production exp_list -> exp_list COMMA exp 
 -- On COMMA reduce production exp_list -> exp_list COMMA exp 
 
-State 108:
-var_spec -> ident_list typeT . SEMICOLON [ VAR TYPE STRUCT STRINGTYPE RUNETYPE RPAR MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE EOF COMMA CHAN ASSIGN ]
-var_spec -> ident_list typeT . ASSIGN exp_list SEMICOLON [ VAR TYPE STRUCT STRINGTYPE RUNETYPE RPAR MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE EOF COMMA CHAN ASSIGN ]
--- On SEMICOLON shift to state 109
--- On ASSIGN shift to state 110
-
 State 109:
-var_spec -> ident_list typeT SEMICOLON . [ VAR TYPE STRUCT STRINGTYPE RUNETYPE RPAR MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE EOF COMMA CHAN ASSIGN ]
--- On VAR reduce production var_spec -> ident_list typeT SEMICOLON 
--- On TYPE reduce production var_spec -> ident_list typeT SEMICOLON 
--- On STRUCT reduce production var_spec -> ident_list typeT SEMICOLON 
--- On STRINGTYPE reduce production var_spec -> ident_list typeT SEMICOLON 
--- On RUNETYPE reduce production var_spec -> ident_list typeT SEMICOLON 
--- On RPAR reduce production var_spec -> ident_list typeT SEMICOLON 
--- On MULT reduce production var_spec -> ident_list typeT SEMICOLON 
--- On MAP reduce production var_spec -> ident_list typeT SEMICOLON 
--- On LSQUARE reduce production var_spec -> ident_list typeT SEMICOLON 
--- On LPAR reduce production var_spec -> ident_list typeT SEMICOLON 
--- On INTTYPE reduce production var_spec -> ident_list typeT SEMICOLON 
--- On INTERFACE reduce production var_spec -> ident_list typeT SEMICOLON 
--- On IDENTIFIER reduce production var_spec -> ident_list typeT SEMICOLON 
--- On FLOATTYPE reduce production var_spec -> ident_list typeT SEMICOLON 
--- On EOF reduce production var_spec -> ident_list typeT SEMICOLON 
--- On COMMA reduce production var_spec -> ident_list typeT SEMICOLON 
--- On CHAN reduce production var_spec -> ident_list typeT SEMICOLON 
--- On ASSIGN reduce production var_spec -> ident_list typeT SEMICOLON 
+exp -> exp . PLUS exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MINUS exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MULT exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . DIV exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINAND exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINOR exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINXOR exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BINANDNOT exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . RSHIFT exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LSHIFT exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . MOD exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLAND exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . BOOLOR exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . EQ exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . NEQ exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LT exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GT exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . LEQ exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp -> exp . GEQ exp [ SEMICOLON RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV COMMA BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
+exp_list -> exp . [ SEMICOLON COMMA ]
+-- On RSHIFT shift to state 58
+-- On PLUS shift to state 64
+-- On NEQ shift to state 78
+-- On MULT shift to state 60
+-- On MOD shift to state 66
+-- On MINUS shift to state 80
+-- On LT shift to state 82
+-- On LSHIFT shift to state 68
+-- On LEQ shift to state 84
+-- On GT shift to state 86
+-- On GEQ shift to state 88
+-- On EQ shift to state 90
+-- On DIV shift to state 62
+-- On BOOLOR shift to state 92
+-- On BOOLAND shift to state 94
+-- On BINXOR shift to state 70
+-- On BINOR shift to state 72
+-- On BINANDNOT shift to state 74
+-- On BINAND shift to state 76
+-- On SEMICOLON reduce production exp_list -> exp 
+-- On COMMA reduce production exp_list -> exp 
 
 State 110:
-var_spec -> ident_list typeT ASSIGN . exp_list SEMICOLON [ VAR TYPE STRUCT STRINGTYPE RUNETYPE RPAR MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE EOF COMMA CHAN ASSIGN ]
--- On exp_list shift to state 111
--- On SEMICOLON reduce production exp_list -> 
--- On COMMA reduce production exp_list -> 
+var_spec -> ident_list typeT . SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+var_spec -> ident_list typeT . ASSIGN exp_list SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+-- On SEMICOLON shift to state 111
+-- On ASSIGN shift to state 112
 
 State 111:
-exp_list -> exp_list . COMMA exp [ SEMICOLON COMMA ]
-var_spec -> ident_list typeT ASSIGN exp_list . SEMICOLON [ VAR TYPE STRUCT STRINGTYPE RUNETYPE RPAR MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE EOF COMMA CHAN ASSIGN ]
--- On SEMICOLON shift to state 112
--- On COMMA shift to state 106
+var_spec -> ident_list typeT SEMICOLON . [ VAR TYPE RPAR IDENTIFIER EOF ]
+-- On VAR reduce production var_spec -> ident_list typeT SEMICOLON 
+-- On TYPE reduce production var_spec -> ident_list typeT SEMICOLON 
+-- On RPAR reduce production var_spec -> ident_list typeT SEMICOLON 
+-- On IDENTIFIER reduce production var_spec -> ident_list typeT SEMICOLON 
+-- On EOF reduce production var_spec -> ident_list typeT SEMICOLON 
 
 State 112:
-var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON . [ VAR TYPE STRUCT STRINGTYPE RUNETYPE RPAR MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE EOF COMMA CHAN ASSIGN ]
--- On VAR reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
--- On TYPE reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
--- On STRUCT reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
--- On STRINGTYPE reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
--- On RUNETYPE reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
--- On RPAR reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
--- On MULT reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
--- On MAP reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
--- On LSQUARE reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
--- On LPAR reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
--- On INTTYPE reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
--- On INTERFACE reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
--- On IDENTIFIER reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
--- On FLOATTYPE reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
--- On EOF reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
--- On COMMA reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
--- On CHAN reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
--- On ASSIGN reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
+var_spec -> ident_list typeT ASSIGN . exp_list SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+-- On STRINGLITERAL shift to state 28
+-- On RUNELITERAL shift to state 29
+-- On RECEIVE shift to state 40
+-- On PLUS shift to state 41
+-- On OCTINTLITERAL shift to state 42
+-- On MINUS shift to state 43
+-- On HEXINTLITERAL shift to state 44
+-- On FLOATLITERAL shift to state 45
+-- On DECINTLITERAL shift to state 46
+-- On BOOLNOT shift to state 47
+-- On BINXOR shift to state 48
+-- On BININTLITERAL shift to state 49
+-- On exp_list shift to state 113
+-- On exp shift to state 109
 
 State 113:
+exp_list -> exp_list . COMMA exp [ SEMICOLON COMMA ]
+var_spec -> ident_list typeT ASSIGN exp_list . SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+-- On SEMICOLON shift to state 114
+-- On COMMA shift to state 107
+
+State 114:
+var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON . [ VAR TYPE RPAR IDENTIFIER EOF ]
+-- On VAR reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
+-- On TYPE reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
+-- On RPAR reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
+-- On IDENTIFIER reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
+-- On EOF reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
+
+State 115:
 var_decls -> VAR var_spec . [ VAR TYPE EOF ]
 -- On VAR reduce production var_decls -> VAR var_spec 
 -- On TYPE reduce production var_decls -> VAR var_spec 
 -- On EOF reduce production var_decls -> VAR var_spec 
 
-State 114:
+State 116:
 type_decls -> TYPE . type_spec [ VAR TYPE EOF ]
 type_decls -> TYPE . LPAR type_specs RPAR SEMICOLON [ VAR TYPE EOF ]
--- On LPAR shift to state 115
--- On IDENTIFIER shift to state 119
--- On type_spec shift to state 126
+-- On LPAR shift to state 117
+-- On IDENTIFIER shift to state 121
+-- On type_spec shift to state 128
 
-State 115:
+State 117:
 type_decls -> TYPE LPAR . type_specs RPAR SEMICOLON [ VAR TYPE EOF ]
--- On type_specs shift to state 116
+-- On type_specs shift to state 118
 -- On RPAR reduce production type_specs -> 
 -- On IDENTIFIER reduce production type_specs -> 
 
-State 116:
+State 118:
 type_decls -> TYPE LPAR type_specs . RPAR SEMICOLON [ VAR TYPE EOF ]
 type_specs -> type_specs . type_spec [ RPAR IDENTIFIER ]
--- On RPAR shift to state 117
--- On IDENTIFIER shift to state 119
--- On type_spec shift to state 125
+-- On RPAR shift to state 119
+-- On IDENTIFIER shift to state 121
+-- On type_spec shift to state 127
 
-State 117:
+State 119:
 type_decls -> TYPE LPAR type_specs RPAR . SEMICOLON [ VAR TYPE EOF ]
--- On SEMICOLON shift to state 118
+-- On SEMICOLON shift to state 120
 
-State 118:
+State 120:
 type_decls -> TYPE LPAR type_specs RPAR SEMICOLON . [ VAR TYPE EOF ]
 -- On VAR reduce production type_decls -> TYPE LPAR type_specs RPAR SEMICOLON 
 -- On TYPE reduce production type_decls -> TYPE LPAR type_specs RPAR SEMICOLON 
 -- On EOF reduce production type_decls -> TYPE LPAR type_specs RPAR SEMICOLON 
 
-State 119:
+State 121:
 type_spec -> IDENTIFIER . ASSIGN typeT SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
 type_spec -> IDENTIFIER . typeT SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
--- On STRUCT shift to state 16
--- On STRINGTYPE shift to state 21
--- On RUNETYPE shift to state 22
--- On MULT shift to state 23
--- On MAP shift to state 24
--- On LSQUARE shift to state 26
--- On LPAR shift to state 30
--- On INTTYPE shift to state 31
--- On INTERFACE shift to state 32
--- On IDENTIFIER shift to state 33
--- On FLOATTYPE shift to state 34
--- On CHAN shift to state 35
--- On ASSIGN shift to state 120
--- On typeT shift to state 123
-
-State 120:
-type_spec -> IDENTIFIER ASSIGN . typeT SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
--- On STRUCT shift to state 16
--- On STRINGTYPE shift to state 21
--- On RUNETYPE shift to state 22
--- On MULT shift to state 23
--- On MAP shift to state 24
--- On LSQUARE shift to state 26
--- On LPAR shift to state 30
--- On INTTYPE shift to state 31
--- On INTERFACE shift to state 32
--- On IDENTIFIER shift to state 33
--- On FLOATTYPE shift to state 34
--- On CHAN shift to state 35
--- On typeT shift to state 121
-
-State 121:
-type_spec -> IDENTIFIER ASSIGN typeT . SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
--- On SEMICOLON shift to state 122
+-- On STRUCT shift to state 17
+-- On STRINGTYPE shift to state 22
+-- On RUNETYPE shift to state 23
+-- On MULT shift to state 24
+-- On MAP shift to state 25
+-- On LSQUARE shift to state 27
+-- On LPAR shift to state 31
+-- On INTTYPE shift to state 32
+-- On INTERFACE shift to state 33
+-- On IDENTIFIER shift to state 34
+-- On FLOATTYPE shift to state 35
+-- On CHAN shift to state 36
+-- On ASSIGN shift to state 122
+-- On typeT shift to state 125
 
 State 122:
+type_spec -> IDENTIFIER ASSIGN . typeT SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+-- On STRUCT shift to state 17
+-- On STRINGTYPE shift to state 22
+-- On RUNETYPE shift to state 23
+-- On MULT shift to state 24
+-- On MAP shift to state 25
+-- On LSQUARE shift to state 27
+-- On LPAR shift to state 31
+-- On INTTYPE shift to state 32
+-- On INTERFACE shift to state 33
+-- On IDENTIFIER shift to state 34
+-- On FLOATTYPE shift to state 35
+-- On CHAN shift to state 36
+-- On typeT shift to state 123
+
+State 123:
+type_spec -> IDENTIFIER ASSIGN typeT . SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+-- On SEMICOLON shift to state 124
+
+State 124:
 type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON . [ VAR TYPE RPAR IDENTIFIER EOF ]
 -- On VAR reduce production type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON 
 -- On TYPE reduce production type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON 
@@ -2374,11 +2328,11 @@ type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON . [ VAR TYPE RPAR IDENTIFIER EOF 
 -- On IDENTIFIER reduce production type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON 
 -- On EOF reduce production type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON 
 
-State 123:
+State 125:
 type_spec -> IDENTIFIER typeT . SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
--- On SEMICOLON shift to state 124
+-- On SEMICOLON shift to state 126
 
-State 124:
+State 126:
 type_spec -> IDENTIFIER typeT SEMICOLON . [ VAR TYPE RPAR IDENTIFIER EOF ]
 -- On VAR reduce production type_spec -> IDENTIFIER typeT SEMICOLON 
 -- On TYPE reduce production type_spec -> IDENTIFIER typeT SEMICOLON 
@@ -2386,28 +2340,28 @@ type_spec -> IDENTIFIER typeT SEMICOLON . [ VAR TYPE RPAR IDENTIFIER EOF ]
 -- On IDENTIFIER reduce production type_spec -> IDENTIFIER typeT SEMICOLON 
 -- On EOF reduce production type_spec -> IDENTIFIER typeT SEMICOLON 
 
-State 125:
+State 127:
 type_specs -> type_specs type_spec . [ RPAR IDENTIFIER ]
 -- On RPAR reduce production type_specs -> type_specs type_spec 
 -- On IDENTIFIER reduce production type_specs -> type_specs type_spec 
 
-State 126:
+State 128:
 type_decls -> TYPE type_spec . [ VAR TYPE EOF ]
 -- On VAR reduce production type_decls -> TYPE type_spec 
 -- On TYPE reduce production type_decls -> TYPE type_spec 
 -- On EOF reduce production type_decls -> TYPE type_spec 
 
-State 127:
+State 129:
 start -> package_clause import_decls top_level_decls EOF . [ # ]
 -- On # reduce production start -> package_clause import_decls top_level_decls EOF 
 
-State 128:
+State 130:
 top_level_decls -> top_level_decls var_decls . [ VAR TYPE EOF ]
 -- On VAR reduce production top_level_decls -> top_level_decls var_decls 
 -- On TYPE reduce production top_level_decls -> top_level_decls var_decls 
 -- On EOF reduce production top_level_decls -> top_level_decls var_decls 
 
-State 129:
+State 131:
 top_level_decls -> top_level_decls type_decls . [ VAR TYPE EOF ]
 -- On VAR reduce production top_level_decls -> top_level_decls type_decls 
 -- On TYPE reduce production top_level_decls -> top_level_decls type_decls 

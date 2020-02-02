@@ -125,11 +125,11 @@ field_decls
    }
 
 ident_list
-  :                               { [] } 
+  : IDENTIFIER                    { [(fst $1)] }
   | ident_list COMMA IDENTIFIER   { (fst $3)::$1 }
 
 exp_list
-  :                               { [] }
+  : exp                           { [$1] }
   | exp_list COMMA exp            { $3::$1 }
 
 exp
