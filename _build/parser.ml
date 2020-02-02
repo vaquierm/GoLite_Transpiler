@@ -3658,18 +3658,18 @@ and _menhir_goto_top_level_decls : _menhir_env -> 'ttv_tail -> (Ast.top_level_de
         let _4 = () in
         let _v : (
 # 61 "parser.mly"
-       (Ast.package_clause)
+       (Ast.program)
 # 3663 "parser.ml"
         ) = 
 # 65 "parser.mly"
-                                                              ( _1 )
+                                                              ( Ast.Program (_1, _3) )
 # 3667 "parser.ml"
          in
         let _menhir_stack = Obj.magic _menhir_stack in
         let _menhir_stack = Obj.magic _menhir_stack in
         let (_1 : (
 # 61 "parser.mly"
-       (Ast.package_clause)
+       (Ast.program)
 # 3674 "parser.ml"
         )) = _v in
         Obj.magic _1
@@ -3751,7 +3751,7 @@ and _menhir_discard : _menhir_env -> _menhir_env =
 
 and start : (Lexing.lexbuf -> token) -> Lexing.lexbuf -> (
 # 61 "parser.mly"
-       (Ast.package_clause)
+       (Ast.program)
 # 3756 "parser.ml"
 ) =
   fun lexer lexbuf ->

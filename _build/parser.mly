@@ -58,11 +58,11 @@
 %left LPAR
 %left DOT
 
-%start <Ast.package_clause> start
+%start <Ast.program> start
 %%
 
 /* Productions */
-start : package_clause import_decls top_level_decls EOF       { $1 };
+start : package_clause import_decls top_level_decls EOF       { Ast.Program ($1, $3) };
 
 package_clause
   : PACKAGE IDENTIFIER SEMICOLON { Ast.Package (fst $2) }

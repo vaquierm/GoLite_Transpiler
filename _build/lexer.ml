@@ -12,6 +12,11 @@
   *)
   let previous_token = ref (SEMICOLON 0)
 
+  (* Function to return tokens and set the last token to the one being returned *)
+  let return token =
+    previous_token := token;
+    token
+
   (*
   Check if the token at the end of the line requires a semicolon
   inserted into the token stream
@@ -20,10 +25,10 @@
     | RSQUARE | RPAR | RCURLY | BREAK | CONTINUE | FALLTHROUGH | RETURN
     | DECINTLITERAL _ | BININTLITERAL _ | OCTINTLITERAL _ | HEXINTLITERAL _
     | BOOLLITERAL _ | FLOATLITERAL _ | RUNELITERAL _ | STRINGLITERAL _ | RAWSTRINGLITERAL _ 
-    | PLUSPLUS _ | MINUSMINUS _ -> true
+    | PLUSPLUS _ | MINUSMINUS _ | IDENTIFIER _ -> true
     | _ -> false
 
-# 27 "lexer.ml"
+# 32 "lexer.ml"
 let __ocaml_lex_tables = {
   Lexing.lex_base =
    "\000\000\158\255\058\000\030\000\035\000\082\000\083\000\160\000\
@@ -3499,494 +3504,494 @@ let rec token lexbuf =
 and __ocaml_lex_token_rec lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
-# 62 "lexer.mll"
-                                ( if is_semicolon_required !previous_token then SEMICOLON (get_line_num lexbuf) else token lexbuf )
-# 3505 "lexer.ml"
-
-  | 1 ->
-# 63 "lexer.mll"
-                                ( token lexbuf )
+# 67 "lexer.mll"
+                                ( if is_semicolon_required !previous_token then return (SEMICOLON (get_line_num lexbuf)) else token lexbuf )
 # 3510 "lexer.ml"
 
-  | 2 ->
-# 64 "lexer.mll"
-                                ( EOF )
+  | 1 ->
+# 68 "lexer.mll"
+                                ( token lexbuf )
 # 3515 "lexer.ml"
 
-  | 3 ->
-# 66 "lexer.mll"
-                                ( LPAR )
+  | 2 ->
+# 69 "lexer.mll"
+                                ( return EOF )
 # 3520 "lexer.ml"
 
-  | 4 ->
-# 67 "lexer.mll"
-                                ( RPAR )
+  | 3 ->
+# 71 "lexer.mll"
+                                ( return LPAR )
 # 3525 "lexer.ml"
 
-  | 5 ->
-# 68 "lexer.mll"
-                                ( LCURLY )
+  | 4 ->
+# 72 "lexer.mll"
+                                ( return RPAR )
 # 3530 "lexer.ml"
 
-  | 6 ->
-# 69 "lexer.mll"
-                                ( RCURLY )
+  | 5 ->
+# 73 "lexer.mll"
+                                ( return LCURLY )
 # 3535 "lexer.ml"
 
-  | 7 ->
-# 70 "lexer.mll"
-                                ( LSQUARE )
+  | 6 ->
+# 74 "lexer.mll"
+                                ( return RCURLY )
 # 3540 "lexer.ml"
 
-  | 8 ->
-# 71 "lexer.mll"
-                                ( RSQUARE )
+  | 7 ->
+# 75 "lexer.mll"
+                                ( return LSQUARE )
 # 3545 "lexer.ml"
 
-  | 9 ->
-# 72 "lexer.mll"
-                                ( COLON )
+  | 8 ->
+# 76 "lexer.mll"
+                                ( return RSQUARE )
 # 3550 "lexer.ml"
 
-  | 10 ->
-# 73 "lexer.mll"
-                                ( SEMICOLON (get_line_num lexbuf) )
+  | 9 ->
+# 77 "lexer.mll"
+                                ( return COLON )
 # 3555 "lexer.ml"
 
-  | 11 ->
-# 74 "lexer.mll"
-                                ( COMMA )
+  | 10 ->
+# 78 "lexer.mll"
+                                ( return (SEMICOLON (get_line_num lexbuf)) )
 # 3560 "lexer.ml"
 
-  | 12 ->
-# 75 "lexer.mll"
-                                ( DOT )
+  | 11 ->
+# 79 "lexer.mll"
+                                ( return COMMA )
 # 3565 "lexer.ml"
 
-  | 13 ->
-# 76 "lexer.mll"
-                                ( THREEDOT )
+  | 12 ->
+# 80 "lexer.mll"
+                                ( return DOT )
 # 3570 "lexer.ml"
 
-  | 14 ->
-# 78 "lexer.mll"
-                                ( PLUS (get_line_num lexbuf) )
+  | 13 ->
+# 81 "lexer.mll"
+                                ( return THREEDOT )
 # 3575 "lexer.ml"
 
-  | 15 ->
-# 79 "lexer.mll"
-                                ( MINUS (get_line_num lexbuf) )
+  | 14 ->
+# 83 "lexer.mll"
+                                ( return (PLUS (get_line_num lexbuf)) )
 # 3580 "lexer.ml"
 
-  | 16 ->
-# 80 "lexer.mll"
-                                ( MULT (get_line_num lexbuf) )
+  | 15 ->
+# 84 "lexer.mll"
+                                ( return (MINUS (get_line_num lexbuf)) )
 # 3585 "lexer.ml"
 
-  | 17 ->
-# 81 "lexer.mll"
-                                ( DIV (get_line_num lexbuf) )
+  | 16 ->
+# 85 "lexer.mll"
+                                ( return (MULT (get_line_num lexbuf)) )
 # 3590 "lexer.ml"
 
-  | 18 ->
-# 82 "lexer.mll"
-                                ( BINAND (get_line_num lexbuf) )
+  | 17 ->
+# 86 "lexer.mll"
+                                ( return (DIV (get_line_num lexbuf)) )
 # 3595 "lexer.ml"
 
-  | 19 ->
-# 83 "lexer.mll"
-                                ( BINOR (get_line_num lexbuf) )
+  | 18 ->
+# 87 "lexer.mll"
+                                ( return (BINAND (get_line_num lexbuf)) )
 # 3600 "lexer.ml"
 
-  | 20 ->
-# 84 "lexer.mll"
-                                ( BINXOR (get_line_num lexbuf) )
+  | 19 ->
+# 88 "lexer.mll"
+                                ( return (BINOR (get_line_num lexbuf)) )
 # 3605 "lexer.ml"
 
-  | 21 ->
-# 85 "lexer.mll"
-                                ( BINANDNOT (get_line_num lexbuf) )
+  | 20 ->
+# 89 "lexer.mll"
+                                ( return (BINXOR (get_line_num lexbuf)) )
 # 3610 "lexer.ml"
 
-  | 22 ->
-# 86 "lexer.mll"
-                                ( RSHIFT (get_line_num lexbuf) )
+  | 21 ->
+# 90 "lexer.mll"
+                                ( return (BINANDNOT (get_line_num lexbuf)) )
 # 3615 "lexer.ml"
 
-  | 23 ->
-# 87 "lexer.mll"
-                                ( LSHIFT (get_line_num lexbuf) )
+  | 22 ->
+# 91 "lexer.mll"
+                                ( return (RSHIFT (get_line_num lexbuf)) )
 # 3620 "lexer.ml"
 
-  | 24 ->
-# 88 "lexer.mll"
-                                ( MOD (get_line_num lexbuf) )
+  | 23 ->
+# 92 "lexer.mll"
+                                ( return (LSHIFT (get_line_num lexbuf)) )
 # 3625 "lexer.ml"
 
-  | 25 ->
-# 89 "lexer.mll"
-                                ( PLUSEQ (get_line_num lexbuf) )
+  | 24 ->
+# 93 "lexer.mll"
+                                ( return (MOD (get_line_num lexbuf)) )
 # 3630 "lexer.ml"
 
-  | 26 ->
-# 90 "lexer.mll"
-                                ( MINUSEQ (get_line_num lexbuf) )
+  | 25 ->
+# 94 "lexer.mll"
+                                ( return (PLUSEQ (get_line_num lexbuf)) )
 # 3635 "lexer.ml"
 
-  | 27 ->
-# 91 "lexer.mll"
-                                ( MULTEQ (get_line_num lexbuf) )
+  | 26 ->
+# 95 "lexer.mll"
+                                ( return (MINUSEQ (get_line_num lexbuf)) )
 # 3640 "lexer.ml"
 
-  | 28 ->
-# 92 "lexer.mll"
-                                ( DIVEQ (get_line_num lexbuf) )
+  | 27 ->
+# 96 "lexer.mll"
+                                ( return (MULTEQ (get_line_num lexbuf)) )
 # 3645 "lexer.ml"
 
-  | 29 ->
-# 93 "lexer.mll"
-                                ( BINANDEQ (get_line_num lexbuf) )
+  | 28 ->
+# 97 "lexer.mll"
+                                ( return (DIVEQ (get_line_num lexbuf)) )
 # 3650 "lexer.ml"
 
-  | 30 ->
-# 94 "lexer.mll"
-                                ( BINOREQ (get_line_num lexbuf) )
+  | 29 ->
+# 98 "lexer.mll"
+                                ( return (BINANDEQ (get_line_num lexbuf)) )
 # 3655 "lexer.ml"
 
-  | 31 ->
-# 95 "lexer.mll"
-                                ( BINXOREQ (get_line_num lexbuf) )
+  | 30 ->
+# 99 "lexer.mll"
+                                ( return (BINOREQ (get_line_num lexbuf)) )
 # 3660 "lexer.ml"
 
-  | 32 ->
-# 96 "lexer.mll"
-                                ( BINANDNOTEQ (get_line_num lexbuf) )
+  | 31 ->
+# 100 "lexer.mll"
+                                ( return (BINXOREQ (get_line_num lexbuf)) )
 # 3665 "lexer.ml"
 
-  | 33 ->
-# 97 "lexer.mll"
-                                ( RSHIFTEQ (get_line_num lexbuf) )
+  | 32 ->
+# 101 "lexer.mll"
+                                ( return (BINANDNOTEQ (get_line_num lexbuf)) )
 # 3670 "lexer.ml"
 
-  | 34 ->
-# 98 "lexer.mll"
-                                ( LSHIFTEQ (get_line_num lexbuf) )
+  | 33 ->
+# 102 "lexer.mll"
+                                ( return (RSHIFTEQ (get_line_num lexbuf)) )
 # 3675 "lexer.ml"
 
-  | 35 ->
-# 99 "lexer.mll"
-                                ( MODEQ (get_line_num lexbuf) )
+  | 34 ->
+# 103 "lexer.mll"
+                                ( return (LSHIFTEQ (get_line_num lexbuf)) )
 # 3680 "lexer.ml"
 
-  | 36 ->
-# 101 "lexer.mll"
-                                ( PLUSPLUS (get_line_num lexbuf) )
+  | 35 ->
+# 104 "lexer.mll"
+                                ( return (MODEQ (get_line_num lexbuf)) )
 # 3685 "lexer.ml"
 
-  | 37 ->
-# 102 "lexer.mll"
-                                ( MINUSMINUS (get_line_num lexbuf) )
+  | 36 ->
+# 106 "lexer.mll"
+                                ( return (PLUSPLUS (get_line_num lexbuf)) )
 # 3690 "lexer.ml"
 
-  | 38 ->
-# 104 "lexer.mll"
-                                ( BOOLAND (get_line_num lexbuf) )
+  | 37 ->
+# 107 "lexer.mll"
+                                ( return (MINUSMINUS (get_line_num lexbuf)) )
 # 3695 "lexer.ml"
 
-  | 39 ->
-# 105 "lexer.mll"
-                                ( BOOLOR (get_line_num lexbuf) )
+  | 38 ->
+# 109 "lexer.mll"
+                                ( return (BOOLAND (get_line_num lexbuf)) )
 # 3700 "lexer.ml"
 
-  | 40 ->
-# 106 "lexer.mll"
-                                ( BOOLNOT (get_line_num lexbuf) )
+  | 39 ->
+# 110 "lexer.mll"
+                                ( return (BOOLOR (get_line_num lexbuf)) )
 # 3705 "lexer.ml"
 
-  | 41 ->
-# 108 "lexer.mll"
-                                ( ASSIGN (get_line_num lexbuf) )
+  | 40 ->
+# 111 "lexer.mll"
+                                ( return (BOOLNOT (get_line_num lexbuf)) )
 # 3710 "lexer.ml"
 
-  | 42 ->
-# 109 "lexer.mll"
-                                ( SHORTASSIGN (get_line_num lexbuf) )
+  | 41 ->
+# 113 "lexer.mll"
+                                ( return (ASSIGN (get_line_num lexbuf)) )
 # 3715 "lexer.ml"
 
-  | 43 ->
-# 111 "lexer.mll"
-                                ( RECEIVE (get_line_num lexbuf) )
+  | 42 ->
+# 114 "lexer.mll"
+                                ( return (SHORTASSIGN (get_line_num lexbuf)) )
 # 3720 "lexer.ml"
 
-  | 44 ->
-# 113 "lexer.mll"
-                                ( EQ (get_line_num lexbuf) )
+  | 43 ->
+# 116 "lexer.mll"
+                                ( return (RECEIVE (get_line_num lexbuf)) )
 # 3725 "lexer.ml"
 
-  | 45 ->
-# 114 "lexer.mll"
-                                ( NEQ (get_line_num lexbuf) )
+  | 44 ->
+# 118 "lexer.mll"
+                                ( return (EQ (get_line_num lexbuf)) )
 # 3730 "lexer.ml"
 
-  | 46 ->
-# 115 "lexer.mll"
-                                ( LT (get_line_num lexbuf) )
+  | 45 ->
+# 119 "lexer.mll"
+                                ( return (NEQ (get_line_num lexbuf)) )
 # 3735 "lexer.ml"
 
-  | 47 ->
-# 116 "lexer.mll"
-                                ( LEQ (get_line_num lexbuf) )
+  | 46 ->
+# 120 "lexer.mll"
+                                ( return (LT (get_line_num lexbuf)) )
 # 3740 "lexer.ml"
 
-  | 48 ->
-# 117 "lexer.mll"
-                                ( GT (get_line_num lexbuf) )
+  | 47 ->
+# 121 "lexer.mll"
+                                ( return (LEQ (get_line_num lexbuf)) )
 # 3745 "lexer.ml"
 
-  | 49 ->
-# 118 "lexer.mll"
-                                ( GEQ (get_line_num lexbuf) )
+  | 48 ->
+# 122 "lexer.mll"
+                                ( return (GT (get_line_num lexbuf)) )
 # 3750 "lexer.ml"
 
-  | 50 ->
-# 120 "lexer.mll"
-                                ( BREAK )
+  | 49 ->
+# 123 "lexer.mll"
+                                ( return (GEQ (get_line_num lexbuf)) )
 # 3755 "lexer.ml"
 
-  | 51 ->
-# 121 "lexer.mll"
-                                ( DEFAULT )
+  | 50 ->
+# 125 "lexer.mll"
+                                ( return BREAK )
 # 3760 "lexer.ml"
 
-  | 52 ->
-# 122 "lexer.mll"
-                                ( FUNC )
+  | 51 ->
+# 126 "lexer.mll"
+                                ( return DEFAULT )
 # 3765 "lexer.ml"
 
-  | 53 ->
-# 123 "lexer.mll"
-                                ( INTERFACE )
+  | 52 ->
+# 127 "lexer.mll"
+                                ( return FUNC )
 # 3770 "lexer.ml"
 
-  | 54 ->
-# 124 "lexer.mll"
-                                ( SELECT )
+  | 53 ->
+# 128 "lexer.mll"
+                                ( return INTERFACE )
 # 3775 "lexer.ml"
 
-  | 55 ->
-# 125 "lexer.mll"
-                                ( CASE )
+  | 54 ->
+# 129 "lexer.mll"
+                                ( return SELECT )
 # 3780 "lexer.ml"
 
-  | 56 ->
-# 126 "lexer.mll"
-                                ( DEFER )
+  | 55 ->
+# 130 "lexer.mll"
+                                ( return CASE )
 # 3785 "lexer.ml"
 
-  | 57 ->
-# 127 "lexer.mll"
-                                ( GO )
+  | 56 ->
+# 131 "lexer.mll"
+                                ( return DEFER )
 # 3790 "lexer.ml"
 
-  | 58 ->
-# 128 "lexer.mll"
-                                ( MAP )
+  | 57 ->
+# 132 "lexer.mll"
+                                ( return GO )
 # 3795 "lexer.ml"
 
-  | 59 ->
-# 129 "lexer.mll"
-                                ( STRUCT )
+  | 58 ->
+# 133 "lexer.mll"
+                                ( return MAP )
 # 3800 "lexer.ml"
 
-  | 60 ->
-# 130 "lexer.mll"
-                                ( CHAN )
+  | 59 ->
+# 134 "lexer.mll"
+                                ( return STRUCT )
 # 3805 "lexer.ml"
 
-  | 61 ->
-# 131 "lexer.mll"
-                                ( ELSE )
+  | 60 ->
+# 135 "lexer.mll"
+                                ( return CHAN )
 # 3810 "lexer.ml"
 
-  | 62 ->
-# 132 "lexer.mll"
-                                ( GOTO )
+  | 61 ->
+# 136 "lexer.mll"
+                                ( return ELSE )
 # 3815 "lexer.ml"
 
-  | 63 ->
-# 133 "lexer.mll"
-                                ( PACKAGE )
+  | 62 ->
+# 137 "lexer.mll"
+                                ( return GOTO )
 # 3820 "lexer.ml"
 
-  | 64 ->
-# 134 "lexer.mll"
-                                ( SWITCH )
+  | 63 ->
+# 138 "lexer.mll"
+                                ( return PACKAGE )
 # 3825 "lexer.ml"
 
-  | 65 ->
-# 135 "lexer.mll"
-                                ( CONS )
+  | 64 ->
+# 139 "lexer.mll"
+                                ( return SWITCH )
 # 3830 "lexer.ml"
 
-  | 66 ->
-# 136 "lexer.mll"
-                                ( FALLTHROUGH )
+  | 65 ->
+# 140 "lexer.mll"
+                                ( return CONS )
 # 3835 "lexer.ml"
 
-  | 67 ->
-# 137 "lexer.mll"
-                                ( IF )
+  | 66 ->
+# 141 "lexer.mll"
+                                ( return FALLTHROUGH )
 # 3840 "lexer.ml"
 
-  | 68 ->
-# 138 "lexer.mll"
-                                ( RANGE )
+  | 67 ->
+# 142 "lexer.mll"
+                                ( return IF )
 # 3845 "lexer.ml"
 
-  | 69 ->
-# 139 "lexer.mll"
-                                ( TYPE )
+  | 68 ->
+# 143 "lexer.mll"
+                                ( return RANGE )
 # 3850 "lexer.ml"
 
-  | 70 ->
-# 140 "lexer.mll"
-                                ( CONTINUE )
+  | 69 ->
+# 144 "lexer.mll"
+                                ( return TYPE )
 # 3855 "lexer.ml"
 
-  | 71 ->
-# 141 "lexer.mll"
-                                ( FOR )
+  | 70 ->
+# 145 "lexer.mll"
+                                ( return CONTINUE )
 # 3860 "lexer.ml"
 
-  | 72 ->
-# 142 "lexer.mll"
-                                ( IMPORT )
+  | 71 ->
+# 146 "lexer.mll"
+                                ( return FOR )
 # 3865 "lexer.ml"
 
-  | 73 ->
-# 143 "lexer.mll"
-                                ( RETURN )
+  | 72 ->
+# 147 "lexer.mll"
+                                ( return IMPORT )
 # 3870 "lexer.ml"
 
-  | 74 ->
-# 144 "lexer.mll"
-                                ( VAR )
+  | 73 ->
+# 148 "lexer.mll"
+                                ( return RETURN )
 # 3875 "lexer.ml"
 
-  | 75 ->
-# 145 "lexer.mll"
-                                ( PRINT (get_line_num lexbuf) )
+  | 74 ->
+# 149 "lexer.mll"
+                                ( return VAR )
 # 3880 "lexer.ml"
 
-  | 76 ->
-# 146 "lexer.mll"
-                                ( PRINTLN (get_line_num lexbuf) )
+  | 75 ->
+# 150 "lexer.mll"
+                                ( return (PRINT (get_line_num lexbuf)) )
 # 3885 "lexer.ml"
 
-  | 77 ->
-# 147 "lexer.mll"
-                                ( APPEND (get_line_num lexbuf) )
+  | 76 ->
+# 151 "lexer.mll"
+                                ( return (PRINTLN (get_line_num lexbuf)) )
 # 3890 "lexer.ml"
 
-  | 78 ->
-# 148 "lexer.mll"
-                                ( LEN (get_line_num lexbuf) )
+  | 77 ->
+# 152 "lexer.mll"
+                                ( return (APPEND (get_line_num lexbuf)) )
 # 3895 "lexer.ml"
 
-  | 79 ->
-# 149 "lexer.mll"
-                                ( CAP (get_line_num lexbuf) )
+  | 78 ->
+# 153 "lexer.mll"
+                                ( return (LEN (get_line_num lexbuf)) )
 # 3900 "lexer.ml"
 
-  | 80 ->
-# 151 "lexer.mll"
-                                ( INTTYPE )
+  | 79 ->
+# 154 "lexer.mll"
+                                ( return (CAP (get_line_num lexbuf)) )
 # 3905 "lexer.ml"
 
-  | 81 ->
-# 152 "lexer.mll"
-                                ( FLOATTYPE )
+  | 80 ->
+# 156 "lexer.mll"
+                                ( return INTTYPE )
 # 3910 "lexer.ml"
 
-  | 82 ->
-# 153 "lexer.mll"
-                                ( RUNETYPE )
+  | 81 ->
+# 157 "lexer.mll"
+                                ( return FLOATTYPE )
 # 3915 "lexer.ml"
 
-  | 83 ->
-# 154 "lexer.mll"
-                                ( STRINGTYPE )
+  | 82 ->
+# 158 "lexer.mll"
+                                ( return RUNETYPE )
 # 3920 "lexer.ml"
 
-  | 84 ->
-# 155 "lexer.mll"
-                                ( failwith ("The type " ^ get lexbuf ^ " is unsuported in GoLite") )
+  | 83 ->
+# 159 "lexer.mll"
+                                ( return STRINGTYPE )
 # 3925 "lexer.ml"
 
-  | 85 ->
-# 157 "lexer.mll"
-                                ( IDENTIFIER (get lexbuf, get_line_num lexbuf) )
+  | 84 ->
+# 160 "lexer.mll"
+                                ( failwith ("The type " ^ get lexbuf ^ " is unsuported in GoLite") )
 # 3930 "lexer.ml"
 
-  | 86 ->
-# 159 "lexer.mll"
-                                ( let c = get lexbuf in COMMENT (String.trim(String.sub c 2 ((String.length c) - 1))) )
+  | 85 ->
+# 162 "lexer.mll"
+                                ( return (IDENTIFIER (get lexbuf, get_line_num lexbuf)) )
 # 3935 "lexer.ml"
 
-  | 87 ->
-# 160 "lexer.mll"
-                                ( let c = get lexbuf in BLOCKCOMMENT (String.sub c 2 ((String.length c) - 3)) )
+  | 86 ->
+# 164 "lexer.mll"
+                                ( let c = get lexbuf in return (COMMENT (String.trim(String.sub c 2 ((String.length c) - 1)))) )
 # 3940 "lexer.ml"
 
-  | 88 ->
-# 162 "lexer.mll"
-                                ( DECINTLITERAL (get lexbuf) )
+  | 87 ->
+# 165 "lexer.mll"
+                                ( let c = get lexbuf in return (BLOCKCOMMENT (String.sub c 2 ((String.length c) - 3))) )
 # 3945 "lexer.ml"
 
-  | 89 ->
-# 163 "lexer.mll"
-                                ( let c = get lexbuf in BININTLITERAL (String.sub c 2 ((String.length c) - 1)) )
+  | 88 ->
+# 167 "lexer.mll"
+                                ( return (DECINTLITERAL (get lexbuf)) )
 # 3950 "lexer.ml"
 
-  | 90 ->
-# 164 "lexer.mll"
-                                ( let c = get lexbuf in OCTINTLITERAL (String.sub c 2 ((String.length c) - 1)) )
+  | 89 ->
+# 168 "lexer.mll"
+                                ( let c = get lexbuf in return (BININTLITERAL (String.sub c 2 ((String.length c) - 1))) )
 # 3955 "lexer.ml"
 
-  | 91 ->
-# 165 "lexer.mll"
-                                ( let c = get lexbuf in HEXINTLITERAL (String.sub c 2 ((String.length c) - 1)) )
+  | 90 ->
+# 169 "lexer.mll"
+                                ( let c = get lexbuf in return (OCTINTLITERAL (String.sub c 2 ((String.length c) - 1))) )
 # 3960 "lexer.ml"
 
-  | 92 ->
-# 167 "lexer.mll"
-                                ( BOOLLITERAL (bool_of_string (get lexbuf)) )
+  | 91 ->
+# 170 "lexer.mll"
+                                ( let c = get lexbuf in return (HEXINTLITERAL (String.sub c 2 ((String.length c) - 1))) )
 # 3965 "lexer.ml"
 
-  | 93 ->
-# 169 "lexer.mll"
-                                ( FLOATLITERAL (float_of_string (get lexbuf)) )
+  | 92 ->
+# 172 "lexer.mll"
+                                ( return (BOOLLITERAL (bool_of_string (get lexbuf))) )
 # 3970 "lexer.ml"
 
-  | 94 ->
-# 171 "lexer.mll"
-                                ( let c = get lexbuf in RUNELITERAL (String.sub c 1 ((String.length c) - 2)) )
+  | 93 ->
+# 174 "lexer.mll"
+                                ( return (FLOATLITERAL (float_of_string (get lexbuf))) )
 # 3975 "lexer.ml"
 
-  | 95 ->
-# 173 "lexer.mll"
-                                ( let c = get lexbuf in RAWSTRINGLITERAL (String.sub c 1 ((String.length c) - 2)) )
+  | 94 ->
+# 176 "lexer.mll"
+                                ( let c = get lexbuf in return (RUNELITERAL (String.sub c 1 ((String.length c) - 2))) )
 # 3980 "lexer.ml"
 
-  | 96 ->
-# 174 "lexer.mll"
-                                ( let c = get lexbuf in STRINGLITERAL (String.sub c 1 ((String.length c) - 2)) )
+  | 95 ->
+# 178 "lexer.mll"
+                                ( let c = get lexbuf in return (RAWSTRINGLITERAL (String.sub c 1 ((String.length c) - 2))) )
 # 3985 "lexer.ml"
 
-  | 97 ->
-# 176 "lexer.mll"
-                                ( let p = pos lexbuf in failwith ("Unexpected char '" ^ (get lexbuf) ^ "' in line " ^ (string_of_int p.pos_lnum) ^ " at position " ^ (string_of_int p.pos_bol)) )
+  | 96 ->
+# 179 "lexer.mll"
+                                ( let c = get lexbuf in return (STRINGLITERAL (String.sub c 1 ((String.length c) - 2))) )
 # 3990 "lexer.ml"
+
+  | 97 ->
+# 181 "lexer.mll"
+                                ( let p = pos lexbuf in failwith ("Unexpected char '" ^ (get lexbuf) ^ "' in line " ^ (string_of_int p.pos_lnum) ^ " at position " ^ (string_of_int p.pos_bol)) )
+# 3995 "lexer.ml"
 
   | __ocaml_lex_state -> lexbuf.Lexing.refill_buff lexbuf;
       __ocaml_lex_token_rec lexbuf __ocaml_lex_state

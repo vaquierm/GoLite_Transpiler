@@ -62,3 +62,6 @@ type top_level_decl =
   | FuncDecl of function_declaration*)
   (* Variable declaration *)
   | TopVarDecl of variable_decl
+
+type program =
+  | Program of package_clause * (top_level_decl list)

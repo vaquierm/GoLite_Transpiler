@@ -104,4 +104,4 @@ exception Error
 
 (* The monolithic API. *)
 
-val start: (Lexing.lexbuf -> token) -> Lexing.lexbuf -> (Ast.package_clause)
+val start: (Lexing.lexbuf -> token) -> Lexing.lexbuf -> (Ast.program)

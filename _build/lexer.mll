@@ -12,6 +12,11 @@
   *)
   let previous_token = ref (SEMICOLON 0)
 
+  (* Function to return tokens and set the last token to the one being returned *)
+  let return token =
+    previous_token := token;
+    token
+
   (*
   Check if the token at the end of the line requires a semicolon
   inserted into the token stream
@@ -20,7 +25,7 @@
     | RSQUARE | RPAR | RCURLY | BREAK | CONTINUE | FALLTHROUGH | RETURN
     | DECINTLITERAL _ | BININTLITERAL _ | OCTINTLITERAL _ | HEXINTLITERAL _
     | BOOLLITERAL _ | FLOATLITERAL _ | RUNELITERAL _ | STRINGLITERAL _ | RAWSTRINGLITERAL _ 
-    | PLUSPLUS _ | MINUSMINUS _ -> true
+    | PLUSPLUS _ | MINUSMINUS _ | IDENTIFIER _ -> true
     | _ -> false
 }
 
@@ -59,119 +64,119 @@
 (* Tokens *)
 
 rule token = parse
-  | eol                         { if is_semicolon_required !previous_token then SEMICOLON (get_line_num lexbuf) else token lexbuf }
+  | eol                         { if is_semicolon_required !previous_token then return (SEMICOLON (get_line_num lexbuf)) else token lexbuf }
   | (' ' | tab)                 { token lexbuf }
-  | eof                         { EOF }
+  | eof                         { return EOF }
 
-  | '('                         { LPAR }
-  | ')'                         { RPAR }
-  | '{'                         { LCURLY }
-  | '}'                         { RCURLY }
-  | '['                         { LSQUARE }
-  | ']'                         { RSQUARE }       
-  | ':'                         { COLON }
-  | ';'                         { SEMICOLON (get_line_num lexbuf) }       
-  | ','                         { COMMA }
-  | '.'                         { DOT }
-  | "..."                       { THREEDOT }
+  | '('                         { return LPAR }
+  | ')'                         { return RPAR }
+  | '{'                         { return LCURLY }
+  | '}'                         { return RCURLY }
+  | '['                         { return LSQUARE }
+  | ']'                         { return RSQUARE }       
+  | ':'                         { return COLON }
+  | ';'                         { return (SEMICOLON (get_line_num lexbuf)) }       
+  | ','                         { return COMMA }
+  | '.'                         { return DOT }
+  | "..."                       { return THREEDOT }
 
-  | '+'                         { PLUS (get_line_num lexbuf) }
-  | '-'                         { MINUS (get_line_num lexbuf) }
-  | '*'                         { MULT (get_line_num lexbuf) }
-  | '/'                         { DIV (get_line_num lexbuf) }
-  | '&'                         { BINAND (get_line_num lexbuf) }
-  | '|'                         { BINOR (get_line_num lexbuf) }
-  | '^'                         { BINXOR (get_line_num lexbuf) }
-  | "&^"                        { BINANDNOT (get_line_num lexbuf) }
-  | ">>"                        { RSHIFT (get_line_num lexbuf) }
-  | "<<"                        { LSHIFT (get_line_num lexbuf) }
-  | '%'                         { MOD (get_line_num lexbuf) }
-  | "+="                        { PLUSEQ (get_line_num lexbuf) }
-  | "-="                        { MINUSEQ (get_line_num lexbuf) }
-  | "*="                        { MULTEQ (get_line_num lexbuf) }
-  | "/="                        { DIVEQ (get_line_num lexbuf) }
-  | "&="                        { BINANDEQ (get_line_num lexbuf) }
-  | "|="                        { BINOREQ (get_line_num lexbuf) }
-  | "^="                        { BINXOREQ (get_line_num lexbuf) }
-  | "&^="                       { BINANDNOTEQ (get_line_num lexbuf) }
-  | ">>="                       { RSHIFTEQ (get_line_num lexbuf) }
-  | "<<="                       { LSHIFTEQ (get_line_num lexbuf) }
-  | "%="                        { MODEQ (get_line_num lexbuf) }
+  | '+'                         { return (PLUS (get_line_num lexbuf)) }
+  | '-'                         { return (MINUS (get_line_num lexbuf)) }
+  | '*'                         { return (MULT (get_line_num lexbuf)) }
+  | '/'                         { return (DIV (get_line_num lexbuf)) }
+  | '&'                         { return (BINAND (get_line_num lexbuf)) }
+  | '|'                         { return (BINOR (get_line_num lexbuf)) }
+  | '^'                         { return (BINXOR (get_line_num lexbuf)) }
+  | "&^"                        { return (BINANDNOT (get_line_num lexbuf)) }
+  | ">>"                        { return (RSHIFT (get_line_num lexbuf)) }
+  | "<<"                        { return (LSHIFT (get_line_num lexbuf)) }
+  | '%'                         { return (MOD (get_line_num lexbuf)) }
+  | "+="                        { return (PLUSEQ (get_line_num lexbuf)) }
+  | "-="                        { return (MINUSEQ (get_line_num lexbuf)) }
+  | "*="                        { return (MULTEQ (get_line_num lexbuf)) }
+  | "/="                        { return (DIVEQ (get_line_num lexbuf)) }
+  | "&="                        { return (BINANDEQ (get_line_num lexbuf)) }
+  | "|="                        { return (BINOREQ (get_line_num lexbuf)) }
+  | "^="                        { return (BINXOREQ (get_line_num lexbuf)) }
+  | "&^="                       { return (BINANDNOTEQ (get_line_num lexbuf)) }
+  | ">>="                       { return (RSHIFTEQ (get_line_num lexbuf)) }
+  | "<<="                       { return (LSHIFTEQ (get_line_num lexbuf)) }
+  | "%="                        { return (MODEQ (get_line_num lexbuf)) }
 
-  | "++"                        { PLUSPLUS (get_line_num lexbuf) }
-  | "--"                        { MINUSMINUS (get_line_num lexbuf) }
+  | "++"                        { return (PLUSPLUS (get_line_num lexbuf)) }
+  | "--"                        { return (MINUSMINUS (get_line_num lexbuf)) }
 
-  | "&&"                        { BOOLAND (get_line_num lexbuf) }
-  | "||"                        { BOOLOR (get_line_num lexbuf) }
-  | "!"                         { BOOLNOT (get_line_num lexbuf) }
+  | "&&"                        { return (BOOLAND (get_line_num lexbuf)) }
+  | "||"                        { return (BOOLOR (get_line_num lexbuf)) }
+  | "!"                         { return (BOOLNOT (get_line_num lexbuf)) }
 
-  | '='                         { ASSIGN (get_line_num lexbuf) }
-  | ":="                        { SHORTASSIGN (get_line_num lexbuf) }
+  | '='                         { return (ASSIGN (get_line_num lexbuf)) }
+  | ":="                        { return (SHORTASSIGN (get_line_num lexbuf)) }
 
-  | "<-"                        { RECEIVE (get_line_num lexbuf) }
+  | "<-"                        { return (RECEIVE (get_line_num lexbuf)) }
 
-  | "=="                        { EQ (get_line_num lexbuf) }
-  | "!="                        { NEQ (get_line_num lexbuf) }
-  | '<'                         { LT (get_line_num lexbuf) }
-  | "<="                        { LEQ (get_line_num lexbuf) }
-  | '>'                         { GT (get_line_num lexbuf) }
-  | ">="                        { GEQ (get_line_num lexbuf) }
+  | "=="                        { return (EQ (get_line_num lexbuf)) }
+  | "!="                        { return (NEQ (get_line_num lexbuf)) }
+  | '<'                         { return (LT (get_line_num lexbuf)) }
+  | "<="                        { return (LEQ (get_line_num lexbuf)) }
+  | '>'                         { return (GT (get_line_num lexbuf)) }
+  | ">="                        { return (GEQ (get_line_num lexbuf)) }
 
-  | "break"                     { BREAK }
-  | "default"                   { DEFAULT }
-  | "func"                      { FUNC }
-  | "interface"                 { INTERFACE }
-  | "select"                    { SELECT }
-  | "case"                      { CASE }
-  | "defer"                     { DEFER }
-  | "go"                        { GO }
-  | "map"                       { MAP }
-  | "struct"                    { STRUCT }
-  | "chan"                      { CHAN }
-  | "else"                      { ELSE }
-  | "goto"                      { GOTO }
-  | "package"                   { PACKAGE }
-  | "switch"                    { SWITCH }
-  | "cons"                      { CONS }
-  | "fallthrough"               { FALLTHROUGH }
-  | "if"                        { IF }
-  | "range"                     { RANGE }
-  | "type"                      { TYPE }
-  | "continue"                  { CONTINUE }
-  | "for"                       { FOR }
-  | "import"                    { IMPORT }
-  | "return"                    { RETURN }
-  | "var"                       { VAR }
-  | "print"                     { PRINT (get_line_num lexbuf) }
-  | "println"                   { PRINTLN (get_line_num lexbuf) }
-  | "append"                    { APPEND (get_line_num lexbuf) }
-  | "len"                       { LEN (get_line_num lexbuf) }
-  | "cap"                       { CAP (get_line_num lexbuf) }
+  | "break"                     { return BREAK }
+  | "default"                   { return DEFAULT }
+  | "func"                      { return FUNC }
+  | "interface"                 { return INTERFACE }
+  | "select"                    { return SELECT }
+  | "case"                      { return CASE }
+  | "defer"                     { return DEFER }
+  | "go"                        { return GO }
+  | "map"                       { return MAP }
+  | "struct"                    { return STRUCT }
+  | "chan"                      { return CHAN }
+  | "else"                      { return ELSE }
+  | "goto"                      { return GOTO }
+  | "package"                   { return PACKAGE }
+  | "switch"                    { return SWITCH }
+  | "cons"                      { return CONS }
+  | "fallthrough"               { return FALLTHROUGH }
+  | "if"                        { return IF }
+  | "range"                     { return RANGE }
+  | "type"                      { return TYPE }
+  | "continue"                  { return CONTINUE }
+  | "for"                       { return FOR }
+  | "import"                    { return IMPORT }
+  | "return"                    { return RETURN }
+  | "var"                       { return VAR }
+  | "print"                     { return (PRINT (get_line_num lexbuf)) }
+  | "println"                   { return (PRINTLN (get_line_num lexbuf)) }
+  | "append"                    { return (APPEND (get_line_num lexbuf)) }
+  | "len"                       { return (LEN (get_line_num lexbuf)) }
+  | "cap"                       { return (CAP (get_line_num lexbuf)) }
 
-  | "int"                       { INTTYPE }
-  | "float32"                   { FLOATTYPE }
-  | "rune"                      { RUNETYPE }
-  | "string"                    { STRINGTYPE }
+  | "int"                       { return INTTYPE }
+  | "float32"                   { return FLOATTYPE }
+  | "rune"                      { return RUNETYPE }
+  | "string"                    { return STRINGTYPE }
   | unsuportedType              { failwith ("The type " ^ get lexbuf ^ " is unsuported in GoLite") }
 
-  | identifier                  { IDENTIFIER (get lexbuf, get_line_num lexbuf) }
+  | identifier                  { return (IDENTIFIER (get lexbuf, get_line_num lexbuf)) }
 
-  | ("//"_*eol)                 { let c = get lexbuf in COMMENT (String.trim(String.sub c 2 ((String.length c) - 1))) }
-  | ("/*"_*"*/")                { let c = get lexbuf in BLOCKCOMMENT (String.sub c 2 ((String.length c) - 3)) }
+  | ("//"_*eol)                 { let c = get lexbuf in return (COMMENT (String.trim(String.sub c 2 ((String.length c) - 1)))) }
+  | ("/*"_*"*/")                { let c = get lexbuf in return (BLOCKCOMMENT (String.sub c 2 ((String.length c) - 3))) }
 
-  | decIntLiteral               { DECINTLITERAL (get lexbuf) }
-  | binIntLiteral               { let c = get lexbuf in BININTLITERAL (String.sub c 2 ((String.length c) - 1)) }
-  | octIntLiteral               { let c = get lexbuf in OCTINTLITERAL (String.sub c 2 ((String.length c) - 1)) }
-  | hexIntLiteral               { let c = get lexbuf in HEXINTLITERAL (String.sub c 2 ((String.length c) - 1)) }
+  | decIntLiteral               { return (DECINTLITERAL (get lexbuf)) }
+  | binIntLiteral               { let c = get lexbuf in return (BININTLITERAL (String.sub c 2 ((String.length c) - 1))) }
+  | octIntLiteral               { let c = get lexbuf in return (OCTINTLITERAL (String.sub c 2 ((String.length c) - 1))) }
+  | hexIntLiteral               { let c = get lexbuf in return (HEXINTLITERAL (String.sub c 2 ((String.length c) - 1))) }
 
-  | ("true" | "false")          { BOOLLITERAL (bool_of_string (get lexbuf)) }
+  | ("true" | "false")          { return (BOOLLITERAL (bool_of_string (get lexbuf))) }
 
-  | floatLiteral                { FLOATLITERAL (float_of_string (get lexbuf)) }
+  | floatLiteral                { return (FLOATLITERAL (float_of_string (get lexbuf))) }
 
-  | runeLiteral                 { let c = get lexbuf in RUNELITERAL (String.sub c 1 ((String.length c) - 2)) }
+  | runeLiteral                 { let c = get lexbuf in return (RUNELITERAL (String.sub c 1 ((String.length c) - 2))) }
 
-  | '`'([^'''] | "\'")*'`'      { let c = get lexbuf in RAWSTRINGLITERAL (String.sub c 1 ((String.length c) - 2)) }
-  | '"'([^'"'] | "\\\"")*'"'    { let c = get lexbuf in STRINGLITERAL (String.sub c 1 ((String.length c) - 2)) }
+  | '`'([^'''] | "\'")*'`'      { let c = get lexbuf in return (RAWSTRINGLITERAL (String.sub c 1 ((String.length c) - 2))) }
+  | '"'([^'"'] | "\\\"")*'"'    { let c = get lexbuf in return (STRINGLITERAL (String.sub c 1 ((String.length c) - 2))) }
 
   | _                           { let p = pos lexbuf in failwith ("Unexpected char '" ^ (get lexbuf) ^ "' in line " ^ (string_of_int p.pos_lnum) ^ " at position " ^ (string_of_int p.pos_bol)) }
 
