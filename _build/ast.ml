@@ -42,8 +42,23 @@ type typeT =
   | StrType
   | RuneType
 
-type top_level_declaration = 
+type variable_decl =
+  (* Last int is line number *)
+  (* Variable declaration initialized with type *)
+  | VarDeclTypeInit of typeT * string * exp * int
+  (* Variable declaration initialized no type *)
+  | VarDeclNoTypeInit of string * exp * int
+  (* Variable declaration with type no expression *)
+  | VarDeclTypeNoInit of typeT * string * int
+
+type type_decl =
   (* Type of the declaration, name of type *)
-  | TypeDecl of typeT * string
-  (*| VarDecl of var_delaration
+  TypeDecl of typeT * string
+
+type top_level_decl = 
+  (* Type declaration *)
+  | TopTypeDecl of type_decl
+  (* (* Function declaration *)
   | FuncDecl of function_declaration*)
+  (* Variable declaration *)
+  | TopVarDecl of variable_decl

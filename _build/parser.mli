@@ -10,7 +10,7 @@ type token =
   | STRINGTYPE
   | STRINGLITERAL of (string)
   | SHORTASSIGN of (int)
-  | SEMICOLON
+  | SEMICOLON of (int)
   | SELECT
   | RUNETYPE
   | RUNELITERAL of (string)

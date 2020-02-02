@@ -10,7 +10,7 @@
   This reference keeps track of the last token
   We can then use it to determine if we wwant to insert a semicilon in the sream
   *)
-  let previous_token = ref SEMICOLON
+  let previous_token = ref (SEMICOLON 0)
 
   (*
   Check if the token at the end of the line requires a semicolon
@@ -59,7 +59,7 @@
 (* Tokens *)
 
 rule token = parse
-  | eol                         { if is_semicolon_required !previous_token then SEMICOLON else token lexbuf }
+  | eol                         { if is_semicolon_required !previous_token then SEMICOLON (get_line_num lexbuf) else token lexbuf }
   | (' ' | tab)                 { token lexbuf }
   | eof                         { EOF }
 
@@ -70,7 +70,7 @@ rule token = parse
   | '['                         { LSQUARE }
   | ']'                         { RSQUARE }       
   | ':'                         { COLON }
-  | ';'                         { SEMICOLON }       
+  | ';'                         { SEMICOLON (get_line_num lexbuf) }       
   | ','                         { COMMA }
   | '.'                         { DOT }
   | "..."                       { THREEDOT }

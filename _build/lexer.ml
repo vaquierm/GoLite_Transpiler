@@ -10,7 +10,7 @@
   This reference keeps track of the last token
   We can then use it to determine if we wwant to insert a semicilon in the sream
   *)
-  let previous_token = ref SEMICOLON
+  let previous_token = ref (SEMICOLON 0)
 
   (*
   Check if the token at the end of the line requires a semicolon
@@ -3500,7 +3500,7 @@ and __ocaml_lex_token_rec lexbuf __ocaml_lex_state =
   match Lexing.engine __ocaml_lex_tables __ocaml_lex_state lexbuf with
       | 0 ->
 # 62 "lexer.mll"
-                                ( if is_semicolon_required !previous_token then SEMICOLON else token lexbuf )
+                                ( if is_semicolon_required !previous_token then SEMICOLON (get_line_num lexbuf) else token lexbuf )
 # 3505 "lexer.ml"
 
   | 1 ->
@@ -3550,7 +3550,7 @@ and __ocaml_lex_token_rec lexbuf __ocaml_lex_state =
 
   | 10 ->
 # 73 "lexer.mll"
-                                ( SEMICOLON )
+                                ( SEMICOLON (get_line_num lexbuf) )
 # 3555 "lexer.ml"
 
   | 11 ->

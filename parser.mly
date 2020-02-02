@@ -7,7 +7,8 @@
 %token LPAR RPAR
 %token LCURLY RCURLY
 %token LSQUARE RSQUARE
-%token COLON SEMICOLON
+%token COLON
+%token<int> SEMICOLON
 
 %token COMMA DOT THREEDOT
 
@@ -72,7 +73,8 @@ import_decls
 
 top_level_decls
   :                     { [] }
-  | top_level_decls type_decls { $2 @ $1 }
+  | top_level_decls type_decls { (List.map (fun var -> Ast.TopTypeDecl var) $2) @ $1 }
+  | top_level_decls var_decls { (List.map (fun var -> Ast.TopVarDecl var) $2) @ $1 }
 
 type_decls
   : TYPE type_spec                      { [$2] }
@@ -85,6 +87,19 @@ type_specs
 type_spec
   : IDENTIFIER ASSIGN typeT SEMICOLON { failwith "Type aliases not supported in GoLite" }
   | IDENTIFIER typeT        SEMICOLON { Ast.TypeDecl ($2, (fst $1)) }
+
+var_decls
+  : VAR var_spec                      { $2 }
+  | VAR LPAR var_specs RPAR SEMICOLON { $3 }
+
+var_specs
+  :                       { [] }
+  | var_specs var_spec    { $2 @ $1 }
+
+var_spec
+  : ident_list typeT SEMICOLON                  { List.map (fun iden -> Ast.VarDeclTypeNoInit ($2, iden, $3)) $1 }
+  | ident_list typeT ASSIGN exp_list SEMICOLON  { List.map2 (fun iden exp -> Ast.VarDeclTypeInit ($2, iden, exp, $5)) $1 $4 }
+  | ident_list ASSIGN exp_list SEMICOLON        { List.map2 (fun iden exp -> Ast.VarDeclNoTypeInit (iden, exp, $4)) $1 $3 }
 
 typeT
   : LPAR typeT RPAR   { $2 }
@@ -112,6 +127,10 @@ field_decls
 ident_list
   :                               { [] } 
   | ident_list COMMA IDENTIFIER   { (fst $3)::$1 }
+
+exp_list
+  :                               { [] }
+  | exp_list COMMA exp            { $3::$1 }
 
 exp
   : FLOATLITERAL                            { Ast.FloatLit ($1) }
