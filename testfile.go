@@ -4,7 +4,17 @@ var a struct {
 	a int
 } = 4
 
+var a, b, c =4, "hello", 5.6;
+
+var (
+	n, m *int
+	e = 5
+	goose string = "Love"
+)
+
 type a []int;
+
+func a1() struct { a int; } :::
 
 type (
 	a int
@@ -20,4 +30,6 @@ type (
 	}
 )
 
-var a = 4 + 3;
+var x [12][]*int
+
+var a = 4 + 3 * 6;

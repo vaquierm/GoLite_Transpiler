@@ -75,6 +75,7 @@ top_level_decls
   :                     { [] }
   | top_level_decls type_decls { (List.map (fun var -> Ast.TopTypeDecl var) $2) @ $1 }
   | top_level_decls var_decls { (List.map (fun var -> Ast.TopVarDecl var) $2) @ $1 }
+  | top_level_decls func_decl { (Ast.TopFuncDecl $2) :: $1 }
 
 type_decls
   : TYPE type_spec                      { [$2] }
@@ -86,7 +87,7 @@ type_specs
 
 type_spec
   : IDENTIFIER ASSIGN typeT SEMICOLON { failwith "Type aliases not supported in GoLite" }
-  | IDENTIFIER typeT        SEMICOLON { Ast.TypeDecl ($2, (fst $1)) }
+  | IDENTIFIER typeT        SEMICOLON { Ast.TypeDecl ($2, (fst $1), (snd $1)) }
 
 var_decls
   : VAR var_spec                      { $2 }
@@ -100,6 +101,23 @@ var_spec
   : ident_list typeT SEMICOLON                  { List.map (fun iden -> Ast.VarDeclTypeNoInit ($2, iden, $3)) $1 }
   | ident_list typeT ASSIGN exp_list SEMICOLON  { List.map2 (fun iden exp -> Ast.VarDeclTypeInit ($2, iden, exp, $5)) $1 $4 }
   | ident_list ASSIGN exp_list SEMICOLON        { List.map2 (fun iden exp -> Ast.VarDeclNoTypeInit (iden, exp, $4)) $1 $3 }
+
+func_decl
+  : FUNC IDENTIFIER LPAR func_params? RPAR typeT? body               { 
+      let params = match $4 with
+      | None -> []
+      | Some p -> p
+      in
+      let retType = match $6 with
+      | None -> Ast.VoidType
+      | Some t -> t
+      in
+      Ast.FuncDecl (params, retType, (snd $2))
+    }
+
+func_params
+  : ident_list typeT                            { [] }
+  | func_params COMMA ident_list typeT          { (List.map (fun iden -> (iden, $4)) $3) @ $1 }
 
 typeT
   : LPAR typeT RPAR   { $2 }
@@ -165,3 +183,6 @@ exp
   | exp LEQ exp                             { Ast.Binop ($1, Ast.LEQ, $3, $2) }
   | exp GEQ exp                             { Ast.Binop ($1, Ast.GEQ, $3, $2) }
 
+
+body
+: COLON COLON COLON { () }

@@ -5,18 +5,19 @@ start' -> . start [ # ]
 -- On package_clause shift to state 5
 
 State 1:
-package_clause -> PACKAGE . IDENTIFIER SEMICOLON [ VAR TYPE IMPORT EOF ]
+package_clause -> PACKAGE . IDENTIFIER SEMICOLON [ VAR TYPE IMPORT FUNC EOF ]
 -- On IDENTIFIER shift to state 2
 
 State 2:
-package_clause -> PACKAGE IDENTIFIER . SEMICOLON [ VAR TYPE IMPORT EOF ]
+package_clause -> PACKAGE IDENTIFIER . SEMICOLON [ VAR TYPE IMPORT FUNC EOF ]
 -- On SEMICOLON shift to state 3
 
 State 3:
-package_clause -> PACKAGE IDENTIFIER SEMICOLON . [ VAR TYPE IMPORT EOF ]
+package_clause -> PACKAGE IDENTIFIER SEMICOLON . [ VAR TYPE IMPORT FUNC EOF ]
 -- On VAR reduce production package_clause -> PACKAGE IDENTIFIER SEMICOLON 
 -- On TYPE reduce production package_clause -> PACKAGE IDENTIFIER SEMICOLON 
 -- On IMPORT reduce production package_clause -> PACKAGE IDENTIFIER SEMICOLON 
+-- On FUNC reduce production package_clause -> PACKAGE IDENTIFIER SEMICOLON 
 -- On EOF reduce production package_clause -> PACKAGE IDENTIFIER SEMICOLON 
 
 State 4:
@@ -29,12 +30,14 @@ start -> package_clause . import_decls top_level_decls EOF [ # ]
 -- On import_decls shift to state 7
 -- On VAR reduce production import_decls -> 
 -- On TYPE reduce production import_decls -> 
+-- On FUNC reduce production import_decls -> 
 -- On EOF reduce production import_decls -> 
 
 State 6:
-import_decls -> IMPORT . [ VAR TYPE EOF ]
+import_decls -> IMPORT . [ VAR TYPE FUNC EOF ]
 -- On VAR reduce production import_decls -> IMPORT 
 -- On TYPE reduce production import_decls -> IMPORT 
+-- On FUNC reduce production import_decls -> IMPORT 
 -- On EOF reduce production import_decls -> IMPORT 
 
 State 7:
@@ -42,34 +45,38 @@ start -> package_clause import_decls . top_level_decls EOF [ # ]
 -- On top_level_decls shift to state 8
 -- On VAR reduce production top_level_decls -> 
 -- On TYPE reduce production top_level_decls -> 
+-- On FUNC reduce production top_level_decls -> 
 -- On EOF reduce production top_level_decls -> 
 
 State 8:
 start -> package_clause import_decls top_level_decls . EOF [ # ]
-top_level_decls -> top_level_decls . type_decls [ VAR TYPE EOF ]
-top_level_decls -> top_level_decls . var_decls [ VAR TYPE EOF ]
+top_level_decls -> top_level_decls . type_decls [ VAR TYPE FUNC EOF ]
+top_level_decls -> top_level_decls . var_decls [ VAR TYPE FUNC EOF ]
+top_level_decls -> top_level_decls . func_decl [ VAR TYPE FUNC EOF ]
 -- On VAR shift to state 9
 -- On TYPE shift to state 116
--- On EOF shift to state 129
--- On var_decls shift to state 130
--- On type_decls shift to state 131
+-- On FUNC shift to state 129
+-- On EOF shift to state 146
+-- On var_decls shift to state 147
+-- On type_decls shift to state 148
+-- On func_decl shift to state 149
 
 State 9:
-var_decls -> VAR . var_spec [ VAR TYPE EOF ]
-var_decls -> VAR . LPAR var_specs RPAR SEMICOLON [ VAR TYPE EOF ]
+var_decls -> VAR . var_spec [ VAR TYPE FUNC EOF ]
+var_decls -> VAR . LPAR var_specs RPAR SEMICOLON [ VAR TYPE FUNC EOF ]
 -- On LPAR shift to state 10
 -- On IDENTIFIER shift to state 14
 -- On var_spec shift to state 115
 -- On ident_list shift to state 16
 
 State 10:
-var_decls -> VAR LPAR . var_specs RPAR SEMICOLON [ VAR TYPE EOF ]
+var_decls -> VAR LPAR . var_specs RPAR SEMICOLON [ VAR TYPE FUNC EOF ]
 -- On var_specs shift to state 11
 -- On RPAR reduce production var_specs -> 
 -- On IDENTIFIER reduce production var_specs -> 
 
 State 11:
-var_decls -> VAR LPAR var_specs . RPAR SEMICOLON [ VAR TYPE EOF ]
+var_decls -> VAR LPAR var_specs . RPAR SEMICOLON [ VAR TYPE FUNC EOF ]
 var_specs -> var_specs . var_spec [ RPAR IDENTIFIER ]
 -- On RPAR shift to state 12
 -- On IDENTIFIER shift to state 14
@@ -77,13 +84,14 @@ var_specs -> var_specs . var_spec [ RPAR IDENTIFIER ]
 -- On ident_list shift to state 16
 
 State 12:
-var_decls -> VAR LPAR var_specs RPAR . SEMICOLON [ VAR TYPE EOF ]
+var_decls -> VAR LPAR var_specs RPAR . SEMICOLON [ VAR TYPE FUNC EOF ]
 -- On SEMICOLON shift to state 13
 
 State 13:
-var_decls -> VAR LPAR var_specs RPAR SEMICOLON . [ VAR TYPE EOF ]
+var_decls -> VAR LPAR var_specs RPAR SEMICOLON . [ VAR TYPE FUNC EOF ]
 -- On VAR reduce production var_decls -> VAR LPAR var_specs RPAR SEMICOLON 
 -- On TYPE reduce production var_decls -> VAR LPAR var_specs RPAR SEMICOLON 
+-- On FUNC reduce production var_decls -> VAR LPAR var_specs RPAR SEMICOLON 
 -- On EOF reduce production var_decls -> VAR LPAR var_specs RPAR SEMICOLON 
 
 State 14:
@@ -110,9 +118,9 @@ var_specs -> var_specs var_spec . [ RPAR IDENTIFIER ]
 
 State 16:
 ident_list -> ident_list . COMMA IDENTIFIER [ STRUCT STRINGTYPE RUNETYPE MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ASSIGN ]
-var_spec -> ident_list . typeT SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
-var_spec -> ident_list . typeT ASSIGN exp_list SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
-var_spec -> ident_list . ASSIGN exp_list SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+var_spec -> ident_list . typeT SEMICOLON [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
+var_spec -> ident_list . typeT ASSIGN exp_list SEMICOLON [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
+var_spec -> ident_list . ASSIGN exp_list SEMICOLON [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
 -- On STRUCT shift to state 17
 -- On STRINGTYPE shift to state 22
 -- On RUNETYPE shift to state 23
@@ -130,27 +138,29 @@ var_spec -> ident_list . ASSIGN exp_list SEMICOLON [ VAR TYPE RPAR IDENTIFIER EO
 -- On typeT shift to state 110
 
 State 17:
-typeT -> STRUCT . LCURLY field_decls RCURLY [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> STRUCT . LCURLY field_decls RCURLY [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On LCURLY shift to state 18
 
 State 18:
-typeT -> STRUCT LCURLY . field_decls RCURLY [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> STRUCT LCURLY . field_decls RCURLY [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On field_decls shift to state 19
 -- On RCURLY reduce production field_decls -> 
 -- On IDENTIFIER reduce production field_decls -> 
 
 State 19:
 field_decls -> field_decls . ident_list typeT SEMICOLON [ RCURLY IDENTIFIER ]
-typeT -> STRUCT LCURLY field_decls . RCURLY [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> STRUCT LCURLY field_decls . RCURLY [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On RCURLY shift to state 20
 -- On IDENTIFIER shift to state 14
 -- On ident_list shift to state 21
 
 State 20:
-typeT -> STRUCT LCURLY field_decls RCURLY . [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> STRUCT LCURLY field_decls RCURLY . [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On SEMICOLON reduce production typeT -> STRUCT LCURLY field_decls RCURLY 
 -- On RSQUARE reduce production typeT -> STRUCT LCURLY field_decls RCURLY 
 -- On RPAR reduce production typeT -> STRUCT LCURLY field_decls RCURLY 
+-- On COMMA reduce production typeT -> STRUCT LCURLY field_decls RCURLY 
+-- On COLON reduce production typeT -> STRUCT LCURLY field_decls RCURLY 
 -- On ASSIGN reduce production typeT -> STRUCT LCURLY field_decls RCURLY 
 
 State 21:
@@ -172,21 +182,25 @@ ident_list -> ident_list . COMMA IDENTIFIER [ STRUCT STRINGTYPE RUNETYPE MULT MA
 -- On typeT shift to state 102
 
 State 22:
-typeT -> STRINGTYPE . [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> STRINGTYPE . [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On SEMICOLON reduce production typeT -> STRINGTYPE 
 -- On RSQUARE reduce production typeT -> STRINGTYPE 
 -- On RPAR reduce production typeT -> STRINGTYPE 
+-- On COMMA reduce production typeT -> STRINGTYPE 
+-- On COLON reduce production typeT -> STRINGTYPE 
 -- On ASSIGN reduce production typeT -> STRINGTYPE 
 
 State 23:
-typeT -> RUNETYPE . [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> RUNETYPE . [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On SEMICOLON reduce production typeT -> RUNETYPE 
 -- On RSQUARE reduce production typeT -> RUNETYPE 
 -- On RPAR reduce production typeT -> RUNETYPE 
+-- On COMMA reduce production typeT -> RUNETYPE 
+-- On COLON reduce production typeT -> RUNETYPE 
 -- On ASSIGN reduce production typeT -> RUNETYPE 
 
 State 24:
-typeT -> MULT . typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> MULT . typeT [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On STRUCT shift to state 17
 -- On STRINGTYPE shift to state 22
 -- On RUNETYPE shift to state 23
@@ -202,11 +216,11 @@ typeT -> MULT . typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On typeT shift to state 99
 
 State 25:
-typeT -> MAP . RSQUARE typeT RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> MAP . RSQUARE typeT RSQUARE typeT [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On RSQUARE shift to state 26
 
 State 26:
-typeT -> MAP RSQUARE . typeT RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> MAP RSQUARE . typeT RSQUARE typeT [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On STRUCT shift to state 17
 -- On STRINGTYPE shift to state 22
 -- On RUNETYPE shift to state 23
@@ -222,8 +236,8 @@ typeT -> MAP RSQUARE . typeT RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On typeT shift to state 96
 
 State 27:
-typeT -> LSQUARE . exp RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
-typeT -> LSQUARE . RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> LSQUARE . exp RSQUARE typeT [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
+typeT -> LSQUARE . RSQUARE typeT [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On STRINGLITERAL shift to state 28
 -- On RUNELITERAL shift to state 29
 -- On RSQUARE shift to state 30
@@ -290,7 +304,7 @@ exp -> RUNELITERAL . [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BINAND reduce production exp -> RUNELITERAL 
 
 State 30:
-typeT -> LSQUARE RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> LSQUARE RSQUARE . typeT [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On STRUCT shift to state 17
 -- On STRINGTYPE shift to state 22
 -- On RUNETYPE shift to state 23
@@ -306,7 +320,7 @@ typeT -> LSQUARE RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On typeT shift to state 39
 
 State 31:
-typeT -> LPAR . typeT RPAR [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> LPAR . typeT RPAR [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On STRUCT shift to state 17
 -- On STRINGTYPE shift to state 22
 -- On RUNETYPE shift to state 23
@@ -322,56 +336,70 @@ typeT -> LPAR . typeT RPAR [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On typeT shift to state 37
 
 State 32:
-typeT -> INTTYPE . [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> INTTYPE . [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On SEMICOLON reduce production typeT -> INTTYPE 
 -- On RSQUARE reduce production typeT -> INTTYPE 
 -- On RPAR reduce production typeT -> INTTYPE 
+-- On COMMA reduce production typeT -> INTTYPE 
+-- On COLON reduce production typeT -> INTTYPE 
 -- On ASSIGN reduce production typeT -> INTTYPE 
 
 State 33:
-typeT -> INTERFACE . [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> INTERFACE . [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On SEMICOLON reduce production typeT -> INTERFACE 
 -- On RSQUARE reduce production typeT -> INTERFACE 
 -- On RPAR reduce production typeT -> INTERFACE 
+-- On COMMA reduce production typeT -> INTERFACE 
+-- On COLON reduce production typeT -> INTERFACE 
 -- On ASSIGN reduce production typeT -> INTERFACE 
 
 State 34:
-typeT -> IDENTIFIER . [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> IDENTIFIER . [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On SEMICOLON reduce production typeT -> IDENTIFIER 
 -- On RSQUARE reduce production typeT -> IDENTIFIER 
 -- On RPAR reduce production typeT -> IDENTIFIER 
+-- On COMMA reduce production typeT -> IDENTIFIER 
+-- On COLON reduce production typeT -> IDENTIFIER 
 -- On ASSIGN reduce production typeT -> IDENTIFIER 
 
 State 35:
-typeT -> FLOATTYPE . [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> FLOATTYPE . [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On SEMICOLON reduce production typeT -> FLOATTYPE 
 -- On RSQUARE reduce production typeT -> FLOATTYPE 
 -- On RPAR reduce production typeT -> FLOATTYPE 
+-- On COMMA reduce production typeT -> FLOATTYPE 
+-- On COLON reduce production typeT -> FLOATTYPE 
 -- On ASSIGN reduce production typeT -> FLOATTYPE 
 
 State 36:
-typeT -> CHAN . [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> CHAN . [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On SEMICOLON reduce production typeT -> CHAN 
 -- On RSQUARE reduce production typeT -> CHAN 
 -- On RPAR reduce production typeT -> CHAN 
+-- On COMMA reduce production typeT -> CHAN 
+-- On COLON reduce production typeT -> CHAN 
 -- On ASSIGN reduce production typeT -> CHAN 
 
 State 37:
-typeT -> LPAR typeT . RPAR [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> LPAR typeT . RPAR [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On RPAR shift to state 38
 
 State 38:
-typeT -> LPAR typeT RPAR . [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> LPAR typeT RPAR . [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On SEMICOLON reduce production typeT -> LPAR typeT RPAR 
 -- On RSQUARE reduce production typeT -> LPAR typeT RPAR 
 -- On RPAR reduce production typeT -> LPAR typeT RPAR 
+-- On COMMA reduce production typeT -> LPAR typeT RPAR 
+-- On COLON reduce production typeT -> LPAR typeT RPAR 
 -- On ASSIGN reduce production typeT -> LPAR typeT RPAR 
 
 State 39:
-typeT -> LSQUARE RSQUARE typeT . [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> LSQUARE RSQUARE typeT . [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On SEMICOLON reduce production typeT -> LSQUARE RSQUARE typeT 
 -- On RSQUARE reduce production typeT -> LSQUARE RSQUARE typeT 
 -- On RPAR reduce production typeT -> LSQUARE RSQUARE typeT 
+-- On COMMA reduce production typeT -> LSQUARE RSQUARE typeT 
+-- On COLON reduce production typeT -> LSQUARE RSQUARE typeT 
 -- On ASSIGN reduce production typeT -> LSQUARE RSQUARE typeT 
 
 State 40:
@@ -819,7 +847,7 @@ exp -> exp . LT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GE
 exp -> exp . GT exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . LEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
 exp -> exp . GEQ exp [ RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIFT LEQ GT GEQ EQ DIV BOOLOR BOOLAND BINXOR BINOR BINANDNOT BINAND ]
-typeT -> LSQUARE exp . RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> LSQUARE exp . RSQUARE typeT [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On RSQUARE shift to state 56
 -- On RSHIFT shift to state 58
 -- On PLUS shift to state 64
@@ -842,7 +870,7 @@ typeT -> LSQUARE exp . RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On BINAND shift to state 76
 
 State 56:
-typeT -> LSQUARE exp RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> LSQUARE exp RSQUARE . typeT [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On STRUCT shift to state 17
 -- On STRINGTYPE shift to state 22
 -- On RUNETYPE shift to state 23
@@ -858,10 +886,12 @@ typeT -> LSQUARE exp RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On typeT shift to state 57
 
 State 57:
-typeT -> LSQUARE exp RSQUARE typeT . [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> LSQUARE exp RSQUARE typeT . [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On SEMICOLON reduce production typeT -> LSQUARE exp RSQUARE typeT 
 -- On RSQUARE reduce production typeT -> LSQUARE exp RSQUARE typeT 
 -- On RPAR reduce production typeT -> LSQUARE exp RSQUARE typeT 
+-- On COMMA reduce production typeT -> LSQUARE exp RSQUARE typeT 
+-- On COLON reduce production typeT -> LSQUARE exp RSQUARE typeT 
 -- On ASSIGN reduce production typeT -> LSQUARE exp RSQUARE typeT 
 
 State 58:
@@ -2005,11 +2035,11 @@ exp -> exp . GEQ exp [ SEMICOLON RSQUARE RSHIFT PLUS NEQ MULT MOD MINUS LT LSHIF
 -- On BOOLAND reduce production exp -> exp BOOLAND exp 
 
 State 96:
-typeT -> MAP RSQUARE typeT . RSQUARE typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> MAP RSQUARE typeT . RSQUARE typeT [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On RSQUARE shift to state 97
 
 State 97:
-typeT -> MAP RSQUARE typeT RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> MAP RSQUARE typeT RSQUARE . typeT [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On STRUCT shift to state 17
 -- On STRINGTYPE shift to state 22
 -- On RUNETYPE shift to state 23
@@ -2025,17 +2055,21 @@ typeT -> MAP RSQUARE typeT RSQUARE . typeT [ SEMICOLON RSQUARE RPAR ASSIGN ]
 -- On typeT shift to state 98
 
 State 98:
-typeT -> MAP RSQUARE typeT RSQUARE typeT . [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> MAP RSQUARE typeT RSQUARE typeT . [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On SEMICOLON reduce production typeT -> MAP RSQUARE typeT RSQUARE typeT 
 -- On RSQUARE reduce production typeT -> MAP RSQUARE typeT RSQUARE typeT 
 -- On RPAR reduce production typeT -> MAP RSQUARE typeT RSQUARE typeT 
+-- On COMMA reduce production typeT -> MAP RSQUARE typeT RSQUARE typeT 
+-- On COLON reduce production typeT -> MAP RSQUARE typeT RSQUARE typeT 
 -- On ASSIGN reduce production typeT -> MAP RSQUARE typeT RSQUARE typeT 
 
 State 99:
-typeT -> MULT typeT . [ SEMICOLON RSQUARE RPAR ASSIGN ]
+typeT -> MULT typeT . [ SEMICOLON RSQUARE RPAR COMMA COLON ASSIGN ]
 -- On SEMICOLON reduce production typeT -> MULT typeT 
 -- On RSQUARE reduce production typeT -> MULT typeT 
 -- On RPAR reduce production typeT -> MULT typeT 
+-- On COMMA reduce production typeT -> MULT typeT 
+-- On COLON reduce production typeT -> MULT typeT 
 -- On ASSIGN reduce production typeT -> MULT typeT 
 
 State 100:
@@ -2069,7 +2103,7 @@ field_decls -> field_decls ident_list typeT SEMICOLON . [ RCURLY IDENTIFIER ]
 -- On IDENTIFIER reduce production field_decls -> field_decls ident_list typeT SEMICOLON 
 
 State 104:
-var_spec -> ident_list ASSIGN . exp_list SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+var_spec -> ident_list ASSIGN . exp_list SEMICOLON [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
 -- On STRINGLITERAL shift to state 28
 -- On RUNELITERAL shift to state 29
 -- On RECEIVE shift to state 40
@@ -2087,16 +2121,17 @@ var_spec -> ident_list ASSIGN . exp_list SEMICOLON [ VAR TYPE RPAR IDENTIFIER EO
 
 State 105:
 exp_list -> exp_list . COMMA exp [ SEMICOLON COMMA ]
-var_spec -> ident_list ASSIGN exp_list . SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+var_spec -> ident_list ASSIGN exp_list . SEMICOLON [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
 -- On SEMICOLON shift to state 106
 -- On COMMA shift to state 107
 
 State 106:
-var_spec -> ident_list ASSIGN exp_list SEMICOLON . [ VAR TYPE RPAR IDENTIFIER EOF ]
+var_spec -> ident_list ASSIGN exp_list SEMICOLON . [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
 -- On VAR reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
 -- On TYPE reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
 -- On RPAR reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
 -- On IDENTIFIER reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
+-- On FUNC reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
 -- On EOF reduce production var_spec -> ident_list ASSIGN exp_list SEMICOLON 
 
 State 107:
@@ -2202,21 +2237,22 @@ exp_list -> exp . [ SEMICOLON COMMA ]
 -- On COMMA reduce production exp_list -> exp 
 
 State 110:
-var_spec -> ident_list typeT . SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
-var_spec -> ident_list typeT . ASSIGN exp_list SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+var_spec -> ident_list typeT . SEMICOLON [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
+var_spec -> ident_list typeT . ASSIGN exp_list SEMICOLON [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
 -- On SEMICOLON shift to state 111
 -- On ASSIGN shift to state 112
 
 State 111:
-var_spec -> ident_list typeT SEMICOLON . [ VAR TYPE RPAR IDENTIFIER EOF ]
+var_spec -> ident_list typeT SEMICOLON . [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
 -- On VAR reduce production var_spec -> ident_list typeT SEMICOLON 
 -- On TYPE reduce production var_spec -> ident_list typeT SEMICOLON 
 -- On RPAR reduce production var_spec -> ident_list typeT SEMICOLON 
 -- On IDENTIFIER reduce production var_spec -> ident_list typeT SEMICOLON 
+-- On FUNC reduce production var_spec -> ident_list typeT SEMICOLON 
 -- On EOF reduce production var_spec -> ident_list typeT SEMICOLON 
 
 State 112:
-var_spec -> ident_list typeT ASSIGN . exp_list SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+var_spec -> ident_list typeT ASSIGN . exp_list SEMICOLON [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
 -- On STRINGLITERAL shift to state 28
 -- On RUNELITERAL shift to state 29
 -- On RECEIVE shift to state 40
@@ -2234,57 +2270,60 @@ var_spec -> ident_list typeT ASSIGN . exp_list SEMICOLON [ VAR TYPE RPAR IDENTIF
 
 State 113:
 exp_list -> exp_list . COMMA exp [ SEMICOLON COMMA ]
-var_spec -> ident_list typeT ASSIGN exp_list . SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+var_spec -> ident_list typeT ASSIGN exp_list . SEMICOLON [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
 -- On SEMICOLON shift to state 114
 -- On COMMA shift to state 107
 
 State 114:
-var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON . [ VAR TYPE RPAR IDENTIFIER EOF ]
+var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON . [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
 -- On VAR reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
 -- On TYPE reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
 -- On RPAR reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
 -- On IDENTIFIER reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
+-- On FUNC reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
 -- On EOF reduce production var_spec -> ident_list typeT ASSIGN exp_list SEMICOLON 
 
 State 115:
-var_decls -> VAR var_spec . [ VAR TYPE EOF ]
+var_decls -> VAR var_spec . [ VAR TYPE FUNC EOF ]
 -- On VAR reduce production var_decls -> VAR var_spec 
 -- On TYPE reduce production var_decls -> VAR var_spec 
+-- On FUNC reduce production var_decls -> VAR var_spec 
 -- On EOF reduce production var_decls -> VAR var_spec 
 
 State 116:
-type_decls -> TYPE . type_spec [ VAR TYPE EOF ]
-type_decls -> TYPE . LPAR type_specs RPAR SEMICOLON [ VAR TYPE EOF ]
+type_decls -> TYPE . type_spec [ VAR TYPE FUNC EOF ]
+type_decls -> TYPE . LPAR type_specs RPAR SEMICOLON [ VAR TYPE FUNC EOF ]
 -- On LPAR shift to state 117
 -- On IDENTIFIER shift to state 121
 -- On type_spec shift to state 128
 
 State 117:
-type_decls -> TYPE LPAR . type_specs RPAR SEMICOLON [ VAR TYPE EOF ]
+type_decls -> TYPE LPAR . type_specs RPAR SEMICOLON [ VAR TYPE FUNC EOF ]
 -- On type_specs shift to state 118
 -- On RPAR reduce production type_specs -> 
 -- On IDENTIFIER reduce production type_specs -> 
 
 State 118:
-type_decls -> TYPE LPAR type_specs . RPAR SEMICOLON [ VAR TYPE EOF ]
+type_decls -> TYPE LPAR type_specs . RPAR SEMICOLON [ VAR TYPE FUNC EOF ]
 type_specs -> type_specs . type_spec [ RPAR IDENTIFIER ]
 -- On RPAR shift to state 119
 -- On IDENTIFIER shift to state 121
 -- On type_spec shift to state 127
 
 State 119:
-type_decls -> TYPE LPAR type_specs RPAR . SEMICOLON [ VAR TYPE EOF ]
+type_decls -> TYPE LPAR type_specs RPAR . SEMICOLON [ VAR TYPE FUNC EOF ]
 -- On SEMICOLON shift to state 120
 
 State 120:
-type_decls -> TYPE LPAR type_specs RPAR SEMICOLON . [ VAR TYPE EOF ]
+type_decls -> TYPE LPAR type_specs RPAR SEMICOLON . [ VAR TYPE FUNC EOF ]
 -- On VAR reduce production type_decls -> TYPE LPAR type_specs RPAR SEMICOLON 
 -- On TYPE reduce production type_decls -> TYPE LPAR type_specs RPAR SEMICOLON 
+-- On FUNC reduce production type_decls -> TYPE LPAR type_specs RPAR SEMICOLON 
 -- On EOF reduce production type_decls -> TYPE LPAR type_specs RPAR SEMICOLON 
 
 State 121:
-type_spec -> IDENTIFIER . ASSIGN typeT SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
-type_spec -> IDENTIFIER . typeT SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+type_spec -> IDENTIFIER . ASSIGN typeT SEMICOLON [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
+type_spec -> IDENTIFIER . typeT SEMICOLON [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
 -- On STRUCT shift to state 17
 -- On STRINGTYPE shift to state 22
 -- On RUNETYPE shift to state 23
@@ -2301,7 +2340,7 @@ type_spec -> IDENTIFIER . typeT SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
 -- On typeT shift to state 125
 
 State 122:
-type_spec -> IDENTIFIER ASSIGN . typeT SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+type_spec -> IDENTIFIER ASSIGN . typeT SEMICOLON [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
 -- On STRUCT shift to state 17
 -- On STRINGTYPE shift to state 22
 -- On RUNETYPE shift to state 23
@@ -2317,27 +2356,29 @@ type_spec -> IDENTIFIER ASSIGN . typeT SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF 
 -- On typeT shift to state 123
 
 State 123:
-type_spec -> IDENTIFIER ASSIGN typeT . SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+type_spec -> IDENTIFIER ASSIGN typeT . SEMICOLON [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
 -- On SEMICOLON shift to state 124
 
 State 124:
-type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON . [ VAR TYPE RPAR IDENTIFIER EOF ]
+type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON . [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
 -- On VAR reduce production type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON 
 -- On TYPE reduce production type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON 
 -- On RPAR reduce production type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON 
 -- On IDENTIFIER reduce production type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON 
+-- On FUNC reduce production type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON 
 -- On EOF reduce production type_spec -> IDENTIFIER ASSIGN typeT SEMICOLON 
 
 State 125:
-type_spec -> IDENTIFIER typeT . SEMICOLON [ VAR TYPE RPAR IDENTIFIER EOF ]
+type_spec -> IDENTIFIER typeT . SEMICOLON [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
 -- On SEMICOLON shift to state 126
 
 State 126:
-type_spec -> IDENTIFIER typeT SEMICOLON . [ VAR TYPE RPAR IDENTIFIER EOF ]
+type_spec -> IDENTIFIER typeT SEMICOLON . [ VAR TYPE RPAR IDENTIFIER FUNC EOF ]
 -- On VAR reduce production type_spec -> IDENTIFIER typeT SEMICOLON 
 -- On TYPE reduce production type_spec -> IDENTIFIER typeT SEMICOLON 
 -- On RPAR reduce production type_spec -> IDENTIFIER typeT SEMICOLON 
 -- On IDENTIFIER reduce production type_spec -> IDENTIFIER typeT SEMICOLON 
+-- On FUNC reduce production type_spec -> IDENTIFIER typeT SEMICOLON 
 -- On EOF reduce production type_spec -> IDENTIFIER typeT SEMICOLON 
 
 State 127:
@@ -2346,24 +2387,160 @@ type_specs -> type_specs type_spec . [ RPAR IDENTIFIER ]
 -- On IDENTIFIER reduce production type_specs -> type_specs type_spec 
 
 State 128:
-type_decls -> TYPE type_spec . [ VAR TYPE EOF ]
+type_decls -> TYPE type_spec . [ VAR TYPE FUNC EOF ]
 -- On VAR reduce production type_decls -> TYPE type_spec 
 -- On TYPE reduce production type_decls -> TYPE type_spec 
+-- On FUNC reduce production type_decls -> TYPE type_spec 
 -- On EOF reduce production type_decls -> TYPE type_spec 
 
 State 129:
+func_decl -> FUNC . IDENTIFIER LPAR option(func_params) RPAR option(typeT) body [ VAR TYPE FUNC EOF ]
+-- On IDENTIFIER shift to state 130
+
+State 130:
+func_decl -> FUNC IDENTIFIER . LPAR option(func_params) RPAR option(typeT) body [ VAR TYPE FUNC EOF ]
+-- On LPAR shift to state 131
+
+State 131:
+func_decl -> FUNC IDENTIFIER LPAR . option(func_params) RPAR option(typeT) body [ VAR TYPE FUNC EOF ]
+-- On IDENTIFIER shift to state 14
+-- On option(func_params) shift to state 132
+-- On ident_list shift to state 140
+-- On func_params shift to state 142
+-- On RPAR reduce production option(func_params) -> 
+
+State 132:
+func_decl -> FUNC IDENTIFIER LPAR option(func_params) . RPAR option(typeT) body [ VAR TYPE FUNC EOF ]
+-- On RPAR shift to state 133
+
+State 133:
+func_decl -> FUNC IDENTIFIER LPAR option(func_params) RPAR . option(typeT) body [ VAR TYPE FUNC EOF ]
+-- On STRUCT shift to state 17
+-- On STRINGTYPE shift to state 22
+-- On RUNETYPE shift to state 23
+-- On MULT shift to state 24
+-- On MAP shift to state 25
+-- On LSQUARE shift to state 27
+-- On LPAR shift to state 31
+-- On INTTYPE shift to state 32
+-- On INTERFACE shift to state 33
+-- On IDENTIFIER shift to state 34
+-- On FLOATTYPE shift to state 35
+-- On CHAN shift to state 36
+-- On typeT shift to state 134
+-- On option(typeT) shift to state 135
+-- On COLON reduce production option(typeT) -> 
+
+State 134:
+option(typeT) -> typeT . [ COLON ]
+-- On COLON reduce production option(typeT) -> typeT 
+
+State 135:
+func_decl -> FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) . body [ VAR TYPE FUNC EOF ]
+-- On COLON shift to state 136
+-- On body shift to state 139
+
+State 136:
+body -> COLON . COLON COLON [ VAR TYPE FUNC EOF ]
+-- On COLON shift to state 137
+
+State 137:
+body -> COLON COLON . COLON [ VAR TYPE FUNC EOF ]
+-- On COLON shift to state 138
+
+State 138:
+body -> COLON COLON COLON . [ VAR TYPE FUNC EOF ]
+-- On VAR reduce production body -> COLON COLON COLON 
+-- On TYPE reduce production body -> COLON COLON COLON 
+-- On FUNC reduce production body -> COLON COLON COLON 
+-- On EOF reduce production body -> COLON COLON COLON 
+
+State 139:
+func_decl -> FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) body . [ VAR TYPE FUNC EOF ]
+-- On VAR reduce production func_decl -> FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) body 
+-- On TYPE reduce production func_decl -> FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) body 
+-- On FUNC reduce production func_decl -> FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) body 
+-- On EOF reduce production func_decl -> FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) body 
+
+State 140:
+func_params -> ident_list . typeT [ RPAR COMMA ]
+ident_list -> ident_list . COMMA IDENTIFIER [ STRUCT STRINGTYPE RUNETYPE MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ]
+-- On STRUCT shift to state 17
+-- On STRINGTYPE shift to state 22
+-- On RUNETYPE shift to state 23
+-- On MULT shift to state 24
+-- On MAP shift to state 25
+-- On LSQUARE shift to state 27
+-- On LPAR shift to state 31
+-- On INTTYPE shift to state 32
+-- On INTERFACE shift to state 33
+-- On IDENTIFIER shift to state 34
+-- On FLOATTYPE shift to state 35
+-- On COMMA shift to state 100
+-- On CHAN shift to state 36
+-- On typeT shift to state 141
+
+State 141:
+func_params -> ident_list typeT . [ RPAR COMMA ]
+-- On RPAR reduce production func_params -> ident_list typeT 
+-- On COMMA reduce production func_params -> ident_list typeT 
+
+State 142:
+func_params -> func_params . COMMA ident_list typeT [ RPAR COMMA ]
+option(func_params) -> func_params . [ RPAR ]
+-- On COMMA shift to state 143
+-- On RPAR reduce production option(func_params) -> func_params 
+
+State 143:
+func_params -> func_params COMMA . ident_list typeT [ RPAR COMMA ]
+-- On IDENTIFIER shift to state 14
+-- On ident_list shift to state 144
+
+State 144:
+func_params -> func_params COMMA ident_list . typeT [ RPAR COMMA ]
+ident_list -> ident_list . COMMA IDENTIFIER [ STRUCT STRINGTYPE RUNETYPE MULT MAP LSQUARE LPAR INTTYPE INTERFACE IDENTIFIER FLOATTYPE COMMA CHAN ]
+-- On STRUCT shift to state 17
+-- On STRINGTYPE shift to state 22
+-- On RUNETYPE shift to state 23
+-- On MULT shift to state 24
+-- On MAP shift to state 25
+-- On LSQUARE shift to state 27
+-- On LPAR shift to state 31
+-- On INTTYPE shift to state 32
+-- On INTERFACE shift to state 33
+-- On IDENTIFIER shift to state 34
+-- On FLOATTYPE shift to state 35
+-- On COMMA shift to state 100
+-- On CHAN shift to state 36
+-- On typeT shift to state 145
+
+State 145:
+func_params -> func_params COMMA ident_list typeT . [ RPAR COMMA ]
+-- On RPAR reduce production func_params -> func_params COMMA ident_list typeT 
+-- On COMMA reduce production func_params -> func_params COMMA ident_list typeT 
+
+State 146:
 start -> package_clause import_decls top_level_decls EOF . [ # ]
 -- On # reduce production start -> package_clause import_decls top_level_decls EOF 
 
-State 130:
-top_level_decls -> top_level_decls var_decls . [ VAR TYPE EOF ]
+State 147:
+top_level_decls -> top_level_decls var_decls . [ VAR TYPE FUNC EOF ]
 -- On VAR reduce production top_level_decls -> top_level_decls var_decls 
 -- On TYPE reduce production top_level_decls -> top_level_decls var_decls 
+-- On FUNC reduce production top_level_decls -> top_level_decls var_decls 
 -- On EOF reduce production top_level_decls -> top_level_decls var_decls 
 
-State 131:
-top_level_decls -> top_level_decls type_decls . [ VAR TYPE EOF ]
+State 148:
+top_level_decls -> top_level_decls type_decls . [ VAR TYPE FUNC EOF ]
 -- On VAR reduce production top_level_decls -> top_level_decls type_decls 
 -- On TYPE reduce production top_level_decls -> top_level_decls type_decls 
+-- On FUNC reduce production top_level_decls -> top_level_decls type_decls 
 -- On EOF reduce production top_level_decls -> top_level_decls type_decls 
+
+State 149:
+top_level_decls -> top_level_decls func_decl . [ VAR TYPE FUNC EOF ]
+-- On VAR reduce production top_level_decls -> top_level_decls func_decl 
+-- On TYPE reduce production top_level_decls -> top_level_decls func_decl 
+-- On FUNC reduce production top_level_decls -> top_level_decls func_decl 
+-- On EOF reduce production top_level_decls -> top_level_decls func_decl 
 

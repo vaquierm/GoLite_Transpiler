@@ -331,6 +331,11 @@ type _menhir_env = {
 }
 
 and _menhir_state = 
+  | MenhirState144
+  | MenhirState143
+  | MenhirState140
+  | MenhirState133
+  | MenhirState131
   | MenhirState122
   | MenhirState121
   | MenhirState118
@@ -380,7 +385,7 @@ and _menhir_state =
   open Lexing
 
 
-# 384 "parser.ml"
+# 389 "parser.ml"
 
 let rec _menhir_run107 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp list) -> 'ttv_return =
   fun _menhir_env _menhir_stack ->
@@ -434,17 +439,17 @@ and _menhir_goto_exp_list : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.ex
             let (_4 : (
 # 11 "parser.mly"
       (int)
-# 438 "parser.ml"
+# 443 "parser.ml"
             )) = _v in
             let (((_menhir_stack, _menhir_s, (_1 : (string list))), _, (_2 : (
 # 21 "parser.mly"
       (int)
-# 443 "parser.ml"
+# 448 "parser.ml"
             ))), _, (_3 : (Ast.exp list))) = _menhir_stack in
             let _v : (Ast.variable_decl list) = 
-# 102 "parser.mly"
+# 103 "parser.mly"
                                                 ( List.map2 (fun iden exp -> Ast.VarDeclNoTypeInit (iden, exp, _4)) _1 _3 )
-# 448 "parser.ml"
+# 453 "parser.ml"
              in
             _menhir_goto_var_spec _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -467,17 +472,17 @@ and _menhir_goto_exp_list : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.ex
             let (_5 : (
 # 11 "parser.mly"
       (int)
-# 471 "parser.ml"
+# 476 "parser.ml"
             )) = _v in
             let ((((_menhir_stack, _menhir_s, (_1 : (string list))), _, (_2 : (Ast.typeT))), (_3 : (
 # 21 "parser.mly"
       (int)
-# 476 "parser.ml"
+# 481 "parser.ml"
             ))), _, (_4 : (Ast.exp list))) = _menhir_stack in
             let _v : (Ast.variable_decl list) = 
-# 101 "parser.mly"
+# 102 "parser.mly"
                                                 ( List.map2 (fun iden exp -> Ast.VarDeclTypeInit (_2, iden, exp, _5)) _1 _4 )
-# 481 "parser.ml"
+# 486 "parser.ml"
              in
             _menhir_goto_var_spec _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -492,7 +497,7 @@ and _menhir_goto_exp_list : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.ex
 and _menhir_run58 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 15 "parser.mly"
       (int)
-# 496 "parser.ml"
+# 501 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -531,7 +536,7 @@ and _menhir_run58 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run64 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 15 "parser.mly"
       (int)
-# 535 "parser.ml"
+# 540 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -570,7 +575,7 @@ and _menhir_run64 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run78 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 25 "parser.mly"
       (int)
-# 574 "parser.ml"
+# 579 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -609,7 +614,7 @@ and _menhir_run78 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run60 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 15 "parser.mly"
       (int)
-# 613 "parser.ml"
+# 618 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -648,7 +653,7 @@ and _menhir_run60 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run66 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 15 "parser.mly"
       (int)
-# 652 "parser.ml"
+# 657 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -687,7 +692,7 @@ and _menhir_run66 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run80 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 15 "parser.mly"
       (int)
-# 691 "parser.ml"
+# 696 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -726,7 +731,7 @@ and _menhir_run80 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run82 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 25 "parser.mly"
       (int)
-# 730 "parser.ml"
+# 735 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -765,7 +770,7 @@ and _menhir_run82 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run68 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 15 "parser.mly"
       (int)
-# 769 "parser.ml"
+# 774 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -804,7 +809,7 @@ and _menhir_run68 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run84 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 25 "parser.mly"
       (int)
-# 808 "parser.ml"
+# 813 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -843,7 +848,7 @@ and _menhir_run84 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run86 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 25 "parser.mly"
       (int)
-# 847 "parser.ml"
+# 852 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -882,7 +887,7 @@ and _menhir_run86 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run88 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 25 "parser.mly"
       (int)
-# 886 "parser.ml"
+# 891 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -921,7 +926,7 @@ and _menhir_run88 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run90 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 25 "parser.mly"
       (int)
-# 925 "parser.ml"
+# 930 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -960,7 +965,7 @@ and _menhir_run90 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run62 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 15 "parser.mly"
       (int)
-# 964 "parser.ml"
+# 969 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -999,7 +1004,7 @@ and _menhir_run62 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run92 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 19 "parser.mly"
       (int)
-# 1003 "parser.ml"
+# 1008 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -1038,7 +1043,7 @@ and _menhir_run92 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run94 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 19 "parser.mly"
       (int)
-# 1042 "parser.ml"
+# 1047 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -1077,7 +1082,7 @@ and _menhir_run94 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run70 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 15 "parser.mly"
       (int)
-# 1081 "parser.ml"
+# 1086 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -1116,7 +1121,7 @@ and _menhir_run70 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run72 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 15 "parser.mly"
       (int)
-# 1120 "parser.ml"
+# 1125 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -1155,7 +1160,7 @@ and _menhir_run72 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run74 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 15 "parser.mly"
       (int)
-# 1159 "parser.ml"
+# 1164 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -1194,7 +1199,7 @@ and _menhir_run74 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 and _menhir_run76 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
 # 15 "parser.mly"
       (int)
-# 1198 "parser.ml"
+# 1203 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
     let _menhir_stack = (_menhir_stack, _v) in
@@ -1230,6 +1235,96 @@ and _menhir_run76 : _menhir_env -> 'ttv_tail * _menhir_state * (Ast.exp) -> (
         _menhir_env._menhir_error <- true;
         _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState76
 
+and _menhir_goto_func_params : _menhir_env -> 'ttv_tail -> _menhir_state -> ((string * Ast.typeT) list) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
+    let _menhir_stack = Obj.magic _menhir_stack in
+    assert (not _menhir_env._menhir_error);
+    let _tok = _menhir_env._menhir_token in
+    match _tok with
+    | COMMA ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let _menhir_env = _menhir_discard _menhir_env in
+        let _tok = _menhir_env._menhir_token in
+        (match _tok with
+        | IDENTIFIER _v ->
+            _menhir_run14 _menhir_env (Obj.magic _menhir_stack) MenhirState143 _v
+        | _ ->
+            assert (not _menhir_env._menhir_error);
+            _menhir_env._menhir_error <- true;
+            _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState143)
+    | RPAR ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let (_menhir_stack, _menhir_s, (x : ((string * Ast.typeT) list))) = _menhir_stack in
+        let _v : ((string * Ast.typeT) list option) = 
+# 102 "/usr/share/menhir/standard.mly"
+    ( Some x )
+# 1263 "parser.ml"
+         in
+        _menhir_goto_option_func_params_ _menhir_env _menhir_stack _menhir_s _v
+    | _ ->
+        assert (not _menhir_env._menhir_error);
+        _menhir_env._menhir_error <- true;
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let (_menhir_stack, _menhir_s, _) = _menhir_stack in
+        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) _menhir_s
+
+and _menhir_goto_type_spec : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.type_decl) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    match _menhir_s with
+    | MenhirState118 ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let (_2 : (Ast.type_decl)) = _v in
+        let (_menhir_stack, (_1 : (Ast.type_decl list))) = _menhir_stack in
+        let _v : (Ast.type_decl list) = 
+# 86 "parser.mly"
+                          ( _2::_1 )
+# 1284 "parser.ml"
+         in
+        _menhir_goto_type_specs _menhir_env _menhir_stack _v
+    | MenhirState116 ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let (_2 : (Ast.type_decl)) = _v in
+        let _1 = () in
+        let _v : (Ast.type_decl list) = 
+# 81 "parser.mly"
+                                        ( [_2] )
+# 1295 "parser.ml"
+         in
+        _menhir_goto_type_decls _menhir_env _menhir_stack _v
+    | _ ->
+        _menhir_fail ()
+
+and _menhir_goto_var_spec : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.variable_decl list) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    match _menhir_s with
+    | MenhirState11 ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let (_2 : (Ast.variable_decl list)) = _v in
+        let (_menhir_stack, (_1 : (Ast.variable_decl list))) = _menhir_stack in
+        let _v : (Ast.variable_decl list) = 
+# 98 "parser.mly"
+                          ( _2 @ _1 )
+# 1312 "parser.ml"
+         in
+        _menhir_goto_var_specs _menhir_env _menhir_stack _v
+    | MenhirState9 ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let (_2 : (Ast.variable_decl list)) = _v in
+        let _1 = () in
+        let _v : (Ast.variable_decl list) = 
+# 93 "parser.mly"
+                                      ( _2 )
+# 1323 "parser.ml"
+         in
+        _menhir_goto_var_decls _menhir_env _menhir_stack _v
+    | _ ->
+        _menhir_fail ()
+
 and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) -> 'ttv_return =
   fun _menhir_env _menhir_stack _menhir_s _v ->
     let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
@@ -1240,12 +1335,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
         let ((_menhir_stack, _menhir_s, (_1 : (
 # 15 "parser.mly"
       (int)
-# 1244 "parser.ml"
+# 1339 "parser.ml"
         ))), _, (_2 : (Ast.exp))) = _menhir_stack in
         let _v : (Ast.exp) = 
-# 159 "parser.mly"
+# 177 "parser.mly"
                                             ( Ast.Urinary (Ast.UBinNOT, _2, _1) )
-# 1249 "parser.ml"
+# 1344 "parser.ml"
          in
         _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
     | MenhirState47 ->
@@ -1254,12 +1349,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
         let ((_menhir_stack, _menhir_s, (_1 : (
 # 19 "parser.mly"
       (int)
-# 1258 "parser.ml"
+# 1353 "parser.ml"
         ))), _, (_2 : (Ast.exp))) = _menhir_stack in
         let _v : (Ast.exp) = 
-# 158 "parser.mly"
+# 176 "parser.mly"
                                             ( Ast.Urinary (Ast.BoolNOT, _2, _1) )
-# 1263 "parser.ml"
+# 1358 "parser.ml"
          in
         _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
     | MenhirState43 ->
@@ -1268,12 +1363,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
         let ((_menhir_stack, _menhir_s, (_1 : (
 # 15 "parser.mly"
       (int)
-# 1272 "parser.ml"
+# 1367 "parser.ml"
         ))), _, (_2 : (Ast.exp))) = _menhir_stack in
         let _v : (Ast.exp) = 
-# 157 "parser.mly"
+# 175 "parser.mly"
                                             ( Ast.Urinary (Ast.UMinus, _2, _1) )
-# 1277 "parser.ml"
+# 1372 "parser.ml"
          in
         _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
     | MenhirState41 ->
@@ -1282,12 +1377,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
         let ((_menhir_stack, _menhir_s, (_1 : (
 # 15 "parser.mly"
       (int)
-# 1286 "parser.ml"
+# 1381 "parser.ml"
         ))), _, (_2 : (Ast.exp))) = _menhir_stack in
         let _v : (Ast.exp) = 
-# 156 "parser.mly"
+# 174 "parser.mly"
                                             ( _2 )
-# 1291 "parser.ml"
+# 1386 "parser.ml"
          in
         _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
     | MenhirState40 ->
@@ -1296,12 +1391,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
         let ((_menhir_stack, _menhir_s, (_1 : (
 # 23 "parser.mly"
       (int)
-# 1300 "parser.ml"
+# 1395 "parser.ml"
         ))), _, (_2 : (Ast.exp))) = _menhir_stack in
         let _v : (Ast.exp) = 
-# 160 "parser.mly"
+# 178 "parser.mly"
                                             ( failwith ("Line: " ^ (string_of_int _1) ^ " Go lite does not support the type <-") )
-# 1305 "parser.ml"
+# 1400 "parser.ml"
          in
         _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
     | MenhirState27 ->
@@ -1400,12 +1495,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 15 "parser.mly"
       (int)
-# 1404 "parser.ml"
+# 1499 "parser.ml"
             ))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp) = 
-# 151 "parser.mly"
+# 169 "parser.mly"
                                             ( Ast.Binop (_1, Ast.Rshift, _3, _2) )
-# 1409 "parser.ml"
+# 1504 "parser.ml"
              in
             _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -1420,12 +1515,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
         let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 15 "parser.mly"
       (int)
-# 1424 "parser.ml"
+# 1519 "parser.ml"
         ))), _, (_3 : (Ast.exp))) = _menhir_stack in
         let _v : (Ast.exp) = 
-# 145 "parser.mly"
+# 163 "parser.mly"
                                             ( Ast.Binop (_1, Ast.Mult, _3, _2) )
-# 1429 "parser.ml"
+# 1524 "parser.ml"
          in
         _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
     | MenhirState62 ->
@@ -1434,12 +1529,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
         let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 15 "parser.mly"
       (int)
-# 1438 "parser.ml"
+# 1533 "parser.ml"
         ))), _, (_3 : (Ast.exp))) = _menhir_stack in
         let _v : (Ast.exp) = 
-# 146 "parser.mly"
+# 164 "parser.mly"
                                             ( Ast.Binop (_1, Ast.Div, _3, _2) )
-# 1443 "parser.ml"
+# 1538 "parser.ml"
          in
         _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
     | MenhirState64 ->
@@ -1470,12 +1565,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 15 "parser.mly"
       (int)
-# 1474 "parser.ml"
+# 1569 "parser.ml"
             ))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp) = 
-# 143 "parser.mly"
+# 161 "parser.mly"
                                             ( Ast.Binop (_1, Ast.BPlus, _3, _2) )
-# 1479 "parser.ml"
+# 1574 "parser.ml"
              in
             _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -1510,12 +1605,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 15 "parser.mly"
       (int)
-# 1514 "parser.ml"
+# 1609 "parser.ml"
             ))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp) = 
-# 153 "parser.mly"
+# 171 "parser.mly"
                                             ( Ast.Binop (_1, Ast.Mod, _3, _2) )
-# 1519 "parser.ml"
+# 1614 "parser.ml"
              in
             _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -1538,12 +1633,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 15 "parser.mly"
       (int)
-# 1542 "parser.ml"
+# 1637 "parser.ml"
             ))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp) = 
-# 152 "parser.mly"
+# 170 "parser.mly"
                                             ( Ast.Binop (_1, Ast.Lshift, _3, _2) )
-# 1547 "parser.ml"
+# 1642 "parser.ml"
              in
             _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -1566,12 +1661,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 15 "parser.mly"
       (int)
-# 1570 "parser.ml"
+# 1665 "parser.ml"
             ))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp) = 
-# 149 "parser.mly"
+# 167 "parser.mly"
                                             ( Ast.Binop (_1, Ast.BinXOR, _3, _2) )
-# 1575 "parser.ml"
+# 1670 "parser.ml"
              in
             _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -1594,12 +1689,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 15 "parser.mly"
       (int)
-# 1598 "parser.ml"
+# 1693 "parser.ml"
             ))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp) = 
-# 148 "parser.mly"
+# 166 "parser.mly"
                                             ( Ast.Binop (_1, Ast.BinOR, _3, _2) )
-# 1603 "parser.ml"
+# 1698 "parser.ml"
              in
             _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -1622,12 +1717,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 15 "parser.mly"
       (int)
-# 1626 "parser.ml"
+# 1721 "parser.ml"
             ))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp) = 
-# 150 "parser.mly"
+# 168 "parser.mly"
                                             ( Ast.Binop (_1, Ast.BinANDNOT, _3, _2) )
-# 1631 "parser.ml"
+# 1726 "parser.ml"
              in
             _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -1650,12 +1745,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 15 "parser.mly"
       (int)
-# 1654 "parser.ml"
+# 1749 "parser.ml"
             ))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp) = 
-# 147 "parser.mly"
+# 165 "parser.mly"
                                             ( Ast.Binop (_1, Ast.BinAND, _3, _2) )
-# 1659 "parser.ml"
+# 1754 "parser.ml"
              in
             _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -1696,12 +1791,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 25 "parser.mly"
       (int)
-# 1700 "parser.ml"
+# 1795 "parser.ml"
             ))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp) = 
-# 162 "parser.mly"
+# 180 "parser.mly"
                                             ( Ast.Binop (_1, Ast.NEQ, _3, _2) )
-# 1705 "parser.ml"
+# 1800 "parser.ml"
              in
             _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -1738,12 +1833,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 15 "parser.mly"
       (int)
-# 1742 "parser.ml"
+# 1837 "parser.ml"
             ))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp) = 
-# 144 "parser.mly"
+# 162 "parser.mly"
                                             ( Ast.Binop (_1, Ast.BMinus, _3, _2) )
-# 1747 "parser.ml"
+# 1842 "parser.ml"
              in
             _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -1784,12 +1879,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 25 "parser.mly"
       (int)
-# 1788 "parser.ml"
+# 1883 "parser.ml"
             ))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp) = 
-# 163 "parser.mly"
+# 181 "parser.mly"
                                             ( Ast.Binop (_1, Ast.LT, _3, _2) )
-# 1793 "parser.ml"
+# 1888 "parser.ml"
              in
             _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -1830,12 +1925,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 25 "parser.mly"
       (int)
-# 1834 "parser.ml"
+# 1929 "parser.ml"
             ))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp) = 
-# 165 "parser.mly"
+# 183 "parser.mly"
                                             ( Ast.Binop (_1, Ast.LEQ, _3, _2) )
-# 1839 "parser.ml"
+# 1934 "parser.ml"
              in
             _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -1876,12 +1971,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 25 "parser.mly"
       (int)
-# 1880 "parser.ml"
+# 1975 "parser.ml"
             ))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp) = 
-# 164 "parser.mly"
+# 182 "parser.mly"
                                             ( Ast.Binop (_1, Ast.GT, _3, _2) )
-# 1885 "parser.ml"
+# 1980 "parser.ml"
              in
             _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -1922,12 +2017,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 25 "parser.mly"
       (int)
-# 1926 "parser.ml"
+# 2021 "parser.ml"
             ))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp) = 
-# 166 "parser.mly"
+# 184 "parser.mly"
                                             ( Ast.Binop (_1, Ast.GEQ, _3, _2) )
-# 1931 "parser.ml"
+# 2026 "parser.ml"
              in
             _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -1968,12 +2063,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 25 "parser.mly"
       (int)
-# 1972 "parser.ml"
+# 2067 "parser.ml"
             ))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp) = 
-# 161 "parser.mly"
+# 179 "parser.mly"
                                             ( Ast.Binop (_1, Ast.EQ, _3, _2) )
-# 1977 "parser.ml"
+# 2072 "parser.ml"
              in
             _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -2028,12 +2123,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 19 "parser.mly"
       (int)
-# 2032 "parser.ml"
+# 2127 "parser.ml"
             ))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp) = 
-# 155 "parser.mly"
+# 173 "parser.mly"
                                             ( Ast.Binop (_1, Ast.BoolOR, _3, _2) )
-# 2037 "parser.ml"
+# 2132 "parser.ml"
              in
             _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -2086,12 +2181,12 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let (((_menhir_stack, _menhir_s, (_1 : (Ast.exp))), (_2 : (
 # 19 "parser.mly"
       (int)
-# 2090 "parser.ml"
+# 2185 "parser.ml"
             ))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp) = 
-# 154 "parser.mly"
+# 172 "parser.mly"
                                             ( Ast.Binop (_1, Ast.BoolAND, _3, _2) )
-# 2095 "parser.ml"
+# 2190 "parser.ml"
              in
             _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -2148,9 +2243,9 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let ((_menhir_stack, _menhir_s, (_1 : (Ast.exp list))), _, (_3 : (Ast.exp))) = _menhir_stack in
             let _2 = () in
             let _v : (Ast.exp list) = 
-# 133 "parser.mly"
+# 151 "parser.mly"
                                   ( _3::_1 )
-# 2154 "parser.ml"
+# 2249 "parser.ml"
              in
             _menhir_goto_exp_list _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -2206,9 +2301,9 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             let _menhir_stack = Obj.magic _menhir_stack in
             let (_menhir_stack, _menhir_s, (_1 : (Ast.exp))) = _menhir_stack in
             let _v : (Ast.exp list) = 
-# 132 "parser.mly"
+# 150 "parser.mly"
                                   ( [_1] )
-# 2212 "parser.ml"
+# 2307 "parser.ml"
              in
             _menhir_goto_exp_list _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -2219,97 +2314,6 @@ and _menhir_goto_exp : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.exp) ->
             _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) _menhir_s)
     | _ ->
         _menhir_fail ()
-
-and _menhir_goto_type_spec : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.type_decl) -> 'ttv_return =
-  fun _menhir_env _menhir_stack _menhir_s _v ->
-    match _menhir_s with
-    | MenhirState118 ->
-        let _menhir_stack = Obj.magic _menhir_stack in
-        let _menhir_stack = Obj.magic _menhir_stack in
-        let (_2 : (Ast.type_decl)) = _v in
-        let (_menhir_stack, (_1 : (Ast.type_decl list))) = _menhir_stack in
-        let _v : (Ast.type_decl list) = 
-# 85 "parser.mly"
-                          ( _2::_1 )
-# 2235 "parser.ml"
-         in
-        _menhir_goto_type_specs _menhir_env _menhir_stack _v
-    | MenhirState116 ->
-        let _menhir_stack = Obj.magic _menhir_stack in
-        let _menhir_stack = Obj.magic _menhir_stack in
-        let (_2 : (Ast.type_decl)) = _v in
-        let _1 = () in
-        let _v : (Ast.type_decl list) = 
-# 80 "parser.mly"
-                                        ( [_2] )
-# 2246 "parser.ml"
-         in
-        _menhir_goto_type_decls _menhir_env _menhir_stack _v
-    | _ ->
-        _menhir_fail ()
-
-and _menhir_goto_var_spec : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.variable_decl list) -> 'ttv_return =
-  fun _menhir_env _menhir_stack _menhir_s _v ->
-    match _menhir_s with
-    | MenhirState11 ->
-        let _menhir_stack = Obj.magic _menhir_stack in
-        let _menhir_stack = Obj.magic _menhir_stack in
-        let (_2 : (Ast.variable_decl list)) = _v in
-        let (_menhir_stack, (_1 : (Ast.variable_decl list))) = _menhir_stack in
-        let _v : (Ast.variable_decl list) = 
-# 97 "parser.mly"
-                          ( _2 @ _1 )
-# 2263 "parser.ml"
-         in
-        _menhir_goto_var_specs _menhir_env _menhir_stack _v
-    | MenhirState9 ->
-        let _menhir_stack = Obj.magic _menhir_stack in
-        let _menhir_stack = Obj.magic _menhir_stack in
-        let (_2 : (Ast.variable_decl list)) = _v in
-        let _1 = () in
-        let _v : (Ast.variable_decl list) = 
-# 92 "parser.mly"
-                                      ( _2 )
-# 2274 "parser.ml"
-         in
-        _menhir_goto_var_decls _menhir_env _menhir_stack _v
-    | _ ->
-        _menhir_fail ()
-
-and _menhir_fail : unit -> 'a =
-  fun () ->
-    Printf.fprintf Pervasives.stderr "Internal failure -- please contact the parser generator's developers.\n%!";
-    assert false
-
-and _menhir_run100 : _menhir_env -> 'ttv_tail * _menhir_state * (string list) -> _menhir_state -> 'ttv_return =
-  fun _menhir_env _menhir_stack _menhir_s ->
-    let _menhir_stack = (_menhir_stack, _menhir_s) in
-    let _menhir_env = _menhir_discard _menhir_env in
-    let _tok = _menhir_env._menhir_token in
-    match _tok with
-    | IDENTIFIER _v ->
-        let _menhir_stack = Obj.magic _menhir_stack in
-        let _menhir_env = _menhir_discard _menhir_env in
-        let _menhir_stack = Obj.magic _menhir_stack in
-        let (_3 : (
-# 27 "parser.mly"
-       (string * int)
-# 2298 "parser.ml"
-        )) = _v in
-        let ((_menhir_stack, _menhir_s, (_1 : (string list))), _) = _menhir_stack in
-        let _2 = () in
-        let _v : (string list) = 
-# 129 "parser.mly"
-                                  ( (fst _3)::_1 )
-# 2305 "parser.ml"
-         in
-        _menhir_goto_ident_list _menhir_env _menhir_stack _menhir_s _v
-    | _ ->
-        assert (not _menhir_env._menhir_error);
-        _menhir_env._menhir_error <- true;
-        let _menhir_stack = Obj.magic _menhir_stack in
-        let (_menhir_stack, _menhir_s) = _menhir_stack in
-        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) _menhir_s
 
 and _menhir_goto_field_decls : _menhir_env -> 'ttv_tail -> ((string * Ast.typeT) list) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
@@ -2330,350 +2334,15 @@ and _menhir_goto_field_decls : _menhir_env -> 'ttv_tail -> ((string * Ast.typeT)
         let _2 = () in
         let _1 = () in
         let _v : (Ast.typeT) = 
-# 113 "parser.mly"
+# 131 "parser.mly"
                                                 ( Ast.StructType _3 )
-# 2336 "parser.ml"
+# 2340 "parser.ml"
          in
         _menhir_goto_typeT _menhir_env _menhir_stack _menhir_s _v
     | _ ->
         assert (not _menhir_env._menhir_error);
         _menhir_env._menhir_error <- true;
         _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState19
-
-and _menhir_run28 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
-# 44 "parser.mly"
-       (string)
-# 2347 "parser.ml"
-) -> 'ttv_return =
-  fun _menhir_env _menhir_stack _menhir_s _v ->
-    let _menhir_env = _menhir_discard _menhir_env in
-    let _menhir_stack = Obj.magic _menhir_stack in
-    let (_1 : (
-# 44 "parser.mly"
-       (string)
-# 2355 "parser.ml"
-    )) = _v in
-    let _v : (Ast.exp) = 
-# 142 "parser.mly"
-                                            ( Ast.StrLit (_1) )
-# 2360 "parser.ml"
-     in
-    _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
-
-and _menhir_run29 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
-# 43 "parser.mly"
-       (string)
-# 2367 "parser.ml"
-) -> 'ttv_return =
-  fun _menhir_env _menhir_stack _menhir_s _v ->
-    let _menhir_env = _menhir_discard _menhir_env in
-    let _menhir_stack = Obj.magic _menhir_stack in
-    let (_1 : (
-# 43 "parser.mly"
-       (string)
-# 2375 "parser.ml"
-    )) = _v in
-    let _v : (Ast.exp) = 
-# 141 "parser.mly"
-                                            ( Ast.RuneLit (_1) )
-# 2380 "parser.ml"
-     in
-    _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
-
-and _menhir_run40 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
-# 23 "parser.mly"
-      (int)
-# 2387 "parser.ml"
-) -> 'ttv_return =
-  fun _menhir_env _menhir_stack _menhir_s _v ->
-    let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
-    let _menhir_env = _menhir_discard _menhir_env in
-    let _tok = _menhir_env._menhir_token in
-    match _tok with
-    | BININTLITERAL _v ->
-        _menhir_run49 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
-    | BINXOR _v ->
-        _menhir_run48 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
-    | BOOLNOT _v ->
-        _menhir_run47 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
-    | DECINTLITERAL _v ->
-        _menhir_run46 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
-    | FLOATLITERAL _v ->
-        _menhir_run45 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
-    | HEXINTLITERAL _v ->
-        _menhir_run44 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
-    | MINUS _v ->
-        _menhir_run43 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
-    | OCTINTLITERAL _v ->
-        _menhir_run42 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
-    | PLUS _v ->
-        _menhir_run41 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
-    | RECEIVE _v ->
-        _menhir_run40 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
-    | RUNELITERAL _v ->
-        _menhir_run29 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
-    | STRINGLITERAL _v ->
-        _menhir_run28 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
-    | _ ->
-        assert (not _menhir_env._menhir_error);
-        _menhir_env._menhir_error <- true;
-        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState40
-
-and _menhir_run41 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
-# 15 "parser.mly"
-      (int)
-# 2426 "parser.ml"
-) -> 'ttv_return =
-  fun _menhir_env _menhir_stack _menhir_s _v ->
-    let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
-    let _menhir_env = _menhir_discard _menhir_env in
-    let _tok = _menhir_env._menhir_token in
-    match _tok with
-    | BININTLITERAL _v ->
-        _menhir_run49 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
-    | BINXOR _v ->
-        _menhir_run48 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
-    | BOOLNOT _v ->
-        _menhir_run47 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
-    | DECINTLITERAL _v ->
-        _menhir_run46 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
-    | FLOATLITERAL _v ->
-        _menhir_run45 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
-    | HEXINTLITERAL _v ->
-        _menhir_run44 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
-    | MINUS _v ->
-        _menhir_run43 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
-    | OCTINTLITERAL _v ->
-        _menhir_run42 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
-    | PLUS _v ->
-        _menhir_run41 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
-    | RECEIVE _v ->
-        _menhir_run40 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
-    | RUNELITERAL _v ->
-        _menhir_run29 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
-    | STRINGLITERAL _v ->
-        _menhir_run28 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
-    | _ ->
-        assert (not _menhir_env._menhir_error);
-        _menhir_env._menhir_error <- true;
-        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState41
-
-and _menhir_run42 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
-# 38 "parser.mly"
-       (string)
-# 2465 "parser.ml"
-) -> 'ttv_return =
-  fun _menhir_env _menhir_stack _menhir_s _v ->
-    let _menhir_env = _menhir_discard _menhir_env in
-    let _menhir_stack = Obj.magic _menhir_stack in
-    let (_1 : (
-# 38 "parser.mly"
-       (string)
-# 2473 "parser.ml"
-    )) = _v in
-    let _v : (Ast.exp) = 
-# 139 "parser.mly"
-                                            ( Ast.IntLit (_1, Ast.Oct) )
-# 2478 "parser.ml"
-     in
-    _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
-
-and _menhir_run43 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
-# 15 "parser.mly"
-      (int)
-# 2485 "parser.ml"
-) -> 'ttv_return =
-  fun _menhir_env _menhir_stack _menhir_s _v ->
-    let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
-    let _menhir_env = _menhir_discard _menhir_env in
-    let _tok = _menhir_env._menhir_token in
-    match _tok with
-    | BININTLITERAL _v ->
-        _menhir_run49 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
-    | BINXOR _v ->
-        _menhir_run48 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
-    | BOOLNOT _v ->
-        _menhir_run47 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
-    | DECINTLITERAL _v ->
-        _menhir_run46 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
-    | FLOATLITERAL _v ->
-        _menhir_run45 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
-    | HEXINTLITERAL _v ->
-        _menhir_run44 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
-    | MINUS _v ->
-        _menhir_run43 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
-    | OCTINTLITERAL _v ->
-        _menhir_run42 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
-    | PLUS _v ->
-        _menhir_run41 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
-    | RECEIVE _v ->
-        _menhir_run40 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
-    | RUNELITERAL _v ->
-        _menhir_run29 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
-    | STRINGLITERAL _v ->
-        _menhir_run28 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
-    | _ ->
-        assert (not _menhir_env._menhir_error);
-        _menhir_env._menhir_error <- true;
-        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState43
-
-and _menhir_run44 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
-# 40 "parser.mly"
-       (string)
-# 2524 "parser.ml"
-) -> 'ttv_return =
-  fun _menhir_env _menhir_stack _menhir_s _v ->
-    let _menhir_env = _menhir_discard _menhir_env in
-    let _menhir_stack = Obj.magic _menhir_stack in
-    let (_1 : (
-# 40 "parser.mly"
-       (string)
-# 2532 "parser.ml"
-    )) = _v in
-    let _v : (Ast.exp) = 
-# 140 "parser.mly"
-                                            ( Ast.IntLit (_1, Ast.Hex) )
-# 2537 "parser.ml"
-     in
-    _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
-
-and _menhir_run45 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
-# 42 "parser.mly"
-       (float)
-# 2544 "parser.ml"
-) -> 'ttv_return =
-  fun _menhir_env _menhir_stack _menhir_s _v ->
-    let _menhir_env = _menhir_discard _menhir_env in
-    let _menhir_stack = Obj.magic _menhir_stack in
-    let (_1 : (
-# 42 "parser.mly"
-       (float)
-# 2552 "parser.ml"
-    )) = _v in
-    let _v : (Ast.exp) = 
-# 136 "parser.mly"
-                                            ( Ast.FloatLit (_1) )
-# 2557 "parser.ml"
-     in
-    _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
-
-and _menhir_run46 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
-# 37 "parser.mly"
-       (string)
-# 2564 "parser.ml"
-) -> 'ttv_return =
-  fun _menhir_env _menhir_stack _menhir_s _v ->
-    let _menhir_env = _menhir_discard _menhir_env in
-    let _menhir_stack = Obj.magic _menhir_stack in
-    let (_1 : (
-# 37 "parser.mly"
-       (string)
-# 2572 "parser.ml"
-    )) = _v in
-    let _v : (Ast.exp) = 
-# 137 "parser.mly"
-                                            ( Ast.IntLit (_1, Ast.Dec) )
-# 2577 "parser.ml"
-     in
-    _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
-
-and _menhir_run47 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
-# 19 "parser.mly"
-      (int)
-# 2584 "parser.ml"
-) -> 'ttv_return =
-  fun _menhir_env _menhir_stack _menhir_s _v ->
-    let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
-    let _menhir_env = _menhir_discard _menhir_env in
-    let _tok = _menhir_env._menhir_token in
-    match _tok with
-    | BININTLITERAL _v ->
-        _menhir_run49 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
-    | BINXOR _v ->
-        _menhir_run48 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
-    | BOOLNOT _v ->
-        _menhir_run47 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
-    | DECINTLITERAL _v ->
-        _menhir_run46 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
-    | FLOATLITERAL _v ->
-        _menhir_run45 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
-    | HEXINTLITERAL _v ->
-        _menhir_run44 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
-    | MINUS _v ->
-        _menhir_run43 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
-    | OCTINTLITERAL _v ->
-        _menhir_run42 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
-    | PLUS _v ->
-        _menhir_run41 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
-    | RECEIVE _v ->
-        _menhir_run40 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
-    | RUNELITERAL _v ->
-        _menhir_run29 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
-    | STRINGLITERAL _v ->
-        _menhir_run28 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
-    | _ ->
-        assert (not _menhir_env._menhir_error);
-        _menhir_env._menhir_error <- true;
-        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState47
-
-and _menhir_run48 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
-# 15 "parser.mly"
-      (int)
-# 2623 "parser.ml"
-) -> 'ttv_return =
-  fun _menhir_env _menhir_stack _menhir_s _v ->
-    let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
-    let _menhir_env = _menhir_discard _menhir_env in
-    let _tok = _menhir_env._menhir_token in
-    match _tok with
-    | BININTLITERAL _v ->
-        _menhir_run49 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
-    | BINXOR _v ->
-        _menhir_run48 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
-    | BOOLNOT _v ->
-        _menhir_run47 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
-    | DECINTLITERAL _v ->
-        _menhir_run46 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
-    | FLOATLITERAL _v ->
-        _menhir_run45 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
-    | HEXINTLITERAL _v ->
-        _menhir_run44 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
-    | MINUS _v ->
-        _menhir_run43 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
-    | OCTINTLITERAL _v ->
-        _menhir_run42 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
-    | PLUS _v ->
-        _menhir_run41 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
-    | RECEIVE _v ->
-        _menhir_run40 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
-    | RUNELITERAL _v ->
-        _menhir_run29 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
-    | STRINGLITERAL _v ->
-        _menhir_run28 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
-    | _ ->
-        assert (not _menhir_env._menhir_error);
-        _menhir_env._menhir_error <- true;
-        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState48
-
-and _menhir_run49 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
-# 39 "parser.mly"
-       (string)
-# 2662 "parser.ml"
-) -> 'ttv_return =
-  fun _menhir_env _menhir_stack _menhir_s _v ->
-    let _menhir_env = _menhir_discard _menhir_env in
-    let _menhir_stack = Obj.magic _menhir_stack in
-    let (_1 : (
-# 39 "parser.mly"
-       (string)
-# 2670 "parser.ml"
-    )) = _v in
-    let _v : (Ast.exp) = 
-# 138 "parser.mly"
-                                            ( Ast.IntLit (_1, Ast.Bin) )
-# 2675 "parser.ml"
-     in
-    _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
 
 and _menhir_goto_typeT : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.typeT) -> 'ttv_return =
   fun _menhir_env _menhir_stack _menhir_s _v ->
@@ -2692,9 +2361,9 @@ and _menhir_goto_typeT : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.typeT
             let _3 = () in
             let _1 = () in
             let _v : (Ast.typeT) = 
-# 105 "parser.mly"
+# 123 "parser.mly"
                       ( _2 )
-# 2698 "parser.ml"
+# 2367 "parser.ml"
              in
             _menhir_goto_typeT _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -2710,9 +2379,9 @@ and _menhir_goto_typeT : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.typeT
         let _2 = () in
         let _1 = () in
         let _v : (Ast.typeT) = 
-# 108 "parser.mly"
+# 126 "parser.mly"
                           ( Ast.SliceType _3 )
-# 2716 "parser.ml"
+# 2385 "parser.ml"
          in
         _menhir_goto_typeT _menhir_env _menhir_stack _menhir_s _v
     | MenhirState56 ->
@@ -2722,9 +2391,9 @@ and _menhir_goto_typeT : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.typeT
         let _3 = () in
         let _1 = () in
         let _v : (Ast.typeT) = 
-# 107 "parser.mly"
+# 125 "parser.mly"
                               ( Ast.ArrayType (_4, _2) )
-# 2728 "parser.ml"
+# 2397 "parser.ml"
          in
         _menhir_goto_typeT _menhir_env _menhir_stack _menhir_s _v
     | MenhirState26 ->
@@ -2779,9 +2448,9 @@ and _menhir_goto_typeT : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.typeT
         let _2 = () in
         let _1 = () in
         let _v : (Ast.typeT) = 
-# 110 "parser.mly"
+# 128 "parser.mly"
                                     ( failwith "Map types are not suppoted in GoLite" )
-# 2785 "parser.ml"
+# 2454 "parser.ml"
          in
         _menhir_goto_typeT _menhir_env _menhir_stack _menhir_s _v
     | MenhirState24 ->
@@ -2790,12 +2459,12 @@ and _menhir_goto_typeT : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.typeT
         let ((_menhir_stack, _menhir_s, (_1 : (
 # 15 "parser.mly"
       (int)
-# 2794 "parser.ml"
+# 2463 "parser.ml"
         ))), _, (_2 : (Ast.typeT))) = _menhir_stack in
         let _v : (Ast.typeT) = 
-# 109 "parser.mly"
+# 127 "parser.mly"
                       ( Ast.PointerType _2 )
-# 2799 "parser.ml"
+# 2468 "parser.ml"
          in
         _menhir_goto_typeT _menhir_env _menhir_stack _menhir_s _v
     | MenhirState21 ->
@@ -2810,17 +2479,17 @@ and _menhir_goto_typeT : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.typeT
             let (_4 : (
 # 11 "parser.mly"
       (int)
-# 2814 "parser.ml"
+# 2483 "parser.ml"
             )) = _v in
             let (((_menhir_stack, (_1 : ((string * Ast.typeT) list))), _, (_2 : (string list))), _, (_3 : (Ast.typeT))) = _menhir_stack in
             let _v : ((string * Ast.typeT) list) = 
-# 121 "parser.mly"
+# 139 "parser.mly"
                                             (
       let f = _2 in
         let ft = List.map (fun f -> (f, _3)) f in
           _1 @ ft
    )
-# 2824 "parser.ml"
+# 2493 "parser.ml"
              in
             _menhir_goto_field_decls _menhir_env _menhir_stack _v
         | _ ->
@@ -2875,13 +2544,13 @@ and _menhir_goto_typeT : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.typeT
             let (_3 : (
 # 11 "parser.mly"
       (int)
-# 2879 "parser.ml"
+# 2548 "parser.ml"
             )) = _v in
             let ((_menhir_stack, _menhir_s, (_1 : (string list))), _, (_2 : (Ast.typeT))) = _menhir_stack in
             let _v : (Ast.variable_decl list) = 
-# 100 "parser.mly"
+# 101 "parser.mly"
                                                 ( List.map (fun iden -> Ast.VarDeclTypeNoInit (_2, iden, _3)) _1 )
-# 2885 "parser.ml"
+# 2554 "parser.ml"
              in
             _menhir_goto_var_spec _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -2902,21 +2571,21 @@ and _menhir_goto_typeT : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.typeT
             let (_4 : (
 # 11 "parser.mly"
       (int)
-# 2906 "parser.ml"
+# 2575 "parser.ml"
             )) = _v in
             let (((_menhir_stack, _menhir_s, (_1 : (
 # 27 "parser.mly"
        (string * int)
-# 2911 "parser.ml"
+# 2580 "parser.ml"
             ))), _, (_2 : (
 # 21 "parser.mly"
       (int)
-# 2915 "parser.ml"
+# 2584 "parser.ml"
             ))), _, (_3 : (Ast.typeT))) = _menhir_stack in
             let _v : (Ast.type_decl) = 
-# 88 "parser.mly"
+# 89 "parser.mly"
                                       ( failwith "Type aliases not supported in GoLite" )
-# 2920 "parser.ml"
+# 2589 "parser.ml"
              in
             _menhir_goto_type_spec _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -2937,17 +2606,17 @@ and _menhir_goto_typeT : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.typeT
             let (_3 : (
 # 11 "parser.mly"
       (int)
-# 2941 "parser.ml"
+# 2610 "parser.ml"
             )) = _v in
             let ((_menhir_stack, _menhir_s, (_1 : (
 # 27 "parser.mly"
        (string * int)
-# 2946 "parser.ml"
+# 2615 "parser.ml"
             ))), _, (_2 : (Ast.typeT))) = _menhir_stack in
             let _v : (Ast.type_decl) = 
-# 89 "parser.mly"
-                                      ( Ast.TypeDecl (_2, (fst _1)) )
-# 2951 "parser.ml"
+# 90 "parser.mly"
+                                      ( Ast.TypeDecl (_2, (fst _1), (snd _1)) )
+# 2620 "parser.ml"
              in
             _menhir_goto_type_spec _menhir_env _menhir_stack _menhir_s _v
         | _ ->
@@ -2956,8 +2625,409 @@ and _menhir_goto_typeT : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.typeT
             let _menhir_stack = Obj.magic _menhir_stack in
             let (_menhir_stack, _menhir_s, _) = _menhir_stack in
             _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) _menhir_s)
+    | MenhirState133 ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let (_menhir_stack, _menhir_s, (x : (Ast.typeT))) = _menhir_stack in
+        let _v : (Ast.typeT option) = 
+# 102 "/usr/share/menhir/standard.mly"
+    ( Some x )
+# 2636 "parser.ml"
+         in
+        _menhir_goto_option_typeT_ _menhir_env _menhir_stack _menhir_s _v
+    | MenhirState140 ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let ((_menhir_stack, _menhir_s, (_1 : (string list))), _, (_2 : (Ast.typeT))) = _menhir_stack in
+        let _v : ((string * Ast.typeT) list) = 
+# 119 "parser.mly"
+                                                ( [] )
+# 2646 "parser.ml"
+         in
+        _menhir_goto_func_params _menhir_env _menhir_stack _menhir_s _v
+    | MenhirState144 ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let (((_menhir_stack, _menhir_s, (_1 : ((string * Ast.typeT) list))), _, (_3 : (string list))), _, (_4 : (Ast.typeT))) = _menhir_stack in
+        let _2 = () in
+        let _v : ((string * Ast.typeT) list) = 
+# 120 "parser.mly"
+                                                ( (List.map (fun iden -> (iden, _4)) _3) @ _1 )
+# 2657 "parser.ml"
+         in
+        _menhir_goto_func_params _menhir_env _menhir_stack _menhir_s _v
     | _ ->
         _menhir_fail ()
+
+and _menhir_fail : unit -> 'a =
+  fun () ->
+    Printf.fprintf Pervasives.stderr "Internal failure -- please contact the parser generator's developers.\n%!";
+    assert false
+
+and _menhir_run100 : _menhir_env -> 'ttv_tail * _menhir_state * (string list) -> _menhir_state -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s ->
+    let _menhir_stack = (_menhir_stack, _menhir_s) in
+    let _menhir_env = _menhir_discard _menhir_env in
+    let _tok = _menhir_env._menhir_token in
+    match _tok with
+    | IDENTIFIER _v ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let _menhir_env = _menhir_discard _menhir_env in
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let (_3 : (
+# 27 "parser.mly"
+       (string * int)
+# 2681 "parser.ml"
+        )) = _v in
+        let ((_menhir_stack, _menhir_s, (_1 : (string list))), _) = _menhir_stack in
+        let _2 = () in
+        let _v : (string list) = 
+# 147 "parser.mly"
+                                  ( (fst _3)::_1 )
+# 2688 "parser.ml"
+         in
+        _menhir_goto_ident_list _menhir_env _menhir_stack _menhir_s _v
+    | _ ->
+        assert (not _menhir_env._menhir_error);
+        _menhir_env._menhir_error <- true;
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let (_menhir_stack, _menhir_s) = _menhir_stack in
+        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) _menhir_s
+
+and _menhir_run28 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
+# 44 "parser.mly"
+       (string)
+# 2701 "parser.ml"
+) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_env = _menhir_discard _menhir_env in
+    let _menhir_stack = Obj.magic _menhir_stack in
+    let (_1 : (
+# 44 "parser.mly"
+       (string)
+# 2709 "parser.ml"
+    )) = _v in
+    let _v : (Ast.exp) = 
+# 160 "parser.mly"
+                                            ( Ast.StrLit (_1) )
+# 2714 "parser.ml"
+     in
+    _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
+
+and _menhir_run29 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
+# 43 "parser.mly"
+       (string)
+# 2721 "parser.ml"
+) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_env = _menhir_discard _menhir_env in
+    let _menhir_stack = Obj.magic _menhir_stack in
+    let (_1 : (
+# 43 "parser.mly"
+       (string)
+# 2729 "parser.ml"
+    )) = _v in
+    let _v : (Ast.exp) = 
+# 159 "parser.mly"
+                                            ( Ast.RuneLit (_1) )
+# 2734 "parser.ml"
+     in
+    _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
+
+and _menhir_run40 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
+# 23 "parser.mly"
+      (int)
+# 2741 "parser.ml"
+) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
+    let _menhir_env = _menhir_discard _menhir_env in
+    let _tok = _menhir_env._menhir_token in
+    match _tok with
+    | BININTLITERAL _v ->
+        _menhir_run49 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
+    | BINXOR _v ->
+        _menhir_run48 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
+    | BOOLNOT _v ->
+        _menhir_run47 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
+    | DECINTLITERAL _v ->
+        _menhir_run46 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
+    | FLOATLITERAL _v ->
+        _menhir_run45 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
+    | HEXINTLITERAL _v ->
+        _menhir_run44 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
+    | MINUS _v ->
+        _menhir_run43 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
+    | OCTINTLITERAL _v ->
+        _menhir_run42 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
+    | PLUS _v ->
+        _menhir_run41 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
+    | RECEIVE _v ->
+        _menhir_run40 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
+    | RUNELITERAL _v ->
+        _menhir_run29 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
+    | STRINGLITERAL _v ->
+        _menhir_run28 _menhir_env (Obj.magic _menhir_stack) MenhirState40 _v
+    | _ ->
+        assert (not _menhir_env._menhir_error);
+        _menhir_env._menhir_error <- true;
+        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState40
+
+and _menhir_run41 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
+# 15 "parser.mly"
+      (int)
+# 2780 "parser.ml"
+) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
+    let _menhir_env = _menhir_discard _menhir_env in
+    let _tok = _menhir_env._menhir_token in
+    match _tok with
+    | BININTLITERAL _v ->
+        _menhir_run49 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
+    | BINXOR _v ->
+        _menhir_run48 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
+    | BOOLNOT _v ->
+        _menhir_run47 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
+    | DECINTLITERAL _v ->
+        _menhir_run46 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
+    | FLOATLITERAL _v ->
+        _menhir_run45 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
+    | HEXINTLITERAL _v ->
+        _menhir_run44 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
+    | MINUS _v ->
+        _menhir_run43 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
+    | OCTINTLITERAL _v ->
+        _menhir_run42 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
+    | PLUS _v ->
+        _menhir_run41 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
+    | RECEIVE _v ->
+        _menhir_run40 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
+    | RUNELITERAL _v ->
+        _menhir_run29 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
+    | STRINGLITERAL _v ->
+        _menhir_run28 _menhir_env (Obj.magic _menhir_stack) MenhirState41 _v
+    | _ ->
+        assert (not _menhir_env._menhir_error);
+        _menhir_env._menhir_error <- true;
+        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState41
+
+and _menhir_run42 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
+# 38 "parser.mly"
+       (string)
+# 2819 "parser.ml"
+) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_env = _menhir_discard _menhir_env in
+    let _menhir_stack = Obj.magic _menhir_stack in
+    let (_1 : (
+# 38 "parser.mly"
+       (string)
+# 2827 "parser.ml"
+    )) = _v in
+    let _v : (Ast.exp) = 
+# 157 "parser.mly"
+                                            ( Ast.IntLit (_1, Ast.Oct) )
+# 2832 "parser.ml"
+     in
+    _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
+
+and _menhir_run43 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
+# 15 "parser.mly"
+      (int)
+# 2839 "parser.ml"
+) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
+    let _menhir_env = _menhir_discard _menhir_env in
+    let _tok = _menhir_env._menhir_token in
+    match _tok with
+    | BININTLITERAL _v ->
+        _menhir_run49 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
+    | BINXOR _v ->
+        _menhir_run48 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
+    | BOOLNOT _v ->
+        _menhir_run47 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
+    | DECINTLITERAL _v ->
+        _menhir_run46 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
+    | FLOATLITERAL _v ->
+        _menhir_run45 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
+    | HEXINTLITERAL _v ->
+        _menhir_run44 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
+    | MINUS _v ->
+        _menhir_run43 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
+    | OCTINTLITERAL _v ->
+        _menhir_run42 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
+    | PLUS _v ->
+        _menhir_run41 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
+    | RECEIVE _v ->
+        _menhir_run40 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
+    | RUNELITERAL _v ->
+        _menhir_run29 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
+    | STRINGLITERAL _v ->
+        _menhir_run28 _menhir_env (Obj.magic _menhir_stack) MenhirState43 _v
+    | _ ->
+        assert (not _menhir_env._menhir_error);
+        _menhir_env._menhir_error <- true;
+        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState43
+
+and _menhir_run44 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
+# 40 "parser.mly"
+       (string)
+# 2878 "parser.ml"
+) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_env = _menhir_discard _menhir_env in
+    let _menhir_stack = Obj.magic _menhir_stack in
+    let (_1 : (
+# 40 "parser.mly"
+       (string)
+# 2886 "parser.ml"
+    )) = _v in
+    let _v : (Ast.exp) = 
+# 158 "parser.mly"
+                                            ( Ast.IntLit (_1, Ast.Hex) )
+# 2891 "parser.ml"
+     in
+    _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
+
+and _menhir_run45 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
+# 42 "parser.mly"
+       (float)
+# 2898 "parser.ml"
+) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_env = _menhir_discard _menhir_env in
+    let _menhir_stack = Obj.magic _menhir_stack in
+    let (_1 : (
+# 42 "parser.mly"
+       (float)
+# 2906 "parser.ml"
+    )) = _v in
+    let _v : (Ast.exp) = 
+# 154 "parser.mly"
+                                            ( Ast.FloatLit (_1) )
+# 2911 "parser.ml"
+     in
+    _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
+
+and _menhir_run46 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
+# 37 "parser.mly"
+       (string)
+# 2918 "parser.ml"
+) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_env = _menhir_discard _menhir_env in
+    let _menhir_stack = Obj.magic _menhir_stack in
+    let (_1 : (
+# 37 "parser.mly"
+       (string)
+# 2926 "parser.ml"
+    )) = _v in
+    let _v : (Ast.exp) = 
+# 155 "parser.mly"
+                                            ( Ast.IntLit (_1, Ast.Dec) )
+# 2931 "parser.ml"
+     in
+    _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
+
+and _menhir_run47 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
+# 19 "parser.mly"
+      (int)
+# 2938 "parser.ml"
+) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
+    let _menhir_env = _menhir_discard _menhir_env in
+    let _tok = _menhir_env._menhir_token in
+    match _tok with
+    | BININTLITERAL _v ->
+        _menhir_run49 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
+    | BINXOR _v ->
+        _menhir_run48 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
+    | BOOLNOT _v ->
+        _menhir_run47 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
+    | DECINTLITERAL _v ->
+        _menhir_run46 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
+    | FLOATLITERAL _v ->
+        _menhir_run45 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
+    | HEXINTLITERAL _v ->
+        _menhir_run44 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
+    | MINUS _v ->
+        _menhir_run43 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
+    | OCTINTLITERAL _v ->
+        _menhir_run42 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
+    | PLUS _v ->
+        _menhir_run41 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
+    | RECEIVE _v ->
+        _menhir_run40 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
+    | RUNELITERAL _v ->
+        _menhir_run29 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
+    | STRINGLITERAL _v ->
+        _menhir_run28 _menhir_env (Obj.magic _menhir_stack) MenhirState47 _v
+    | _ ->
+        assert (not _menhir_env._menhir_error);
+        _menhir_env._menhir_error <- true;
+        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState47
+
+and _menhir_run48 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
+# 15 "parser.mly"
+      (int)
+# 2977 "parser.ml"
+) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
+    let _menhir_env = _menhir_discard _menhir_env in
+    let _tok = _menhir_env._menhir_token in
+    match _tok with
+    | BININTLITERAL _v ->
+        _menhir_run49 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
+    | BINXOR _v ->
+        _menhir_run48 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
+    | BOOLNOT _v ->
+        _menhir_run47 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
+    | DECINTLITERAL _v ->
+        _menhir_run46 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
+    | FLOATLITERAL _v ->
+        _menhir_run45 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
+    | HEXINTLITERAL _v ->
+        _menhir_run44 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
+    | MINUS _v ->
+        _menhir_run43 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
+    | OCTINTLITERAL _v ->
+        _menhir_run42 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
+    | PLUS _v ->
+        _menhir_run41 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
+    | RECEIVE _v ->
+        _menhir_run40 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
+    | RUNELITERAL _v ->
+        _menhir_run29 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
+    | STRINGLITERAL _v ->
+        _menhir_run28 _menhir_env (Obj.magic _menhir_stack) MenhirState48 _v
+    | _ ->
+        assert (not _menhir_env._menhir_error);
+        _menhir_env._menhir_error <- true;
+        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState48
+
+and _menhir_run49 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
+# 39 "parser.mly"
+       (string)
+# 3016 "parser.ml"
+) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_env = _menhir_discard _menhir_env in
+    let _menhir_stack = Obj.magic _menhir_stack in
+    let (_1 : (
+# 39 "parser.mly"
+       (string)
+# 3024 "parser.ml"
+    )) = _v in
+    let _v : (Ast.exp) = 
+# 156 "parser.mly"
+                                            ( Ast.IntLit (_1, Ast.Bin) )
+# 3029 "parser.ml"
+     in
+    _menhir_goto_exp _menhir_env _menhir_stack _menhir_s _v
 
 and _menhir_goto_var_decls : _menhir_env -> 'ttv_tail -> (Ast.variable_decl list) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
@@ -2968,121 +3038,9 @@ and _menhir_goto_var_decls : _menhir_env -> 'ttv_tail -> (Ast.variable_decl list
     let _v : (Ast.top_level_decl list) = 
 # 77 "parser.mly"
                               ( (List.map (fun var -> Ast.TopVarDecl var) _2) @ _1 )
-# 2972 "parser.ml"
+# 3042 "parser.ml"
      in
     _menhir_goto_top_level_decls _menhir_env _menhir_stack _v
-
-and _menhir_goto_ident_list : _menhir_env -> 'ttv_tail -> _menhir_state -> (string list) -> 'ttv_return =
-  fun _menhir_env _menhir_stack _menhir_s _v ->
-    let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
-    match _menhir_s with
-    | MenhirState9 | MenhirState11 ->
-        let _menhir_stack = Obj.magic _menhir_stack in
-        assert (not _menhir_env._menhir_error);
-        let _tok = _menhir_env._menhir_token in
-        (match _tok with
-        | ASSIGN _v ->
-            let _menhir_stack = Obj.magic _menhir_stack in
-            let _menhir_s = MenhirState16 in
-            let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
-            let _menhir_env = _menhir_discard _menhir_env in
-            let _tok = _menhir_env._menhir_token in
-            (match _tok with
-            | BININTLITERAL _v ->
-                _menhir_run49 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
-            | BINXOR _v ->
-                _menhir_run48 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
-            | BOOLNOT _v ->
-                _menhir_run47 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
-            | DECINTLITERAL _v ->
-                _menhir_run46 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
-            | FLOATLITERAL _v ->
-                _menhir_run45 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
-            | HEXINTLITERAL _v ->
-                _menhir_run44 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
-            | MINUS _v ->
-                _menhir_run43 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
-            | OCTINTLITERAL _v ->
-                _menhir_run42 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
-            | PLUS _v ->
-                _menhir_run41 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
-            | RECEIVE _v ->
-                _menhir_run40 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
-            | RUNELITERAL _v ->
-                _menhir_run29 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
-            | STRINGLITERAL _v ->
-                _menhir_run28 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
-            | _ ->
-                assert (not _menhir_env._menhir_error);
-                _menhir_env._menhir_error <- true;
-                _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState104)
-        | CHAN ->
-            _menhir_run36 _menhir_env (Obj.magic _menhir_stack) MenhirState16
-        | COMMA ->
-            _menhir_run100 _menhir_env (Obj.magic _menhir_stack) MenhirState16
-        | FLOATTYPE ->
-            _menhir_run35 _menhir_env (Obj.magic _menhir_stack) MenhirState16
-        | IDENTIFIER _v ->
-            _menhir_run34 _menhir_env (Obj.magic _menhir_stack) MenhirState16 _v
-        | INTERFACE ->
-            _menhir_run33 _menhir_env (Obj.magic _menhir_stack) MenhirState16
-        | INTTYPE ->
-            _menhir_run32 _menhir_env (Obj.magic _menhir_stack) MenhirState16
-        | LPAR ->
-            _menhir_run31 _menhir_env (Obj.magic _menhir_stack) MenhirState16
-        | LSQUARE ->
-            _menhir_run27 _menhir_env (Obj.magic _menhir_stack) MenhirState16
-        | MAP ->
-            _menhir_run25 _menhir_env (Obj.magic _menhir_stack) MenhirState16
-        | MULT _v ->
-            _menhir_run24 _menhir_env (Obj.magic _menhir_stack) MenhirState16 _v
-        | RUNETYPE ->
-            _menhir_run23 _menhir_env (Obj.magic _menhir_stack) MenhirState16
-        | STRINGTYPE ->
-            _menhir_run22 _menhir_env (Obj.magic _menhir_stack) MenhirState16
-        | STRUCT ->
-            _menhir_run17 _menhir_env (Obj.magic _menhir_stack) MenhirState16
-        | _ ->
-            assert (not _menhir_env._menhir_error);
-            _menhir_env._menhir_error <- true;
-            _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState16)
-    | MenhirState19 ->
-        let _menhir_stack = Obj.magic _menhir_stack in
-        assert (not _menhir_env._menhir_error);
-        let _tok = _menhir_env._menhir_token in
-        (match _tok with
-        | CHAN ->
-            _menhir_run36 _menhir_env (Obj.magic _menhir_stack) MenhirState21
-        | COMMA ->
-            _menhir_run100 _menhir_env (Obj.magic _menhir_stack) MenhirState21
-        | FLOATTYPE ->
-            _menhir_run35 _menhir_env (Obj.magic _menhir_stack) MenhirState21
-        | IDENTIFIER _v ->
-            _menhir_run34 _menhir_env (Obj.magic _menhir_stack) MenhirState21 _v
-        | INTERFACE ->
-            _menhir_run33 _menhir_env (Obj.magic _menhir_stack) MenhirState21
-        | INTTYPE ->
-            _menhir_run32 _menhir_env (Obj.magic _menhir_stack) MenhirState21
-        | LPAR ->
-            _menhir_run31 _menhir_env (Obj.magic _menhir_stack) MenhirState21
-        | LSQUARE ->
-            _menhir_run27 _menhir_env (Obj.magic _menhir_stack) MenhirState21
-        | MAP ->
-            _menhir_run25 _menhir_env (Obj.magic _menhir_stack) MenhirState21
-        | MULT _v ->
-            _menhir_run24 _menhir_env (Obj.magic _menhir_stack) MenhirState21 _v
-        | RUNETYPE ->
-            _menhir_run23 _menhir_env (Obj.magic _menhir_stack) MenhirState21
-        | STRINGTYPE ->
-            _menhir_run22 _menhir_env (Obj.magic _menhir_stack) MenhirState21
-        | STRUCT ->
-            _menhir_run17 _menhir_env (Obj.magic _menhir_stack) MenhirState21
-        | _ ->
-            assert (not _menhir_env._menhir_error);
-            _menhir_env._menhir_error <- true;
-            _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState21)
-    | _ ->
-        _menhir_fail ()
 
 and _menhir_goto_type_decls : _menhir_env -> 'ttv_tail -> (Ast.type_decl list) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
@@ -3093,9 +3051,91 @@ and _menhir_goto_type_decls : _menhir_env -> 'ttv_tail -> (Ast.type_decl list) -
     let _v : (Ast.top_level_decl list) = 
 # 76 "parser.mly"
                                ( (List.map (fun var -> Ast.TopTypeDecl var) _2) @ _1 )
-# 3097 "parser.ml"
+# 3055 "parser.ml"
      in
     _menhir_goto_top_level_decls _menhir_env _menhir_stack _v
+
+and _menhir_goto_option_typeT_ : _menhir_env -> 'ttv_tail -> _menhir_state -> (Ast.typeT option) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
+    let _menhir_stack = Obj.magic _menhir_stack in
+    assert (not _menhir_env._menhir_error);
+    let _tok = _menhir_env._menhir_token in
+    match _tok with
+    | COLON ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let _menhir_env = _menhir_discard _menhir_env in
+        let _tok = _menhir_env._menhir_token in
+        (match _tok with
+        | COLON ->
+            let _menhir_stack = Obj.magic _menhir_stack in
+            let _menhir_env = _menhir_discard _menhir_env in
+            let _tok = _menhir_env._menhir_token in
+            (match _tok with
+            | COLON ->
+                let _menhir_stack = Obj.magic _menhir_stack in
+                let _menhir_env = _menhir_discard _menhir_env in
+                let _menhir_stack = Obj.magic _menhir_stack in
+                let _3 = () in
+                let _2 = () in
+                let _1 = () in
+                let _v : (unit) = 
+# 188 "parser.mly"
+                    ( () )
+# 3086 "parser.ml"
+                 in
+                let _menhir_stack = Obj.magic _menhir_stack in
+                let _menhir_stack = Obj.magic _menhir_stack in
+                let (_7 : (unit)) = _v in
+                let (((_menhir_stack, (_2 : (
+# 27 "parser.mly"
+       (string * int)
+# 3094 "parser.ml"
+                ))), _, (_4 : ((string * Ast.typeT) list option))), _, (_6 : (Ast.typeT option))) = _menhir_stack in
+                let _5 = () in
+                let _3 = () in
+                let _1 = () in
+                let _v : (Ast.func_decl) = 
+# 106 "parser.mly"
+                                                                     ( 
+      let params = match _4 with
+      | None -> []
+      | Some p -> p
+      in
+      let retType = match _6 with
+      | None -> Ast.VoidType
+      | Some t -> t
+      in
+      Ast.FuncDecl (params, retType, (snd _2))
+    )
+# 3112 "parser.ml"
+                 in
+                let _menhir_stack = Obj.magic _menhir_stack in
+                let _menhir_stack = Obj.magic _menhir_stack in
+                let (_2 : (Ast.func_decl)) = _v in
+                let (_menhir_stack, (_1 : (Ast.top_level_decl list))) = _menhir_stack in
+                let _v : (Ast.top_level_decl list) = 
+# 78 "parser.mly"
+                              ( (Ast.TopFuncDecl _2) :: _1 )
+# 3121 "parser.ml"
+                 in
+                _menhir_goto_top_level_decls _menhir_env _menhir_stack _v
+            | _ ->
+                assert (not _menhir_env._menhir_error);
+                _menhir_env._menhir_error <- true;
+                let _menhir_stack = Obj.magic _menhir_stack in
+                raise _eRR)
+        | _ ->
+            assert (not _menhir_env._menhir_error);
+            _menhir_env._menhir_error <- true;
+            let _menhir_stack = Obj.magic _menhir_stack in
+            raise _eRR)
+    | _ ->
+        assert (not _menhir_env._menhir_error);
+        _menhir_env._menhir_error <- true;
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let (_menhir_stack, _menhir_s, _) = _menhir_stack in
+        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) _menhir_s
 
 and _menhir_run17 : _menhir_env -> 'ttv_tail -> _menhir_state -> 'ttv_return =
   fun _menhir_env _menhir_stack _menhir_s ->
@@ -3108,9 +3148,9 @@ and _menhir_run17 : _menhir_env -> 'ttv_tail -> _menhir_state -> 'ttv_return =
         let _menhir_env = _menhir_discard _menhir_env in
         let _menhir_stack = Obj.magic _menhir_stack in
         let _v : ((string * Ast.typeT) list) = 
-# 120 "parser.mly"
+# 138 "parser.mly"
                     ( [] )
-# 3114 "parser.ml"
+# 3154 "parser.ml"
          in
         _menhir_goto_field_decls _menhir_env _menhir_stack _v
     | _ ->
@@ -3126,9 +3166,9 @@ and _menhir_run22 : _menhir_env -> 'ttv_tail -> _menhir_state -> 'ttv_return =
     let _menhir_stack = Obj.magic _menhir_stack in
     let _1 = () in
     let _v : (Ast.typeT) = 
-# 116 "parser.mly"
+# 134 "parser.mly"
                       ( Ast.StrType )
-# 3132 "parser.ml"
+# 3172 "parser.ml"
      in
     _menhir_goto_typeT _menhir_env _menhir_stack _menhir_s _v
 
@@ -3138,16 +3178,16 @@ and _menhir_run23 : _menhir_env -> 'ttv_tail -> _menhir_state -> 'ttv_return =
     let _menhir_stack = Obj.magic _menhir_stack in
     let _1 = () in
     let _v : (Ast.typeT) = 
-# 117 "parser.mly"
+# 135 "parser.mly"
                       ( Ast.RuneType )
-# 3144 "parser.ml"
+# 3184 "parser.ml"
      in
     _menhir_goto_typeT _menhir_env _menhir_stack _menhir_s _v
 
 and _menhir_run24 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
 # 15 "parser.mly"
       (int)
-# 3151 "parser.ml"
+# 3191 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _menhir_s _v ->
     let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
@@ -3340,9 +3380,9 @@ and _menhir_run32 : _menhir_env -> 'ttv_tail -> _menhir_state -> 'ttv_return =
     let _menhir_stack = Obj.magic _menhir_stack in
     let _1 = () in
     let _v : (Ast.typeT) = 
-# 114 "parser.mly"
+# 132 "parser.mly"
                       ( Ast.IntType )
-# 3346 "parser.ml"
+# 3386 "parser.ml"
      in
     _menhir_goto_typeT _menhir_env _menhir_stack _menhir_s _v
 
@@ -3352,16 +3392,16 @@ and _menhir_run33 : _menhir_env -> 'ttv_tail -> _menhir_state -> 'ttv_return =
     let _menhir_stack = Obj.magic _menhir_stack in
     let _1 = () in
     let _v : (Ast.typeT) = 
-# 111 "parser.mly"
+# 129 "parser.mly"
                       ( failwith "Interface types are not suppoted in GoLite" )
-# 3358 "parser.ml"
+# 3398 "parser.ml"
      in
     _menhir_goto_typeT _menhir_env _menhir_stack _menhir_s _v
 
 and _menhir_run34 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
 # 27 "parser.mly"
        (string * int)
-# 3365 "parser.ml"
+# 3405 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _menhir_s _v ->
     let _menhir_env = _menhir_discard _menhir_env in
@@ -3369,12 +3409,12 @@ and _menhir_run34 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
     let (_1 : (
 # 27 "parser.mly"
        (string * int)
-# 3373 "parser.ml"
+# 3413 "parser.ml"
     )) = _v in
     let _v : (Ast.typeT) = 
-# 106 "parser.mly"
+# 124 "parser.mly"
                       ( failwith "TODO keep track of underlying types" )
-# 3378 "parser.ml"
+# 3418 "parser.ml"
      in
     _menhir_goto_typeT _menhir_env _menhir_stack _menhir_s _v
 
@@ -3384,9 +3424,9 @@ and _menhir_run35 : _menhir_env -> 'ttv_tail -> _menhir_state -> 'ttv_return =
     let _menhir_stack = Obj.magic _menhir_stack in
     let _1 = () in
     let _v : (Ast.typeT) = 
-# 115 "parser.mly"
+# 133 "parser.mly"
                       ( Ast.FloatType )
-# 3390 "parser.ml"
+# 3430 "parser.ml"
      in
     _menhir_goto_typeT _menhir_env _menhir_stack _menhir_s _v
 
@@ -3396,11 +3436,193 @@ and _menhir_run36 : _menhir_env -> 'ttv_tail -> _menhir_state -> 'ttv_return =
     let _menhir_stack = Obj.magic _menhir_stack in
     let _1 = () in
     let _v : (Ast.typeT) = 
-# 112 "parser.mly"
+# 130 "parser.mly"
                       ( failwith "Channel types are not suppoted in GoLite" )
-# 3402 "parser.ml"
+# 3442 "parser.ml"
      in
     _menhir_goto_typeT _menhir_env _menhir_stack _menhir_s _v
+
+and _menhir_goto_ident_list : _menhir_env -> 'ttv_tail -> _menhir_state -> (string list) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
+    match _menhir_s with
+    | MenhirState9 | MenhirState11 ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        assert (not _menhir_env._menhir_error);
+        let _tok = _menhir_env._menhir_token in
+        (match _tok with
+        | ASSIGN _v ->
+            let _menhir_stack = Obj.magic _menhir_stack in
+            let _menhir_s = MenhirState16 in
+            let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
+            let _menhir_env = _menhir_discard _menhir_env in
+            let _tok = _menhir_env._menhir_token in
+            (match _tok with
+            | BININTLITERAL _v ->
+                _menhir_run49 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
+            | BINXOR _v ->
+                _menhir_run48 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
+            | BOOLNOT _v ->
+                _menhir_run47 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
+            | DECINTLITERAL _v ->
+                _menhir_run46 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
+            | FLOATLITERAL _v ->
+                _menhir_run45 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
+            | HEXINTLITERAL _v ->
+                _menhir_run44 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
+            | MINUS _v ->
+                _menhir_run43 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
+            | OCTINTLITERAL _v ->
+                _menhir_run42 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
+            | PLUS _v ->
+                _menhir_run41 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
+            | RECEIVE _v ->
+                _menhir_run40 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
+            | RUNELITERAL _v ->
+                _menhir_run29 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
+            | STRINGLITERAL _v ->
+                _menhir_run28 _menhir_env (Obj.magic _menhir_stack) MenhirState104 _v
+            | _ ->
+                assert (not _menhir_env._menhir_error);
+                _menhir_env._menhir_error <- true;
+                _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState104)
+        | CHAN ->
+            _menhir_run36 _menhir_env (Obj.magic _menhir_stack) MenhirState16
+        | COMMA ->
+            _menhir_run100 _menhir_env (Obj.magic _menhir_stack) MenhirState16
+        | FLOATTYPE ->
+            _menhir_run35 _menhir_env (Obj.magic _menhir_stack) MenhirState16
+        | IDENTIFIER _v ->
+            _menhir_run34 _menhir_env (Obj.magic _menhir_stack) MenhirState16 _v
+        | INTERFACE ->
+            _menhir_run33 _menhir_env (Obj.magic _menhir_stack) MenhirState16
+        | INTTYPE ->
+            _menhir_run32 _menhir_env (Obj.magic _menhir_stack) MenhirState16
+        | LPAR ->
+            _menhir_run31 _menhir_env (Obj.magic _menhir_stack) MenhirState16
+        | LSQUARE ->
+            _menhir_run27 _menhir_env (Obj.magic _menhir_stack) MenhirState16
+        | MAP ->
+            _menhir_run25 _menhir_env (Obj.magic _menhir_stack) MenhirState16
+        | MULT _v ->
+            _menhir_run24 _menhir_env (Obj.magic _menhir_stack) MenhirState16 _v
+        | RUNETYPE ->
+            _menhir_run23 _menhir_env (Obj.magic _menhir_stack) MenhirState16
+        | STRINGTYPE ->
+            _menhir_run22 _menhir_env (Obj.magic _menhir_stack) MenhirState16
+        | STRUCT ->
+            _menhir_run17 _menhir_env (Obj.magic _menhir_stack) MenhirState16
+        | _ ->
+            assert (not _menhir_env._menhir_error);
+            _menhir_env._menhir_error <- true;
+            _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState16)
+    | MenhirState19 ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        assert (not _menhir_env._menhir_error);
+        let _tok = _menhir_env._menhir_token in
+        (match _tok with
+        | CHAN ->
+            _menhir_run36 _menhir_env (Obj.magic _menhir_stack) MenhirState21
+        | COMMA ->
+            _menhir_run100 _menhir_env (Obj.magic _menhir_stack) MenhirState21
+        | FLOATTYPE ->
+            _menhir_run35 _menhir_env (Obj.magic _menhir_stack) MenhirState21
+        | IDENTIFIER _v ->
+            _menhir_run34 _menhir_env (Obj.magic _menhir_stack) MenhirState21 _v
+        | INTERFACE ->
+            _menhir_run33 _menhir_env (Obj.magic _menhir_stack) MenhirState21
+        | INTTYPE ->
+            _menhir_run32 _menhir_env (Obj.magic _menhir_stack) MenhirState21
+        | LPAR ->
+            _menhir_run31 _menhir_env (Obj.magic _menhir_stack) MenhirState21
+        | LSQUARE ->
+            _menhir_run27 _menhir_env (Obj.magic _menhir_stack) MenhirState21
+        | MAP ->
+            _menhir_run25 _menhir_env (Obj.magic _menhir_stack) MenhirState21
+        | MULT _v ->
+            _menhir_run24 _menhir_env (Obj.magic _menhir_stack) MenhirState21 _v
+        | RUNETYPE ->
+            _menhir_run23 _menhir_env (Obj.magic _menhir_stack) MenhirState21
+        | STRINGTYPE ->
+            _menhir_run22 _menhir_env (Obj.magic _menhir_stack) MenhirState21
+        | STRUCT ->
+            _menhir_run17 _menhir_env (Obj.magic _menhir_stack) MenhirState21
+        | _ ->
+            assert (not _menhir_env._menhir_error);
+            _menhir_env._menhir_error <- true;
+            _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState21)
+    | MenhirState131 ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        assert (not _menhir_env._menhir_error);
+        let _tok = _menhir_env._menhir_token in
+        (match _tok with
+        | CHAN ->
+            _menhir_run36 _menhir_env (Obj.magic _menhir_stack) MenhirState140
+        | COMMA ->
+            _menhir_run100 _menhir_env (Obj.magic _menhir_stack) MenhirState140
+        | FLOATTYPE ->
+            _menhir_run35 _menhir_env (Obj.magic _menhir_stack) MenhirState140
+        | IDENTIFIER _v ->
+            _menhir_run34 _menhir_env (Obj.magic _menhir_stack) MenhirState140 _v
+        | INTERFACE ->
+            _menhir_run33 _menhir_env (Obj.magic _menhir_stack) MenhirState140
+        | INTTYPE ->
+            _menhir_run32 _menhir_env (Obj.magic _menhir_stack) MenhirState140
+        | LPAR ->
+            _menhir_run31 _menhir_env (Obj.magic _menhir_stack) MenhirState140
+        | LSQUARE ->
+            _menhir_run27 _menhir_env (Obj.magic _menhir_stack) MenhirState140
+        | MAP ->
+            _menhir_run25 _menhir_env (Obj.magic _menhir_stack) MenhirState140
+        | MULT _v ->
+            _menhir_run24 _menhir_env (Obj.magic _menhir_stack) MenhirState140 _v
+        | RUNETYPE ->
+            _menhir_run23 _menhir_env (Obj.magic _menhir_stack) MenhirState140
+        | STRINGTYPE ->
+            _menhir_run22 _menhir_env (Obj.magic _menhir_stack) MenhirState140
+        | STRUCT ->
+            _menhir_run17 _menhir_env (Obj.magic _menhir_stack) MenhirState140
+        | _ ->
+            assert (not _menhir_env._menhir_error);
+            _menhir_env._menhir_error <- true;
+            _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState140)
+    | MenhirState143 ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        assert (not _menhir_env._menhir_error);
+        let _tok = _menhir_env._menhir_token in
+        (match _tok with
+        | CHAN ->
+            _menhir_run36 _menhir_env (Obj.magic _menhir_stack) MenhirState144
+        | COMMA ->
+            _menhir_run100 _menhir_env (Obj.magic _menhir_stack) MenhirState144
+        | FLOATTYPE ->
+            _menhir_run35 _menhir_env (Obj.magic _menhir_stack) MenhirState144
+        | IDENTIFIER _v ->
+            _menhir_run34 _menhir_env (Obj.magic _menhir_stack) MenhirState144 _v
+        | INTERFACE ->
+            _menhir_run33 _menhir_env (Obj.magic _menhir_stack) MenhirState144
+        | INTTYPE ->
+            _menhir_run32 _menhir_env (Obj.magic _menhir_stack) MenhirState144
+        | LPAR ->
+            _menhir_run31 _menhir_env (Obj.magic _menhir_stack) MenhirState144
+        | LSQUARE ->
+            _menhir_run27 _menhir_env (Obj.magic _menhir_stack) MenhirState144
+        | MAP ->
+            _menhir_run25 _menhir_env (Obj.magic _menhir_stack) MenhirState144
+        | MULT _v ->
+            _menhir_run24 _menhir_env (Obj.magic _menhir_stack) MenhirState144 _v
+        | RUNETYPE ->
+            _menhir_run23 _menhir_env (Obj.magic _menhir_stack) MenhirState144
+        | STRINGTYPE ->
+            _menhir_run22 _menhir_env (Obj.magic _menhir_stack) MenhirState144
+        | STRUCT ->
+            _menhir_run17 _menhir_env (Obj.magic _menhir_stack) MenhirState144
+        | _ ->
+            assert (not _menhir_env._menhir_error);
+            _menhir_env._menhir_error <- true;
+            _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState144)
+    | _ ->
+        _menhir_fail ()
 
 and _menhir_goto_var_specs : _menhir_env -> 'ttv_tail -> (Ast.variable_decl list) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
@@ -3425,16 +3647,16 @@ and _menhir_goto_var_specs : _menhir_env -> 'ttv_tail -> (Ast.variable_decl list
             let (_5 : (
 # 11 "parser.mly"
       (int)
-# 3429 "parser.ml"
+# 3651 "parser.ml"
             )) = _v in
             let (((_menhir_stack, _), (_3 : (Ast.variable_decl list))), _) = _menhir_stack in
             let _4 = () in
             let _2 = () in
             let _1 = () in
             let _v : (Ast.variable_decl list) = 
-# 93 "parser.mly"
+# 94 "parser.mly"
                                       ( _3 )
-# 3438 "parser.ml"
+# 3660 "parser.ml"
              in
             _menhir_goto_var_decls _menhir_env _menhir_stack _v
         | _ ->
@@ -3448,29 +3670,148 @@ and _menhir_goto_var_specs : _menhir_env -> 'ttv_tail -> (Ast.variable_decl list
         _menhir_env._menhir_error <- true;
         _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState11
 
-and _menhir_run14 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
+and _menhir_goto_type_specs : _menhir_env -> 'ttv_tail -> (Ast.type_decl list) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _v ->
+    let _menhir_stack = (_menhir_stack, _v) in
+    let _menhir_stack = Obj.magic _menhir_stack in
+    assert (not _menhir_env._menhir_error);
+    let _tok = _menhir_env._menhir_token in
+    match _tok with
+    | IDENTIFIER _v ->
+        _menhir_run121 _menhir_env (Obj.magic _menhir_stack) MenhirState118 _v
+    | RPAR ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let _menhir_s = MenhirState118 in
+        let _menhir_stack = (_menhir_stack, _menhir_s) in
+        let _menhir_env = _menhir_discard _menhir_env in
+        let _tok = _menhir_env._menhir_token in
+        (match _tok with
+        | SEMICOLON _v ->
+            let _menhir_stack = Obj.magic _menhir_stack in
+            let _menhir_env = _menhir_discard _menhir_env in
+            let _menhir_stack = Obj.magic _menhir_stack in
+            let (_5 : (
+# 11 "parser.mly"
+      (int)
+# 3697 "parser.ml"
+            )) = _v in
+            let (((_menhir_stack, _), (_3 : (Ast.type_decl list))), _) = _menhir_stack in
+            let _4 = () in
+            let _2 = () in
+            let _1 = () in
+            let _v : (Ast.type_decl list) = 
+# 82 "parser.mly"
+                                        ( _3 )
+# 3706 "parser.ml"
+             in
+            _menhir_goto_type_decls _menhir_env _menhir_stack _v
+        | _ ->
+            assert (not _menhir_env._menhir_error);
+            _menhir_env._menhir_error <- true;
+            let _menhir_stack = Obj.magic _menhir_stack in
+            let (_menhir_stack, _menhir_s) = _menhir_stack in
+            _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) _menhir_s)
+    | _ ->
+        assert (not _menhir_env._menhir_error);
+        _menhir_env._menhir_error <- true;
+        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState118
+
+and _menhir_run121 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
 # 27 "parser.mly"
        (string * int)
-# 3455 "parser.ml"
+# 3723 "parser.ml"
 ) -> 'ttv_return =
   fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
     let _menhir_env = _menhir_discard _menhir_env in
-    let _menhir_stack = Obj.magic _menhir_stack in
-    let (_1 : (
-# 27 "parser.mly"
-       (string * int)
-# 3463 "parser.ml"
-    )) = _v in
-    let _v : (string list) = 
-# 128 "parser.mly"
-                                  ( [(fst _1)] )
-# 3468 "parser.ml"
-     in
-    _menhir_goto_ident_list _menhir_env _menhir_stack _menhir_s _v
+    let _tok = _menhir_env._menhir_token in
+    match _tok with
+    | ASSIGN _v ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let _menhir_s = MenhirState121 in
+        let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
+        let _menhir_env = _menhir_discard _menhir_env in
+        let _tok = _menhir_env._menhir_token in
+        (match _tok with
+        | CHAN ->
+            _menhir_run36 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+        | FLOATTYPE ->
+            _menhir_run35 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+        | IDENTIFIER _v ->
+            _menhir_run34 _menhir_env (Obj.magic _menhir_stack) MenhirState122 _v
+        | INTERFACE ->
+            _menhir_run33 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+        | INTTYPE ->
+            _menhir_run32 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+        | LPAR ->
+            _menhir_run31 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+        | LSQUARE ->
+            _menhir_run27 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+        | MAP ->
+            _menhir_run25 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+        | MULT _v ->
+            _menhir_run24 _menhir_env (Obj.magic _menhir_stack) MenhirState122 _v
+        | RUNETYPE ->
+            _menhir_run23 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+        | STRINGTYPE ->
+            _menhir_run22 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+        | STRUCT ->
+            _menhir_run17 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+        | _ ->
+            assert (not _menhir_env._menhir_error);
+            _menhir_env._menhir_error <- true;
+            _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState122)
+    | CHAN ->
+        _menhir_run36 _menhir_env (Obj.magic _menhir_stack) MenhirState121
+    | FLOATTYPE ->
+        _menhir_run35 _menhir_env (Obj.magic _menhir_stack) MenhirState121
+    | IDENTIFIER _v ->
+        _menhir_run34 _menhir_env (Obj.magic _menhir_stack) MenhirState121 _v
+    | INTERFACE ->
+        _menhir_run33 _menhir_env (Obj.magic _menhir_stack) MenhirState121
+    | INTTYPE ->
+        _menhir_run32 _menhir_env (Obj.magic _menhir_stack) MenhirState121
+    | LPAR ->
+        _menhir_run31 _menhir_env (Obj.magic _menhir_stack) MenhirState121
+    | LSQUARE ->
+        _menhir_run27 _menhir_env (Obj.magic _menhir_stack) MenhirState121
+    | MAP ->
+        _menhir_run25 _menhir_env (Obj.magic _menhir_stack) MenhirState121
+    | MULT _v ->
+        _menhir_run24 _menhir_env (Obj.magic _menhir_stack) MenhirState121 _v
+    | RUNETYPE ->
+        _menhir_run23 _menhir_env (Obj.magic _menhir_stack) MenhirState121
+    | STRINGTYPE ->
+        _menhir_run22 _menhir_env (Obj.magic _menhir_stack) MenhirState121
+    | STRUCT ->
+        _menhir_run17 _menhir_env (Obj.magic _menhir_stack) MenhirState121
+    | _ ->
+        assert (not _menhir_env._menhir_error);
+        _menhir_env._menhir_error <- true;
+        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState121
 
 and _menhir_errorcase : _menhir_env -> 'ttv_tail -> _menhir_state -> 'ttv_return =
   fun _menhir_env _menhir_stack _menhir_s ->
     match _menhir_s with
+    | MenhirState144 ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let (_menhir_stack, _menhir_s, _) = _menhir_stack in
+        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) _menhir_s
+    | MenhirState143 ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let (_menhir_stack, _menhir_s, _) = _menhir_stack in
+        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) _menhir_s
+    | MenhirState140 ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let (_menhir_stack, _menhir_s, _) = _menhir_stack in
+        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) _menhir_s
+    | MenhirState133 ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let (_menhir_stack, _menhir_s, _) = _menhir_stack in
+        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) _menhir_s
+    | MenhirState131 ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        raise _eRR
     | MenhirState122 ->
         let _menhir_stack = Obj.magic _menhir_stack in
         let (_menhir_stack, _menhir_s, _) = _menhir_stack in
@@ -3642,125 +3983,81 @@ and _menhir_errorcase : _menhir_env -> 'ttv_tail -> _menhir_state -> 'ttv_return
         let _menhir_stack = Obj.magic _menhir_stack in
         raise _eRR
 
-and _menhir_goto_type_specs : _menhir_env -> 'ttv_tail -> (Ast.type_decl list) -> 'ttv_return =
-  fun _menhir_env _menhir_stack _v ->
-    let _menhir_stack = (_menhir_stack, _v) in
+and _menhir_goto_option_func_params_ : _menhir_env -> 'ttv_tail -> _menhir_state -> ((string * Ast.typeT) list option) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
     let _menhir_stack = Obj.magic _menhir_stack in
     assert (not _menhir_env._menhir_error);
     let _tok = _menhir_env._menhir_token in
     match _tok with
-    | IDENTIFIER _v ->
-        _menhir_run121 _menhir_env (Obj.magic _menhir_stack) MenhirState118 _v
     | RPAR ->
         let _menhir_stack = Obj.magic _menhir_stack in
-        let _menhir_s = MenhirState118 in
-        let _menhir_stack = (_menhir_stack, _menhir_s) in
-        let _menhir_env = _menhir_discard _menhir_env in
-        let _tok = _menhir_env._menhir_token in
-        (match _tok with
-        | SEMICOLON _v ->
-            let _menhir_stack = Obj.magic _menhir_stack in
-            let _menhir_env = _menhir_discard _menhir_env in
-            let _menhir_stack = Obj.magic _menhir_stack in
-            let (_5 : (
-# 11 "parser.mly"
-      (int)
-# 3669 "parser.ml"
-            )) = _v in
-            let (((_menhir_stack, _), (_3 : (Ast.type_decl list))), _) = _menhir_stack in
-            let _4 = () in
-            let _2 = () in
-            let _1 = () in
-            let _v : (Ast.type_decl list) = 
-# 81 "parser.mly"
-                                        ( _3 )
-# 3678 "parser.ml"
-             in
-            _menhir_goto_type_decls _menhir_env _menhir_stack _v
-        | _ ->
-            assert (not _menhir_env._menhir_error);
-            _menhir_env._menhir_error <- true;
-            let _menhir_stack = Obj.magic _menhir_stack in
-            let (_menhir_stack, _menhir_s) = _menhir_stack in
-            _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) _menhir_s)
-    | _ ->
-        assert (not _menhir_env._menhir_error);
-        _menhir_env._menhir_error <- true;
-        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState118
-
-and _menhir_run121 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
-# 27 "parser.mly"
-       (string * int)
-# 3695 "parser.ml"
-) -> 'ttv_return =
-  fun _menhir_env _menhir_stack _menhir_s _v ->
-    let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
-    let _menhir_env = _menhir_discard _menhir_env in
-    let _tok = _menhir_env._menhir_token in
-    match _tok with
-    | ASSIGN _v ->
-        let _menhir_stack = Obj.magic _menhir_stack in
-        let _menhir_s = MenhirState121 in
-        let _menhir_stack = (_menhir_stack, _menhir_s, _v) in
         let _menhir_env = _menhir_discard _menhir_env in
         let _tok = _menhir_env._menhir_token in
         (match _tok with
         | CHAN ->
-            _menhir_run36 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+            _menhir_run36 _menhir_env (Obj.magic _menhir_stack) MenhirState133
         | FLOATTYPE ->
-            _menhir_run35 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+            _menhir_run35 _menhir_env (Obj.magic _menhir_stack) MenhirState133
         | IDENTIFIER _v ->
-            _menhir_run34 _menhir_env (Obj.magic _menhir_stack) MenhirState122 _v
+            _menhir_run34 _menhir_env (Obj.magic _menhir_stack) MenhirState133 _v
         | INTERFACE ->
-            _menhir_run33 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+            _menhir_run33 _menhir_env (Obj.magic _menhir_stack) MenhirState133
         | INTTYPE ->
-            _menhir_run32 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+            _menhir_run32 _menhir_env (Obj.magic _menhir_stack) MenhirState133
         | LPAR ->
-            _menhir_run31 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+            _menhir_run31 _menhir_env (Obj.magic _menhir_stack) MenhirState133
         | LSQUARE ->
-            _menhir_run27 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+            _menhir_run27 _menhir_env (Obj.magic _menhir_stack) MenhirState133
         | MAP ->
-            _menhir_run25 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+            _menhir_run25 _menhir_env (Obj.magic _menhir_stack) MenhirState133
         | MULT _v ->
-            _menhir_run24 _menhir_env (Obj.magic _menhir_stack) MenhirState122 _v
+            _menhir_run24 _menhir_env (Obj.magic _menhir_stack) MenhirState133 _v
         | RUNETYPE ->
-            _menhir_run23 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+            _menhir_run23 _menhir_env (Obj.magic _menhir_stack) MenhirState133
         | STRINGTYPE ->
-            _menhir_run22 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+            _menhir_run22 _menhir_env (Obj.magic _menhir_stack) MenhirState133
         | STRUCT ->
-            _menhir_run17 _menhir_env (Obj.magic _menhir_stack) MenhirState122
+            _menhir_run17 _menhir_env (Obj.magic _menhir_stack) MenhirState133
+        | COLON ->
+            let _menhir_stack = Obj.magic _menhir_stack in
+            let _menhir_s = MenhirState133 in
+            let _v : (Ast.typeT option) = 
+# 100 "/usr/share/menhir/standard.mly"
+    ( None )
+# 4029 "parser.ml"
+             in
+            _menhir_goto_option_typeT_ _menhir_env _menhir_stack _menhir_s _v
         | _ ->
             assert (not _menhir_env._menhir_error);
             _menhir_env._menhir_error <- true;
-            _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState122)
-    | CHAN ->
-        _menhir_run36 _menhir_env (Obj.magic _menhir_stack) MenhirState121
-    | FLOATTYPE ->
-        _menhir_run35 _menhir_env (Obj.magic _menhir_stack) MenhirState121
-    | IDENTIFIER _v ->
-        _menhir_run34 _menhir_env (Obj.magic _menhir_stack) MenhirState121 _v
-    | INTERFACE ->
-        _menhir_run33 _menhir_env (Obj.magic _menhir_stack) MenhirState121
-    | INTTYPE ->
-        _menhir_run32 _menhir_env (Obj.magic _menhir_stack) MenhirState121
-    | LPAR ->
-        _menhir_run31 _menhir_env (Obj.magic _menhir_stack) MenhirState121
-    | LSQUARE ->
-        _menhir_run27 _menhir_env (Obj.magic _menhir_stack) MenhirState121
-    | MAP ->
-        _menhir_run25 _menhir_env (Obj.magic _menhir_stack) MenhirState121
-    | MULT _v ->
-        _menhir_run24 _menhir_env (Obj.magic _menhir_stack) MenhirState121 _v
-    | RUNETYPE ->
-        _menhir_run23 _menhir_env (Obj.magic _menhir_stack) MenhirState121
-    | STRINGTYPE ->
-        _menhir_run22 _menhir_env (Obj.magic _menhir_stack) MenhirState121
-    | STRUCT ->
-        _menhir_run17 _menhir_env (Obj.magic _menhir_stack) MenhirState121
+            _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState133)
     | _ ->
         assert (not _menhir_env._menhir_error);
         _menhir_env._menhir_error <- true;
-        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState121
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let (_menhir_stack, _menhir_s, _) = _menhir_stack in
+        _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) _menhir_s
+
+and _menhir_run14 : _menhir_env -> 'ttv_tail -> _menhir_state -> (
+# 27 "parser.mly"
+       (string * int)
+# 4046 "parser.ml"
+) -> 'ttv_return =
+  fun _menhir_env _menhir_stack _menhir_s _v ->
+    let _menhir_env = _menhir_discard _menhir_env in
+    let _menhir_stack = Obj.magic _menhir_stack in
+    let (_1 : (
+# 27 "parser.mly"
+       (string * int)
+# 4054 "parser.ml"
+    )) = _v in
+    let _v : (string list) = 
+# 146 "parser.mly"
+                                  ( [(fst _1)] )
+# 4059 "parser.ml"
+     in
+    _menhir_goto_ident_list _menhir_env _menhir_stack _menhir_s _v
 
 and _menhir_goto_top_level_decls : _menhir_env -> 'ttv_tail -> (Ast.top_level_decl list) -> 'ttv_return =
   fun _menhir_env _menhir_stack _v ->
@@ -3777,20 +4074,61 @@ and _menhir_goto_top_level_decls : _menhir_env -> 'ttv_tail -> (Ast.top_level_de
         let _v : (
 # 61 "parser.mly"
        (Ast.program)
-# 3781 "parser.ml"
+# 4078 "parser.ml"
         ) = 
 # 65 "parser.mly"
                                                               ( Ast.Program (_1, _3) )
-# 3785 "parser.ml"
+# 4082 "parser.ml"
          in
         let _menhir_stack = Obj.magic _menhir_stack in
         let _menhir_stack = Obj.magic _menhir_stack in
         let (_1 : (
 # 61 "parser.mly"
        (Ast.program)
-# 3792 "parser.ml"
+# 4089 "parser.ml"
         )) = _v in
         Obj.magic _1
+    | FUNC ->
+        let _menhir_stack = Obj.magic _menhir_stack in
+        let _menhir_env = _menhir_discard _menhir_env in
+        let _tok = _menhir_env._menhir_token in
+        (match _tok with
+        | IDENTIFIER _v ->
+            let _menhir_stack = Obj.magic _menhir_stack in
+            let _menhir_stack = (_menhir_stack, _v) in
+            let _menhir_env = _menhir_discard _menhir_env in
+            let _tok = _menhir_env._menhir_token in
+            (match _tok with
+            | LPAR ->
+                let _menhir_stack = Obj.magic _menhir_stack in
+                let _menhir_env = _menhir_discard _menhir_env in
+                let _tok = _menhir_env._menhir_token in
+                (match _tok with
+                | IDENTIFIER _v ->
+                    _menhir_run14 _menhir_env (Obj.magic _menhir_stack) MenhirState131 _v
+                | RPAR ->
+                    let _menhir_stack = Obj.magic _menhir_stack in
+                    let _menhir_s = MenhirState131 in
+                    let _v : ((string * Ast.typeT) list option) = 
+# 100 "/usr/share/menhir/standard.mly"
+    ( None )
+# 4116 "parser.ml"
+                     in
+                    _menhir_goto_option_func_params_ _menhir_env _menhir_stack _menhir_s _v
+                | _ ->
+                    assert (not _menhir_env._menhir_error);
+                    _menhir_env._menhir_error <- true;
+                    _menhir_errorcase _menhir_env (Obj.magic _menhir_stack) MenhirState131)
+            | _ ->
+                assert (not _menhir_env._menhir_error);
+                _menhir_env._menhir_error <- true;
+                let _menhir_stack = Obj.magic _menhir_stack in
+                raise _eRR)
+        | _ ->
+            assert (not _menhir_env._menhir_error);
+            _menhir_env._menhir_error <- true;
+            let _menhir_stack = Obj.magic _menhir_stack in
+            raise _eRR)
     | TYPE ->
         let _menhir_stack = Obj.magic _menhir_stack in
         let _menhir_env = _menhir_discard _menhir_env in
@@ -3805,9 +4143,9 @@ and _menhir_goto_top_level_decls : _menhir_env -> 'ttv_tail -> (Ast.top_level_de
             let _menhir_env = _menhir_discard _menhir_env in
             let _menhir_stack = Obj.magic _menhir_stack in
             let _v : (Ast.type_decl list) = 
-# 84 "parser.mly"
+# 85 "parser.mly"
                           ( [] )
-# 3811 "parser.ml"
+# 4149 "parser.ml"
              in
             _menhir_goto_type_specs _menhir_env _menhir_stack _v
         | _ ->
@@ -3828,9 +4166,9 @@ and _menhir_goto_top_level_decls : _menhir_env -> 'ttv_tail -> (Ast.top_level_de
             let _menhir_env = _menhir_discard _menhir_env in
             let _menhir_stack = Obj.magic _menhir_stack in
             let _v : (Ast.variable_decl list) = 
-# 96 "parser.mly"
+# 97 "parser.mly"
                           ( [] )
-# 3834 "parser.ml"
+# 4172 "parser.ml"
              in
             _menhir_goto_var_specs _menhir_env _menhir_stack _v
         | _ ->
@@ -3851,7 +4189,7 @@ and _menhir_goto_import_decls : _menhir_env -> 'ttv_tail -> (unit) -> 'ttv_retur
     let _v : (Ast.top_level_decl list) = 
 # 75 "parser.mly"
                         ( [] )
-# 3855 "parser.ml"
+# 4193 "parser.ml"
      in
     _menhir_goto_top_level_decls _menhir_env _menhir_stack _v
 
@@ -3870,7 +4208,7 @@ and _menhir_discard : _menhir_env -> _menhir_env =
 and start : (Lexing.lexbuf -> token) -> Lexing.lexbuf -> (
 # 61 "parser.mly"
        (Ast.program)
-# 3874 "parser.ml"
+# 4212 "parser.ml"
 ) =
   fun lexer lexbuf ->
     let _menhir_env = let _tok = Obj.magic () in
@@ -3902,18 +4240,18 @@ and start : (Lexing.lexbuf -> token) -> Lexing.lexbuf -> (
                 let (_3 : (
 # 11 "parser.mly"
       (int)
-# 3906 "parser.ml"
+# 4244 "parser.ml"
                 )) = _v in
                 let (_menhir_stack, (_2 : (
 # 27 "parser.mly"
        (string * int)
-# 3911 "parser.ml"
+# 4249 "parser.ml"
                 ))) = _menhir_stack in
                 let _1 = () in
                 let _v : (Ast.package_clause) = 
 # 68 "parser.mly"
                                  ( Ast.Package (fst _2) )
-# 3917 "parser.ml"
+# 4255 "parser.ml"
                  in
                 let _menhir_stack = (_menhir_stack, _v) in
                 let _menhir_stack = Obj.magic _menhir_stack in
@@ -3928,15 +4266,15 @@ and start : (Lexing.lexbuf -> token) -> Lexing.lexbuf -> (
                     let _v : (unit) = 
 # 72 "parser.mly"
                         ( failwith "Packages are not supported in GoLite.")
-# 3932 "parser.ml"
+# 4270 "parser.ml"
                      in
                     _menhir_goto_import_decls _menhir_env _menhir_stack _v
-                | EOF | TYPE | VAR ->
+                | EOF | FUNC | TYPE | VAR ->
                     let _menhir_stack = Obj.magic _menhir_stack in
                     let _v : (unit) = 
 # 71 "parser.mly"
                         ( () )
-# 3940 "parser.ml"
+# 4278 "parser.ml"
                      in
                     _menhir_goto_import_decls _menhir_env _menhir_stack _v
                 | _ ->
@@ -3964,4 +4302,4 @@ and start : (Lexing.lexbuf -> token) -> Lexing.lexbuf -> (
   
 
 
-# 3968 "parser.ml"
+# 4306 "parser.ml"

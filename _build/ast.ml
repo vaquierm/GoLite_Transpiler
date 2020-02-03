@@ -41,6 +41,7 @@ type typeT =
   | FloatType
   | StrType
   | RuneType
+  | VoidType
 
 type variable_decl =
   (* Last int is line number *)
@@ -52,14 +53,18 @@ type variable_decl =
   | VarDeclTypeNoInit of typeT * string * int
 
 type type_decl =
-  (* Type of the declaration, name of type *)
-  TypeDecl of typeT * string
+  (* Type of the declaration, name of type, line number *)
+  TypeDecl of typeT * string * int
+
+type func_decl =
+  (* List of inputs (id, type), return type, line number *)
+  FuncDecl of ((string * typeT) list) * typeT * int
 
 type top_level_decl = 
   (* Type declaration *)
   | TopTypeDecl of type_decl
-  (* (* Function declaration *)
-  | FuncDecl of function_declaration*)
+  (* Function declaration *)
+  | TopFuncDecl of func_decl
   (* Variable declaration *)
   | TopVarDecl of variable_decl
 
