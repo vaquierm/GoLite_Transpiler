@@ -16,6 +16,9 @@ type a [kskks(3 + true, goose)]int;
 
 func goosefunction(x, y float32, z []*[]int) int {
 	continue;
+	break;
+	return 7+4
+	id[1] := 7 + 1
 }
 
 type (

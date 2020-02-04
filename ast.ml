@@ -81,6 +81,15 @@ type statement =
   | VarDeclStm of variable_decl
   (* Return statement (expression, line number) *)
   | Return of (exp option) * int
+  (* Break statement *)
+  | Break
+  (* Continue statement *)
+  | Continue
+  (* Expression statement (exp, line number) *)
+  | ExpStm of exp * int
+  (* Assgnment statement (LHS, RHS, line number) *)
+  | AssignStm of exp * exp * int
+  
 
 
 type top_level_decl = 

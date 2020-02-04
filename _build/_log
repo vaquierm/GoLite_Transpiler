@@ -10,14 +10,6 @@ menhir -v --raw-depend --ocamldep '/usr/bin/ocamldep.opt -modules' parser.mly > 
 + menhir -v --raw-depend --ocamldep '/usr/bin/ocamldep.opt -modules' parser.mly > parser.mly.depends
 File "parser.mly", line 30, characters 26-32:
 Warning: the token APPEND is unused.
-File "parser.mly", line 14, characters 40-48:
-Warning: the token BINANDEQ is unused.
-File "parser.mly", line 14, characters 66-77:
-Warning: the token BINANDNOTEQ is unused.
-File "parser.mly", line 14, characters 49-56:
-Warning: the token BINOREQ is unused.
-File "parser.mly", line 14, characters 57-65:
-Warning: the token BINXOREQ is unused.
 File "parser.mly", line 33, characters 15-27:
 Warning: the token BLOCKCOMMENT is unused.
 File "parser.mly", line 39, characters 13-24:
@@ -38,8 +30,6 @@ File "parser.mly", line 27, characters 13-20:
 Warning: the token DEFAULT is unused.
 File "parser.mly", line 27, characters 48-53:
 Warning: the token DEFER is unused.
-File "parser.mly", line 14, characters 34-39:
-Warning: the token DIVEQ is unused.
 File "parser.mly", line 28, characters 23-27:
 Warning: the token ELSE is unused.
 File "parser.mly", line 29, characters 30-33:
@@ -48,20 +38,6 @@ File "parser.mly", line 29, characters 7-9:
 Warning: the token IF is unused.
 File "parser.mly", line 30, characters 33-36:
 Warning: the token LEN is unused.
-File "parser.mly", line 14, characters 87-95:
-Warning: the token LSHIFTEQ is unused.
-File "parser.mly", line 14, characters 19-26:
-Warning: the token MINUSEQ is unused.
-File "parser.mly", line 15, characters 21-31:
-Warning: the token MINUSMINUS is unused.
-File "parser.mly", line 14, characters 96-101:
-Warning: the token MODEQ is unused.
-File "parser.mly", line 14, characters 27-33:
-Warning: the token MULTEQ is unused.
-File "parser.mly", line 14, characters 12-18:
-Warning: the token PLUSEQ is unused.
-File "parser.mly", line 15, characters 12-20:
-Warning: the token PLUSPLUS is unused.
 File "parser.mly", line 30, characters 12-17:
 Warning: the token PRINT is unused.
 File "parser.mly", line 30, characters 18-25:
@@ -70,12 +46,8 @@ File "parser.mly", line 29, characters 10-15:
 Warning: the token RANGE is unused.
 File "parser.mly", line 43, characters 15-31:
 Warning: the token RAWSTRINGLITERAL is unused.
-File "parser.mly", line 14, characters 78-86:
-Warning: the token RSHIFTEQ is unused.
 File "parser.mly", line 27, characters 36-42:
 Warning: the token SELECT is unused.
-File "parser.mly", line 19, characters 19-30:
-Warning: the token SHORTASSIGN is unused.
 File "parser.mly", line 28, characters 41-47:
 Warning: the token SWITCH is unused.
 File "parser.mly", line 11, characters 17-25:
@@ -89,14 +61,6 @@ menhir -v --ocamlc /usr/bin/ocamlc.opt --infer parser.mly
 + menhir -v --ocamlc /usr/bin/ocamlc.opt --infer parser.mly
 File "parser.mly", line 30, characters 26-32:
 Warning: the token APPEND is unused.
-File "parser.mly", line 14, characters 40-48:
-Warning: the token BINANDEQ is unused.
-File "parser.mly", line 14, characters 66-77:
-Warning: the token BINANDNOTEQ is unused.
-File "parser.mly", line 14, characters 49-56:
-Warning: the token BINOREQ is unused.
-File "parser.mly", line 14, characters 57-65:
-Warning: the token BINXOREQ is unused.
 File "parser.mly", line 33, characters 15-27:
 Warning: the token BLOCKCOMMENT is unused.
 File "parser.mly", line 39, characters 13-24:
@@ -117,8 +81,6 @@ File "parser.mly", line 27, characters 13-20:
 Warning: the token DEFAULT is unused.
 File "parser.mly", line 27, characters 48-53:
 Warning: the token DEFER is unused.
-File "parser.mly", line 14, characters 34-39:
-Warning: the token DIVEQ is unused.
 File "parser.mly", line 28, characters 23-27:
 Warning: the token ELSE is unused.
 File "parser.mly", line 29, characters 30-33:
@@ -127,20 +89,6 @@ File "parser.mly", line 29, characters 7-9:
 Warning: the token IF is unused.
 File "parser.mly", line 30, characters 33-36:
 Warning: the token LEN is unused.
-File "parser.mly", line 14, characters 87-95:
-Warning: the token LSHIFTEQ is unused.
-File "parser.mly", line 14, characters 19-26:
-Warning: the token MINUSEQ is unused.
-File "parser.mly", line 15, characters 21-31:
-Warning: the token MINUSMINUS is unused.
-File "parser.mly", line 14, characters 96-101:
-Warning: the token MODEQ is unused.
-File "parser.mly", line 14, characters 27-33:
-Warning: the token MULTEQ is unused.
-File "parser.mly", line 14, characters 12-18:
-Warning: the token PLUSEQ is unused.
-File "parser.mly", line 15, characters 12-20:
-Warning: the token PLUSPLUS is unused.
 File "parser.mly", line 30, characters 12-17:
 Warning: the token PRINT is unused.
 File "parser.mly", line 30, characters 18-25:
@@ -149,12 +97,8 @@ File "parser.mly", line 29, characters 10-15:
 Warning: the token RANGE is unused.
 File "parser.mly", line 43, characters 15-31:
 Warning: the token RAWSTRINGLITERAL is unused.
-File "parser.mly", line 14, characters 78-86:
-Warning: the token RSHIFTEQ is unused.
 File "parser.mly", line 27, characters 36-42:
 Warning: the token SELECT is unused.
-File "parser.mly", line 19, characters 19-30:
-Warning: the token SHORTASSIGN is unused.
 File "parser.mly", line 28, characters 41-47:
 Warning: the token SWITCH is unused.
 File "parser.mly", line 11, characters 17-25:
@@ -164,9 +108,9 @@ Warning: the precedence level assigned to DOT is never useful.
 Warning: one state has shift/reduce conflicts.
 Warning: one shift/reduce conflict was arbitrarily resolved.
 # Target: parser.mli.depends, tags: { extension:mli, file:parser.mli, ocaml, ocamldep, quiet }
-/usr/bin/ocamldep.opt -modules parser.mli > parser.mli.depends # cached
+/usr/bin/ocamldep.opt -modules parser.mli > parser.mli.depends
 # Target: parser.cmi, tags: { byte, compile, extension:mli, file:parser.mli, interf, ocaml, quiet }
-/usr/bin/ocamlc.opt -c -o parser.cmi parser.mli # cached
+/usr/bin/ocamlc.opt -c -o parser.cmi parser.mli
 # Target: lexer.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:lexer.cmo, file:lexer.ml, implem, ocaml, quiet }
 /usr/bin/ocamlc.opt -c -o lexer.cmo lexer.ml # cached
 # Target: main.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet }
@@ -176,5 +120,5 @@ Warning: one shift/reduce conflict was arbitrarily resolved.
 # Target: parser.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:parser.cmo, file:parser.ml, implem, ocaml, quiet }
 /usr/bin/ocamlc.opt -c -o parser.cmo parser.ml
 # Target: main.byte, tags: { byte, dont_link_with, extension:byte, file:main.byte, link, ocaml, program, quiet }
-/usr/bin/ocamlc.opt ast.cmo parser.cmo lexer.cmo main.cmo -o main.byte # cached
+/usr/bin/ocamlc.opt ast.cmo parser.cmo lexer.cmo main.cmo -o main.byte
 # Compilation successful.

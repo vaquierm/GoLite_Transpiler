@@ -204,11 +204,44 @@ primary_exp
 body : LCURLY statement_list RCURLY { () }
 
 statement_list
-:                                     { [] }
-| statement_list GO exp SEMICOLON     { failwith "go statements are not supported in GoLite" }
-| statement_list RETURN exp? SEMICOLON { [] }
-| statement_list BREAK SEMICOLON      { [] }
-| statement_list CONTINUE SEMICOLON      { [] }
-| statement_list GOTO IDENTIFIER SEMICOLON      { failwith "goto statements are not supported in GoLite" }
-| statement_list FALLTHROUGH SEMICOLON  { failwith "fallthrough statements are not supported in GoLite" }
+  :                                     { [] }
+  | statement_list GO exp SEMICOLON     { failwith "go statements are not supported in GoLite" }
+  | statement_list RETURN exp? SEMICOLON { (Ast.Return ($3, $4))::$1 }
+  | statement_list BREAK SEMICOLON      { (Ast.Break)::$1 }
+  | statement_list CONTINUE SEMICOLON      { (Ast.Continue)::$1 }
+  | statement_list GOTO IDENTIFIER SEMICOLON      { failwith "goto statements are not supported in GoLite" }
+  | statement_list FALLTHROUGH SEMICOLON  { failwith "fallthrough statements are not supported in GoLite" }
+  | statement_list simple_statement     { $2::$1 }
+
+simple_statement
+  : exp SEMICOLON                         { Ast.ExpStm ($1, $2) }
+  | exp PLUSPLUS SEMICOLON                { Ast.ExpStm (Ast.Binop ($1, Ast.BPlus, $1, $3), $3) }
+  | exp MINUSMINUS SEMICOLON              { Ast.ExpStm (Ast.Binop ($1, Ast.BMinus, $1, $3), $3) }
+  | exp ASSIGN exp SEMICOLON              { Ast.AssignStm ($1, $3, $4) }
+  | exp PLUSEQ exp SEMICOLON              { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BPlus, $3, $4), $4) }
+  | exp MINUSEQ exp SEMICOLON             { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BMinus, $3, $4), $4) }
+  | exp MULTEQ exp SEMICOLON              { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Mult, $3, $4), $4) }
+  | exp DIVEQ exp SEMICOLON               { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Div, $3, $4), $4) }
+  | exp BINANDEQ exp SEMICOLON            { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinAND, $3, $4), $4) }
+  | exp BINOREQ exp SEMICOLON             { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinOR, $3, $4), $4) }
+  | exp BINXOREQ exp SEMICOLON            { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinXOR, $3, $4), $4) }
+  | exp BINANDNOTEQ exp SEMICOLON         { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinANDNOT, $3, $4), $4) }
+  | exp RSHIFTEQ exp SEMICOLON            { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Rshift, $3, $4), $4) }
+  | exp LSHIFTEQ exp SEMICOLON            { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Lshift, $3, $4), $4) }
+  | exp MODEQ exp SEMICOLON               { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Mod, $3, $4), $4) }
+  | exp SHORTASSIGN exp SEMICOLON         {
+      let id = match $1 with
+      | Ast.PrimExp e ->
+        begin match e with
+        | Ast.Var (x, _) -> x
+        | _ -> failwith "The left hand side of a short hand assignment must be an id";
+        end
+      | _ -> failwith "The left hand side of a short hand assignment must be an id";
+      in
+      Ast.VarDeclStm (Ast.VarDeclNoTypeInit (id, $3, $4))
+    }
+
+
+  
+
 
