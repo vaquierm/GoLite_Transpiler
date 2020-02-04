@@ -56,6 +56,12 @@ and primary_exp =
   | FuncCall of string * (exp list) * int
   (* Unsure Cast or Function call (name of identifier, exp to cast or func input, line number) *)
   | UnsureTypeFuncCall of string * exp * int
+  (* Append expression (slice, exp, line number) *)
+  | AppendExp of primary_exp * exp * int
+  (* Length expression (slice or array, line number) *)
+  | LenExp of primary_exp * int
+  (* Capacity expression (slice or array, line number) *)
+  | CapExp of primary_exp * int
   (* Temp constructor for conflicts *)
   | TempPrimExp of typeT
 
@@ -98,6 +104,8 @@ and statement =
   | WhileStm of (exp option) * block * int
   (* For loops (Init, Condition, Increment, body, line number) *)
   | ForStm of (statement option) * (exp option) * (statement option) * block * int
+  (* Print statement (exp to print, line number) *)
+  | Print of exp * int
 and block =
   (* List of statements the block is made of *)
   | StmsBlock of statement list

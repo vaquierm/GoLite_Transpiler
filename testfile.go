@@ -57,6 +57,14 @@ func goosefunction(x, y float32, z []*[]int) int {
 
 	}
 
+	append(x, 2+1)
+
+	print(1+1)
+
+	cap(xxx)
+
+	len(l.hi)
+
 	for ; q; ; {
 		if i ==1 {
 			i++

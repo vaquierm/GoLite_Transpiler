@@ -206,6 +206,9 @@ primary_exp
       end
   }
   (* TODO: Slices access *)
+  | APPEND LPAR primary_exp COMMA exp RPAR  { Ast.AppendExp ($3, $5, $2) }
+  | LEN LPAR primary_exp RPAR               { Ast.LenExp ($3, $2) }
+  | CAP LPAR primary_exp RPAR               { Ast.CapExp ($3, $2) }
 
 body : LCURLY statement_list RCURLY SEMICOLON?{ Ast.StmsBlock $2 }
 
@@ -232,7 +235,7 @@ statement_list
   }
 
 simple_statement
-  : exp SEMICOLON                             { Ast.ExpStm ($1, $2) }
+  : exp                              { Ast.ExpStm ($1, 1) }
   | exp PLUSPLUS SEMICOLON                    { Ast.ExpStm (Ast.Binop ($1, Ast.BPlus, $1, $3), $3) }
   | exp MINUSMINUS SEMICOLON                  { Ast.ExpStm (Ast.Binop ($1, Ast.BMinus, $1, $3), $3) }
   | exp ASSIGN exp SEMICOLON                  { Ast.AssignStm ($1, $3, $4) }
@@ -258,6 +261,7 @@ simple_statement
     in
     Ast.VarDeclStm (Ast.VarDeclNoTypeInit (id, $3, $4))
   }
+  | PRINT LPAR exp RPAR SEMICOLON             { Ast.Print ($3, $5) }
 
 if_statement
   : IF simple_statement exp body ELSE if_statement {

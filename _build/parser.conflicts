@@ -1,34 +1,164 @@
 
-** Conflict (reduce/reduce) in state 46.
-** Token involved: RPAR
+** Conflict (shift/reduce) in state 265.
+** Tokens involved: PLUS MULT MINUS BINXOR BINAND
+** The following explanations concentrate on token PLUS.
 ** This state is reached from start after reading:
 
-package_clause import_decls top_level_decls VAR ident_list LSQUARE LPAR IDENTIFIER 
+package_clause import_decls top_level_decls FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) LCURLY statement_list FOR exp 
 
 ** The derivations that appear below have the following common factor:
 ** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
 
 start 
 package_clause import_decls top_level_decls EOF 
-                            top_level_decls var_decls 
-                                            VAR var_spec 
-                                                ident_list typeT SEMICOLON 
-                                                           LSQUARE exp RSQUARE typeT 
-                                                                   (?)
+                            top_level_decls func_decl 
+                                            FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) body 
+                                                                                                        LCURLY statement_list RCURLY option(SEMICOLON) 
+                                                                                                               statement_list for_statement 
+                                                                                                                              (?)
 
-** In state 46, looking ahead at RPAR, reducing production
+** In state 265, looking ahead at PLUS, shifting is permitted
+** because of the following sub-derivation:
+
+FOR option(exp) body 
+    exp 
+    exp . PLUS exp 
+
+** In state 265, looking ahead at PLUS, reducing production
+** simple_statement -> exp 
+** is permitted because of the following sub-derivation:
+
+FOR simple_statement option(exp) SEMICOLON simple_statement body // lookahead token appears because option(exp) can begin with PLUS
+    exp . 
+
+** Conflict (shift/reduce) in state 255.
+** Tokens involved: PLUS MULT MINUS BINXOR BINAND
+** The following explanations concentrate on token PLUS.
+** This state is reached from start after reading:
+
+package_clause import_decls top_level_decls FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) LCURLY statement_list exp 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+start 
+package_clause import_decls top_level_decls EOF 
+                            top_level_decls func_decl 
+                                            FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) body 
+                                                                                                        LCURLY statement_list RCURLY option(SEMICOLON) 
+                                                                                                               (?)
+
+** In state 255, looking ahead at PLUS, shifting is permitted
+** because of the following sub-derivation:
+
+statement_list simple_statement 
+               exp 
+               exp . PLUS exp 
+
+** In state 255, looking ahead at PLUS, reducing production
+** simple_statement -> exp 
+** is permitted because of the following sub-derivation:
+
+statement_list simple_statement // lookahead token appears because simple_statement can begin with PLUS
+statement_list simple_statement // lookahead token is inherited
+               exp . 
+
+** Conflict (shift/reduce) in state 193.
+** Tokens involved: PLUS MULT MINUS BINXOR BINAND
+** The following explanations concentrate on token PLUS.
+** This state is reached from start after reading:
+
+package_clause import_decls top_level_decls FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) LCURLY statement_list IF exp 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+start 
+package_clause import_decls top_level_decls EOF 
+                            top_level_decls func_decl 
+                                            FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) body 
+                                                                                                        LCURLY statement_list RCURLY option(SEMICOLON) 
+                                                                                                               statement_list if_statement 
+                                                                                                                              (?)
+
+** In state 193, looking ahead at PLUS, shifting is permitted
+** because of the following sub-derivation:
+
+IF exp body ELSE if_statement 
+   exp . PLUS exp 
+
+** In state 193, looking ahead at PLUS, reducing production
+** simple_statement -> exp 
+** is permitted because of the following sub-derivation:
+
+IF simple_statement exp body ELSE if_statement // lookahead token appears because exp can begin with PLUS
+   exp . 
+
+** Conflict (shift/reduce) in state 59.
+** Token involved: LSQUARE
+** This state is reached from start after reading:
+
+package_clause import_decls top_level_decls FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) LCURLY statement_list primary_exp 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+start 
+package_clause import_decls top_level_decls EOF 
+                            top_level_decls func_decl 
+                                            FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) body 
+                                                                                                        LCURLY statement_list RCURLY option(SEMICOLON) 
+                                                                                                               (?)
+
+** In state 59, looking ahead at LSQUARE, reducing production
+** exp -> primary_exp 
+** is permitted because of the following sub-derivation:
+
+statement_list simple_statement // lookahead token appears because simple_statement can begin with LSQUARE
+statement_list simple_statement // lookahead token is inherited
+               exp // lookahead token is inherited
+               primary_exp . 
+
+** In state 59, looking ahead at LSQUARE, shifting is permitted
+** because of the following sub-derivation:
+
+statement_list simple_statement 
+               exp 
+               primary_exp 
+               primary_exp . LSQUARE exp RSQUARE 
+
+** Conflict (reduce/reduce) in state 45.
+** Token involved: LPAR
+** This state is reached from start after reading:
+
+package_clause import_decls top_level_decls FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) LCURLY statement_list IDENTIFIER 
+
+** The derivations that appear below have the following common factor:
+** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
+
+start 
+package_clause import_decls top_level_decls EOF 
+                            top_level_decls func_decl 
+                                            FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) body 
+                                                                                                        LCURLY statement_list RCURLY option(SEMICOLON) 
+                                                                                                               (?)
+
+** In state 45, looking ahead at LPAR, reducing production
 ** primary_exp -> IDENTIFIER 
 ** is permitted because of the following sub-derivation:
 
-LPAR exp RPAR // lookahead token appears
-     primary_exp // lookahead token is inherited
-     IDENTIFIER . 
+statement_list simple_statement // lookahead token appears because simple_statement can begin with LPAR
+statement_list simple_statement // lookahead token is inherited
+               exp // lookahead token is inherited
+               primary_exp // lookahead token is inherited
+               IDENTIFIER . 
 
-** In state 46, looking ahead at RPAR, reducing production
+** In state 45, looking ahead at LPAR, reducing production
 ** typeT -> IDENTIFIER 
 ** is permitted because of the following sub-derivation:
 
-primary_exp 
-typeT LPAR option(exp_list) RPAR 
-LPAR typeT RPAR // lookahead token appears
-     IDENTIFIER . 
+statement_list simple_statement 
+               exp 
+               primary_exp 
+               typeT LPAR option(exp_list) RPAR // lookahead token appears
+               IDENTIFIER . 
