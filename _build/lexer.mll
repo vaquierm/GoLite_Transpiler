@@ -140,7 +140,7 @@ rule token = parse
   | "switch"                    { return SWITCH }
   | "cons"                      { return CONS }
   | "fallthrough"               { return FALLTHROUGH }
-  | "if"                        { return IF }
+  | "if"                        { return (IF (get_line_num lexbuf)) }
   | "range"                     { return RANGE }
   | "type"                      { return TYPE }
   | "continue"                  { return CONTINUE }

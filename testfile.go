@@ -12,13 +12,38 @@ var (
 	goose string = "Love"
 )
 
-type a [int(goose, 1)]int;
+type a [int(goose)]int;
 
 func goosefunction(x, y float32, z []*[]int) int {
 	continue;
 	break;
 	return 7+4
 	id := 7 + 1
+
+	var (
+		hello = 3
+		hi *int
+		lol []float32 = 34
+	)
+
+	type i struct {
+		h int
+		j float32
+	}
+
+	if a; 1==1 {
+		continue
+	}
+	else if 3 {
+		return
+	} else {
+		if nnn {
+
+		}
+		if x:= 3; x == 3 {
+			
+		}
+	}
 }
 
 type (

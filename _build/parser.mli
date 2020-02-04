@@ -50,7 +50,7 @@ type token =
   | INTTYPE
   | INTERFACE
   | IMPORT
-  | IF
+  | IF of (int)
   | IDENTIFIER of (string * int)
   | HEXINTLITERAL of (string)
   | GT of (int)

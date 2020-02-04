@@ -24,9 +24,10 @@
 
 %token <string * int>IDENTIFIER
 
+%token<int> IF
 %token BREAK DEFAULT FUNC INTERFACE SELECT CASE DEFER GO
 %token MAP STRUCT CHAN ELSE GOTO PACKAGE SWITCH CONS FALLTHROUGH
-%token IF RANGE TYPE CONTINUE FOR IMPORT RETURN VAR
+%token RANGE TYPE CONTINUE FOR IMPORT RETURN VAR
 %token <int>PRINT PRINTLN APPEND LEN CAP
 
 %token <string>COMMENT
@@ -100,7 +101,7 @@ var_spec
   | ident_list ASSIGN exp_list SEMICOLON        { List.map2 (fun iden exp -> Ast.VarDeclNoTypeInit (iden, exp, $4)) $1 $3 }
 
 func_decl
-  : FUNC IDENTIFIER LPAR func_params? RPAR typeT? body SEMICOLON              { 
+  : FUNC IDENTIFIER LPAR func_params? RPAR typeT? body              { 
       let params = match $4 with
       | None -> []
       | Some p -> p
@@ -109,7 +110,7 @@ func_decl
       | None -> Ast.VoidType
       | Some t -> t
       in
-      Ast.FuncDecl (params, retType, (snd $2))
+      Ast.FuncDecl (params, retType, $7, (snd $2))
     }
 
 func_params
@@ -189,62 +190,92 @@ primary_exp
   | primary_exp LSQUARE exp RSQUARE         { Ast.IndexExp ($1, $3, $2) }
   | primary_exp DOT LPAR typeT RPAR         { failwith "Type assertions are not supported in GoLite" }
   | typeT LPAR exp_list? RPAR               {
-      let args = match $3 with
-      | None -> []
-      | Some a -> a
-      in
-      if List.length args == 1 then
-        begin match $1 with
-        | Ast.DefinedType (x, _) -> Ast.UnsureTypeFuncCall (x, (List.hd args), $2)
-        | _ -> Ast.CastExp ($1, (List.hd args), $2)
-        end
-      else
-        begin match $1 with
-        | Ast.DefinedType (x, _) -> Ast.FuncCall (x, args, $2)
-        | _ -> failwith "A cast expression must have exactly one argument"
-        end
-    }
+    let args = match $3 with
+    | None -> []
+    | Some a -> a
+    in
+    if List.length args == 1 then
+      begin match $1 with
+      | Ast.DefinedType (x, _) -> Ast.UnsureTypeFuncCall (x, (List.hd args), $2)
+      | _ -> Ast.CastExp ($1, (List.hd args), $2)
+      end
+    else
+      begin match $1 with
+      | Ast.DefinedType (x, _) -> Ast.FuncCall (x, args, $2)
+      | _ -> failwith "A cast expression must have exactly one argument"
+      end
+  }
   (* TODO: Slices access *)
 
-body : LCURLY statement_list RCURLY { () }
+body : LCURLY statement_list RCURLY SEMICOLON?{ Ast.StmsBlock $2 }
 
 statement_list
-  :                                     { [] }
-  | statement_list GO exp SEMICOLON     { failwith "go statements are not supported in GoLite" }
-  | statement_list RETURN exp? SEMICOLON { (Ast.Return ($3, $4))::$1 }
-  | statement_list BREAK SEMICOLON      { (Ast.Break)::$1 }
-  | statement_list CONTINUE SEMICOLON      { (Ast.Continue)::$1 }
-  | statement_list GOTO IDENTIFIER SEMICOLON      { failwith "goto statements are not supported in GoLite" }
-  | statement_list FALLTHROUGH SEMICOLON  { failwith "fallthrough statements are not supported in GoLite" }
-  | statement_list simple_statement     { $2::$1 }
+  :                                           { [] }
+  | statement_list body                       { (Ast.BlockStm $2)::$1  }
+  | statement_list var_decls                  { (List.map (fun d -> Ast.VarDeclStm d) $2) @ $1 }
+  | statement_list type_decls                 { (List.map (fun d -> Ast.TypeDeclStm d) $2) @ $1 }
+  | statement_list GO exp SEMICOLON           { failwith "go statements are not supported in GoLite" }
+  | statement_list RETURN exp? SEMICOLON      { (Ast.Return ($3, $4))::$1 }
+  | statement_list BREAK SEMICOLON            { (Ast.Break)::$1 }
+  | statement_list CONTINUE SEMICOLON         { (Ast.Continue)::$1 }
+  | statement_list GOTO IDENTIFIER SEMICOLON  { failwith "goto statements are not supported in GoLite" }
+  | statement_list FALLTHROUGH SEMICOLON      { failwith "fallthrough statements are not supported in GoLite" }
+  | statement_list simple_statement           { $2::$1 }
+  | statement_list if_statement               { $2::$1 }
 
 simple_statement
-  : exp SEMICOLON                         { Ast.ExpStm ($1, $2) }
-  | exp PLUSPLUS SEMICOLON                { Ast.ExpStm (Ast.Binop ($1, Ast.BPlus, $1, $3), $3) }
-  | exp MINUSMINUS SEMICOLON              { Ast.ExpStm (Ast.Binop ($1, Ast.BMinus, $1, $3), $3) }
-  | exp ASSIGN exp SEMICOLON              { Ast.AssignStm ($1, $3, $4) }
-  | exp PLUSEQ exp SEMICOLON              { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BPlus, $3, $4), $4) }
-  | exp MINUSEQ exp SEMICOLON             { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BMinus, $3, $4), $4) }
-  | exp MULTEQ exp SEMICOLON              { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Mult, $3, $4), $4) }
-  | exp DIVEQ exp SEMICOLON               { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Div, $3, $4), $4) }
-  | exp BINANDEQ exp SEMICOLON            { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinAND, $3, $4), $4) }
-  | exp BINOREQ exp SEMICOLON             { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinOR, $3, $4), $4) }
-  | exp BINXOREQ exp SEMICOLON            { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinXOR, $3, $4), $4) }
-  | exp BINANDNOTEQ exp SEMICOLON         { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinANDNOT, $3, $4), $4) }
-  | exp RSHIFTEQ exp SEMICOLON            { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Rshift, $3, $4), $4) }
-  | exp LSHIFTEQ exp SEMICOLON            { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Lshift, $3, $4), $4) }
-  | exp MODEQ exp SEMICOLON               { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Mod, $3, $4), $4) }
-  | exp SHORTASSIGN exp SEMICOLON         {
-      let id = match $1 with
-      | Ast.PrimExp e ->
-        begin match e with
-        | Ast.Var (x, _) -> x
-        | _ -> failwith "The left hand side of a short hand assignment must be an id";
-        end
+  : exp SEMICOLON                             { Ast.ExpStm ($1, $2) }
+  | exp PLUSPLUS SEMICOLON                    { Ast.ExpStm (Ast.Binop ($1, Ast.BPlus, $1, $3), $3) }
+  | exp MINUSMINUS SEMICOLON                  { Ast.ExpStm (Ast.Binop ($1, Ast.BMinus, $1, $3), $3) }
+  | exp ASSIGN exp SEMICOLON                  { Ast.AssignStm ($1, $3, $4) }
+  | exp PLUSEQ exp SEMICOLON                  { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BPlus, $3, $4), $4) }
+  | exp MINUSEQ exp SEMICOLON                 { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BMinus, $3, $4), $4) }
+  | exp MULTEQ exp SEMICOLON                  { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Mult, $3, $4), $4) }
+  | exp DIVEQ exp SEMICOLON                   { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Div, $3, $4), $4) }
+  | exp BINANDEQ exp SEMICOLON                { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinAND, $3, $4), $4) }
+  | exp BINOREQ exp SEMICOLON                 { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinOR, $3, $4), $4) }
+  | exp BINXOREQ exp SEMICOLON                { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinXOR, $3, $4), $4) }
+  | exp BINANDNOTEQ exp SEMICOLON             { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinANDNOT, $3, $4), $4) }
+  | exp RSHIFTEQ exp SEMICOLON                { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Rshift, $3, $4), $4) }
+  | exp LSHIFTEQ exp SEMICOLON                { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Lshift, $3, $4), $4) }
+  | exp MODEQ exp SEMICOLON                   { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Mod, $3, $4), $4) }
+  | exp SHORTASSIGN exp SEMICOLON             {
+    let id = match $1 with
+    | Ast.PrimExp e ->
+      begin match e with
+      | Ast.Var (x, _) -> x
       | _ -> failwith "The left hand side of a short hand assignment must be an id";
-      in
-      Ast.VarDeclStm (Ast.VarDeclNoTypeInit (id, $3, $4))
-    }
+      end
+    | _ -> failwith "The left hand side of a short hand assignment must be an id";
+    in
+    Ast.VarDeclStm (Ast.VarDeclNoTypeInit (id, $3, $4))
+  }
+
+if_statement
+  : IF simple_statement exp body ELSE if_statement {
+    let inner_else = Ast.StmsBlock ([$6])
+    in
+    let inner = Ast.IfStm ($3, $4, Some inner_else, $1)
+    in
+    Ast.BlockStm (Ast.StmsBlock [$2; inner])
+  }
+  | IF simple_statement exp body ELSE body {
+    let inner = Ast.IfStm ($3, $4, Some $6, $1)
+    in
+    Ast.BlockStm (Ast.StmsBlock [$2; inner])
+  }
+  | IF exp body ELSE if_statement {
+    let b = Ast.StmsBlock ([$5])
+    in
+    Ast.IfStm ($2, $3, Some b, $1) 
+  }
+  | IF exp body ELSE body { Ast.IfStm ($2, $3, Some $5, $1) }
+  | IF exp body { Ast.IfStm ($2, $3, None, $1) }
+  | IF simple_statement exp body {
+    let inner = Ast.IfStm ($3, $4, None, $1)
+    in
+    Ast.BlockStm (Ast.StmsBlock [$2; inner])
+  }
 
 
   
