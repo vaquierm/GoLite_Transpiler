@@ -1,12 +1,10 @@
 %{ 
-  open Lexing
-
 %}
 
 %token EOF
-%token LPAR RPAR
+%token<int> LPAR RPAR
 %token LCURLY RCURLY
-%token LSQUARE RSQUARE
+%token<int> LSQUARE RSQUARE
 %token COLON
 %token<int> SEMICOLON
 
@@ -46,7 +44,6 @@
 
 %token INTTYPE BOOLTYPE STRINGTYPE RUNETYPE FLOATTYPE
 
-
 %left BOOLOR
 %left BOOLAND
 %left GEQ LEQ LT GT EQ NEQ
@@ -82,7 +79,7 @@ type_decls
   | TYPE LPAR type_specs RPAR SEMICOLON { $3 }
 
 type_specs
-  :                       { [] }
+  : type_spec             { [$1] }
   | type_specs type_spec  { $2::$1 }
 
 type_spec
@@ -94,7 +91,7 @@ var_decls
   | VAR LPAR var_specs RPAR SEMICOLON { $3 }
 
 var_specs
-  :                       { [] }
+  : var_spec              { $1 }
   | var_specs var_spec    { $2 @ $1 }
 
 var_spec
@@ -103,7 +100,7 @@ var_spec
   | ident_list ASSIGN exp_list SEMICOLON        { List.map2 (fun iden exp -> Ast.VarDeclNoTypeInit (iden, exp, $4)) $1 $3 }
 
 func_decl
-  : FUNC IDENTIFIER LPAR func_params? RPAR typeT? body               { 
+  : FUNC IDENTIFIER LPAR func_params? RPAR typeT? body SEMICOLON              { 
       let params = match $4 with
       | None -> []
       | Some p -> p
@@ -121,7 +118,7 @@ func_params
 
 typeT
   : LPAR typeT RPAR   { $2 }
-  | IDENTIFIER        { failwith "TODO keep track of underlying types" }
+  | IDENTIFIER        { print_string "DEFINED TYPE"; Ast.DefinedType ((fst $1), None) }
   | LSQUARE exp RSQUARE typeT { Ast.ArrayType ($4, $2) }
   | LSQUARE RSQUARE typeT { Ast.SliceType $3 }
   | MULT typeT        { Ast.PointerType $2 }
@@ -151,14 +148,7 @@ exp_list
   | exp_list COMMA exp            { $3::$1 }
 
 exp
-  : FLOATLITERAL                            { Ast.FloatLit ($1) }
-  | DECINTLITERAL                           { Ast.IntLit ($1, Ast.Dec) }
-  | BININTLITERAL                           { Ast.IntLit ($1, Ast.Bin) }
-  | OCTINTLITERAL                           { Ast.IntLit ($1, Ast.Oct) }
-  | HEXINTLITERAL                           { Ast.IntLit ($1, Ast.Hex) }
-  | RUNELITERAL                             { Ast.RuneLit ($1) }
-  | STRINGLITERAL                           { Ast.StrLit ($1) }
-  | exp PLUS exp                            { Ast.Binop ($1, Ast.BPlus, $3, $2) }
+  : exp PLUS exp                            { Ast.Binop ($1, Ast.BPlus, $3, $2) }
   | exp MINUS exp                           { Ast.Binop ($1, Ast.BMinus, $3, $2) }
   | exp MULT exp                            { Ast.Binop ($1, Ast.Mult, $3, $2) }
   | exp DIV exp                             { Ast.Binop ($1, Ast.Div, $3, $2) }
@@ -172,9 +162,11 @@ exp
   | exp BOOLAND exp                         { Ast.Binop ($1, Ast.BoolAND, $3, $2) }
   | exp BOOLOR exp                          { Ast.Binop ($1, Ast.BoolOR, $3, $2) }
   | PLUS exp %prec __unary_precedence__     { $2 }
-  | MINUS exp %prec __unary_precedence__    { Ast.Urinary (Ast.UMinus, $2, $1) }
-  | BOOLNOT exp %prec __unary_precedence__  { Ast.Urinary (Ast.BoolNOT, $2, $1) }
-  | BINXOR exp %prec __unary_precedence__   { Ast.Urinary (Ast.UBinNOT, $2, $1) }
+  | MINUS exp %prec __unary_precedence__    { Ast.Unary (Ast.UMinus, $2, $1) }
+  | BOOLNOT exp %prec __unary_precedence__  { Ast.Unary (Ast.BoolNOT, $2, $1) }
+  | BINXOR exp %prec __unary_precedence__   { Ast.Unary (Ast.UBinNOT, $2, $1) }
+  | MULT exp %prec __unary_precedence__     { Ast.Unary (Ast.DeRef, $2, $1) }
+  | BINAND exp %prec __unary_precedence__   { Ast.Unary (Ast.Ref, $2, $1) }
   | RECEIVE exp %prec __unary_precedence__  { failwith ("Line: " ^ (string_of_int $1) ^ " Go lite does not support the type <-") }
   | exp EQ exp                              { Ast.Binop ($1, Ast.EQ, $3, $2) }
   | exp NEQ exp                             { Ast.Binop ($1, Ast.NEQ, $3, $2) }
@@ -182,7 +174,41 @@ exp
   | exp GT exp                              { Ast.Binop ($1, Ast.GT, $3, $2) }
   | exp LEQ exp                             { Ast.Binop ($1, Ast.LEQ, $3, $2) }
   | exp GEQ exp                             { Ast.Binop ($1, Ast.GEQ, $3, $2) }
+  | primary_exp                             { Ast.PrimExp $1 }
 
+primary_exp
+  : IDENTIFIER                              { Ast.Var ((fst $1), (snd $1)) }
+  | FLOATLITERAL                            { Ast.FloatLit ($1) }
+  | DECINTLITERAL                           { Ast.IntLit ($1, Ast.Dec) }
+  | BININTLITERAL                           { Ast.IntLit ($1, Ast.Bin) }
+  | OCTINTLITERAL                           { Ast.IntLit ($1, Ast.Oct) }
+  | HEXINTLITERAL                           { Ast.IntLit ($1, Ast.Hex) }
+  | RUNELITERAL                             { Ast.RuneLit ($1) }
+  | STRINGLITERAL                           { Ast.StrLit ($1) }
+  | typeT LPAR exp RPAR                     { Ast.CastExp ($1, $3, $2) }
+  | primary_exp DOT IDENTIFIER              { Ast.SelectExp ($1, (fst $3), (snd $3)) }
+  | primary_exp LSQUARE exp RSQUARE         { Ast.IndexExp ($1, $3, $2) }
+  | primary_exp DOT LPAR typeT RPAR         { failwith "Type assertions are not supported in GoLite" }
+  | IDENTIFIER LPAR exp_list? RPAR          {
+      let args = match $3 with
+      | None -> []
+      | Some a -> a
+      in
+      if List.length args == 1 then
+        Ast.UnsureTypeFuncCall ((fst $1), (List.hd args), (snd $1))
+      else
+        Ast.FuncCall ((fst $1), args, (snd $1))
+    }
+  (* TODO: Slices access *)
 
-body
-: COLON COLON COLON { () }
+body : LCURLY statement_list RCURLY { () }
+
+statement_list
+:                                     { [] }
+| statement_list GO exp SEMICOLON     { failwith "go statements are not supported in GoLite" }
+| statement_list RETURN exp? SEMICOLON { [] }
+| statement_list BREAK SEMICOLON      { [] }
+| statement_list CONTINUE SEMICOLON      { [] }
+| statement_list GOTO IDENTIFIER SEMICOLON      { failwith "goto statements are not supported in GoLite" }
+| statement_list FALLTHROUGH SEMICOLON  { failwith "fallthrough statements are not supported in GoLite" }
+

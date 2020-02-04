@@ -22,7 +22,7 @@
   inserted into the token stream
   *)
   let is_semicolon_required = function
-    | RSQUARE | RPAR | RCURLY | BREAK | CONTINUE | FALLTHROUGH | RETURN
+    | RSQUARE _ | RPAR _ | RCURLY | BREAK | CONTINUE | FALLTHROUGH | RETURN
     | DECINTLITERAL _ | BININTLITERAL _ | OCTINTLITERAL _ | HEXINTLITERAL _
     | BOOLLITERAL _ | FLOATLITERAL _ | RUNELITERAL _ | STRINGLITERAL _ | RAWSTRINGLITERAL _ 
     | PLUSPLUS _ | MINUSMINUS _ | IDENTIFIER _
@@ -3521,12 +3521,12 @@ and __ocaml_lex_token_rec lexbuf __ocaml_lex_state =
 
   | 3 ->
 # 72 "lexer.mll"
-                                ( return LPAR )
+                                ( return (LPAR (get_line_num lexbuf)) )
 # 3526 "lexer.ml"
 
   | 4 ->
 # 73 "lexer.mll"
-                                ( return RPAR )
+                                ( return (RPAR (get_line_num lexbuf)) )
 # 3531 "lexer.ml"
 
   | 5 ->
@@ -3541,12 +3541,12 @@ and __ocaml_lex_token_rec lexbuf __ocaml_lex_state =
 
   | 7 ->
 # 76 "lexer.mll"
-                                ( return LSQUARE )
+                                ( return (LSQUARE (get_line_num lexbuf)) )
 # 3546 "lexer.ml"
 
   | 8 ->
 # 77 "lexer.mll"
-                                ( return RSQUARE )
+                                ( return (RSQUARE (get_line_num lexbuf)) )
 # 3551 "lexer.ml"
 
   | 9 ->

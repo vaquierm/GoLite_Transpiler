@@ -12,22 +12,12 @@ type binary_op =
   | BPlus | BMinus | Mult | Div | BinAND | BinOR | BinXOR | BinANDNOT
   | Rshift | Lshift | Mod | BoolAND | BoolOR | EQ | GT | LT | GEQ | LEQ | NEQ
 
-type urinary_op =
-  | UMinus | UBinNOT | BoolNOT
-
-type exp =
-  (* Primitive types *)
-  | FloatLit of float
-  | IntLit of string * base
-  | RuneLit of string
-  | StrLit of string
-  (* Arithmetic: Last int is the line number *)
-  | Binop of exp * binary_op * exp * int
-  | Urinary of urinary_op * exp * int
+type unary_op =
+  | UMinus | UBinNOT | BoolNOT | Ref | DeRef
 
 type typeT =
   (* Type from identifier: string of type, real type*)
-  | DefinedType of string * typeT
+  | DefinedType of string * (typeT option)
   (* Array type: Element type, experession for size of array *)
   | ArrayType of typeT * exp
   (* Slice type: type of element *)
@@ -42,6 +32,30 @@ type typeT =
   | StrType
   | RuneType
   | VoidType
+and exp =
+  (* Arithmetic: Last int is the line number *)
+  | Binop of exp * binary_op * exp * int
+  | Unary of unary_op * exp * int
+  (* Primary expressions *)
+  | PrimExp of primary_exp
+and primary_exp =
+  (* Variable (Name of var, line number) *)
+  | Var of string * int
+  (* Primitive types *)
+  | FloatLit of float
+  | IntLit of string * base
+  | RuneLit of string
+  | StrLit of string
+  (* Cast of expression to other type, last int is line number *)
+  | CastExp of typeT * exp * int
+  (* Selection of field (exp to select from, field to select, line number) *)
+  | SelectExp of primary_exp * string * int
+  (* Index of array or slice (Array or slice, index, line number) *)
+  | IndexExp of primary_exp * exp * int
+  (* Function call (func name, inputs, line number) *)
+  | FuncCall of string * (exp list) * int
+  (* Unsure Cast or Function call (name of identifier, exp to cast or func input, line number) *)
+  | UnsureTypeFuncCall of string * exp * int
 
 type variable_decl =
   (* Last int is line number *)
@@ -59,6 +73,15 @@ type type_decl =
 type func_decl =
   (* List of inputs (id, type), return type, line number *)
   FuncDecl of ((string * typeT) list) * typeT * int
+
+type statement = 
+  (* Type declaration statement *)
+  | TypeDeclStm of type_decl
+  (* Variable declaration statement *)
+  | VarDeclStm of variable_decl
+  (* Return statement (expression, line number) *)
+  | Return of (exp option) * int
+
 
 type top_level_decl = 
   (* Type declaration *)

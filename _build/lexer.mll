@@ -22,7 +22,7 @@
   inserted into the token stream
   *)
   let is_semicolon_required = function
-    | RSQUARE | RPAR | RCURLY | BREAK | CONTINUE | FALLTHROUGH | RETURN
+    | RSQUARE _ | RPAR _ | RCURLY | BREAK | CONTINUE | FALLTHROUGH | RETURN
     | DECINTLITERAL _ | BININTLITERAL _ | OCTINTLITERAL _ | HEXINTLITERAL _
     | BOOLLITERAL _ | FLOATLITERAL _ | RUNELITERAL _ | STRINGLITERAL _ | RAWSTRINGLITERAL _ 
     | PLUSPLUS _ | MINUSMINUS _ | IDENTIFIER _
@@ -69,12 +69,12 @@ rule token = parse
   | (' ' | tab)                 { token lexbuf }
   | eof                         { return EOF }
 
-  | '('                         { return LPAR }
-  | ')'                         { return RPAR }
+  | '('                         { return (LPAR (get_line_num lexbuf)) }
+  | ')'                         { return (RPAR (get_line_num lexbuf)) }
   | '{'                         { return LCURLY }
   | '}'                         { return RCURLY }
-  | '['                         { return LSQUARE }
-  | ']'                         { return RSQUARE }       
+  | '['                         { return (LSQUARE (get_line_num lexbuf)) }
+  | ']'                         { return (RSQUARE (get_line_num lexbuf)) }
   | ':'                         { return COLON }
   | ';'                         { return (SEMICOLON (get_line_num lexbuf)) }       
   | ','                         { return COMMA }

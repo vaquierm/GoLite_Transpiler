@@ -12,9 +12,11 @@ var (
 	goose string = "Love"
 )
 
-type a []int;
+type a [kskks(3 + true, goose)]int;
 
-func a1() struct { a int; } :::
+func goosefunction(x, y float32, z []*[]int) int {
+	continue;
+}
 
 type (
 	a int

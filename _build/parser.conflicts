@@ -1,9 +1,9 @@
 
-** Conflict (shift/reduce) in state 9.
+** Conflict (shift/reduce) in state 45.
 ** Token involved: LPAR
 ** This state is reached from start after reading:
 
-package_clause import_decls top_level_decls VAR 
+package_clause import_decls top_level_decls VAR ident_list LSQUARE IDENTIFIER 
 
 ** The derivations that appear below have the following common factor:
 ** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
@@ -11,17 +11,20 @@ package_clause import_decls top_level_decls VAR
 start 
 package_clause import_decls top_level_decls EOF 
                             top_level_decls var_decls 
-                                            (?)
+                                            VAR var_spec 
+                                                ident_list typeT SEMICOLON 
+                                                           LSQUARE exp RSQUARE typeT 
+                                                                   primary_exp 
+                                                                   (?)
 
-** In state 9, looking ahead at LPAR, reducing production
-** ident_list -> 
-** is permitted because of the following sub-derivation:
-
-VAR var_spec 
-    ident_list typeT SEMICOLON // lookahead token appears because typeT can begin with LPAR
-    . 
-
-** In state 9, looking ahead at LPAR, shifting is permitted
+** In state 45, looking ahead at LPAR, shifting is permitted
 ** because of the following sub-derivation:
 
-VAR . LPAR var_specs RPAR SEMICOLON 
+IDENTIFIER . LPAR option(exp_list) RPAR 
+
+** In state 45, looking ahead at LPAR, reducing production
+** typeT -> IDENTIFIER 
+** is permitted because of the following sub-derivation:
+
+typeT LPAR exp RPAR // lookahead token appears
+IDENTIFIER . 

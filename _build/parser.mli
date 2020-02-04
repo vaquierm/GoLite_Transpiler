@@ -14,10 +14,10 @@ type token =
   | SELECT
   | RUNETYPE
   | RUNELITERAL of (string)
-  | RSQUARE
+  | RSQUARE of (int)
   | RSHIFTEQ of (int)
   | RSHIFT of (int)
-  | RPAR
+  | RPAR of (int)
   | RETURN
   | RECEIVE of (int)
   | RCURLY
@@ -40,10 +40,10 @@ type token =
   | MINUS of (int)
   | MAP
   | LT of (int)
-  | LSQUARE
+  | LSQUARE of (int)
   | LSHIFTEQ of (int)
   | LSHIFT of (int)
-  | LPAR
+  | LPAR of (int)
   | LEQ of (int)
   | LEN of (int)
   | LCURLY
