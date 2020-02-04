@@ -118,7 +118,7 @@ func_params
 
 typeT
   : LPAR typeT RPAR   { $2 }
-  | IDENTIFIER        { print_string "DEFINED TYPE"; Ast.DefinedType ((fst $1), None) }
+  | IDENTIFIER        { Ast.DefinedType ((fst $1), None) }
   | LSQUARE exp RSQUARE typeT { Ast.ArrayType ($4, $2) }
   | LSQUARE RSQUARE typeT { Ast.SliceType $3 }
   | MULT typeT        { Ast.PointerType $2 }
@@ -185,19 +185,24 @@ primary_exp
   | HEXINTLITERAL                           { Ast.IntLit ($1, Ast.Hex) }
   | RUNELITERAL                             { Ast.RuneLit ($1) }
   | STRINGLITERAL                           { Ast.StrLit ($1) }
-  | typeT LPAR exp RPAR                     { Ast.CastExp ($1, $3, $2) }
   | primary_exp DOT IDENTIFIER              { Ast.SelectExp ($1, (fst $3), (snd $3)) }
   | primary_exp LSQUARE exp RSQUARE         { Ast.IndexExp ($1, $3, $2) }
   | primary_exp DOT LPAR typeT RPAR         { failwith "Type assertions are not supported in GoLite" }
-  | IDENTIFIER LPAR exp_list? RPAR          {
+  | typeT LPAR exp_list? RPAR               {
       let args = match $3 with
       | None -> []
       | Some a -> a
       in
       if List.length args == 1 then
-        Ast.UnsureTypeFuncCall ((fst $1), (List.hd args), (snd $1))
+        begin match $1 with
+        | Ast.DefinedType (x, _) -> Ast.UnsureTypeFuncCall (x, (List.hd args), $2)
+        | _ -> Ast.CastExp ($1, (List.hd args), $2)
+        end
       else
-        Ast.FuncCall ((fst $1), args, (snd $1))
+        begin match $1 with
+        | Ast.DefinedType (x, _) -> Ast.FuncCall (x, args, $2)
+        | _ -> failwith "A cast expression must have exactly one argument"
+        end
     }
   (* TODO: Slices access *)
 

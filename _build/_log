@@ -105,12 +105,10 @@ File "parser.mly", line 11, characters 17-25:
 Warning: the token THREEDOT is unused.
 File "parser.mly", line 56, characters 0-5:
 Warning: the precedence level assigned to DOT is never useful.
-Warning: one state has shift/reduce conflicts.
-Warning: one shift/reduce conflict was arbitrarily resolved.
 # Target: parser.mli.depends, tags: { extension:mli, file:parser.mli, ocaml, ocamldep, quiet }
-/usr/bin/ocamldep.opt -modules parser.mli > parser.mli.depends
+/usr/bin/ocamldep.opt -modules parser.mli > parser.mli.depends # cached
 # Target: parser.cmi, tags: { byte, compile, extension:mli, file:parser.mli, interf, ocaml, quiet }
-/usr/bin/ocamlc.opt -c -o parser.cmi parser.mli
+/usr/bin/ocamlc.opt -c -o parser.cmi parser.mli # cached
 # Target: lexer.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:lexer.cmo, file:lexer.ml, implem, ocaml, quiet }
 /usr/bin/ocamlc.opt -c -o lexer.cmo lexer.ml # cached
 # Target: main.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet }
