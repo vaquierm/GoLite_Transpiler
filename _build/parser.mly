@@ -205,7 +205,24 @@ primary_exp
       | _ -> failwith "A cast expression must have exactly one argument"
       end
   }
-  (* TODO: Slices access *)
+  | primary_exp LSQUARE exp? COLON exp? RSQUARE  {
+    let beg = match $3 with
+    | None -> Ast.PrimExp (Ast. IntLit ("0", Ast.Dec))
+    | Some e -> e
+    in
+    let en = match $5 with
+    | None -> Ast.PrimExp (Ast.LenExp ($1, $2))
+    | Some e -> e
+    in
+    Ast.SliceExp ($1, beg, en, None, $2)
+  }
+  | primary_exp LSQUARE exp? COLON exp COLON exp RSQUARE  {
+    let beg = match $3 with
+    | None -> Ast.PrimExp (Ast. IntLit ("0", Ast.Dec))
+    | Some e -> e
+    in
+    Ast.SliceExp ($1, beg, $5, Some $7, $2)
+  }
   | APPEND LPAR primary_exp COMMA exp RPAR  { Ast.AppendExp ($3, $5, $2) }
   | LEN LPAR primary_exp RPAR               { Ast.LenExp ($3, $2) }
   | CAP LPAR primary_exp RPAR               { Ast.CapExp ($3, $2) }
@@ -235,7 +252,7 @@ statement_list
   }
 
 simple_statement
-  : exp                              { Ast.ExpStm ($1, 1) }
+  : exp SEMICOLON                             { Ast.ExpStm ($1, $2) }
   | exp PLUSPLUS SEMICOLON                    { Ast.ExpStm (Ast.Binop ($1, Ast.BPlus, $1, $3), $3) }
   | exp MINUSMINUS SEMICOLON                  { Ast.ExpStm (Ast.Binop ($1, Ast.BMinus, $1, $3), $3) }
   | exp ASSIGN exp SEMICOLON                  { Ast.AssignStm ($1, $3, $4) }
@@ -261,7 +278,8 @@ simple_statement
     in
     Ast.VarDeclStm (Ast.VarDeclNoTypeInit (id, $3, $4))
   }
-  | PRINT LPAR exp RPAR SEMICOLON             { Ast.Print ($3, $5) }
+  | PRINT LPAR exp RPAR SEMICOLON             { Ast.Print ($3, false, $5) }
+  | PRINTLN LPAR exp RPAR SEMICOLON           { Ast.Print ($3, true, $5) }
 
 if_statement
   : IF simple_statement exp body ELSE if_statement {

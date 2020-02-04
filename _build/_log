@@ -16,8 +16,6 @@ File "parser.mly", line 46, characters 15-23:
 Warning: the token BOOLTYPE is unused.
 File "parser.mly", line 28, characters 43-47:
 Warning: the token CASE is unused.
-File "parser.mly", line 8, characters 7-12:
-Warning: the token COLON is unused.
 File "parser.mly", line 33, characters 15-22:
 Warning: the token COMMENT is unused.
 File "parser.mly", line 29, characters 48-52:
@@ -26,8 +24,6 @@ File "parser.mly", line 28, characters 13-20:
 Warning: the token DEFAULT is unused.
 File "parser.mly", line 28, characters 48-53:
 Warning: the token DEFER is unused.
-File "parser.mly", line 31, characters 18-25:
-Warning: the token PRINTLN is unused.
 File "parser.mly", line 30, characters 7-12:
 Warning: the token RANGE is unused.
 File "parser.mly", line 44, characters 15-31:
@@ -53,8 +49,6 @@ File "parser.mly", line 46, characters 15-23:
 Warning: the token BOOLTYPE is unused.
 File "parser.mly", line 28, characters 43-47:
 Warning: the token CASE is unused.
-File "parser.mly", line 8, characters 7-12:
-Warning: the token COLON is unused.
 File "parser.mly", line 33, characters 15-22:
 Warning: the token COMMENT is unused.
 File "parser.mly", line 29, characters 48-52:
@@ -63,8 +57,6 @@ File "parser.mly", line 28, characters 13-20:
 Warning: the token DEFAULT is unused.
 File "parser.mly", line 28, characters 48-53:
 Warning: the token DEFER is unused.
-File "parser.mly", line 31, characters 18-25:
-Warning: the token PRINTLN is unused.
 File "parser.mly", line 30, characters 7-12:
 Warning: the token RANGE is unused.
 File "parser.mly", line 44, characters 15-31:
@@ -77,18 +69,17 @@ File "parser.mly", line 11, characters 17-25:
 Warning: the token THREEDOT is unused.
 File "parser.mly", line 57, characters 0-5:
 Warning: the precedence level assigned to DOT is never useful.
-Warning: 4 states have shift/reduce conflicts.
-Warning: one state has reduce/reduce conflicts.
-Warning: 16 shift/reduce conflicts were arbitrarily resolved.
-Warning: one reduce/reduce conflict was arbitrarily resolved.
 # Target: parser.mli.depends, tags: { extension:mli, file:parser.mli, ocaml, ocamldep, quiet }
-/usr/bin/ocamldep.opt -modules parser.mli > parser.mli.depends # cached
+/usr/bin/ocamldep.opt -modules parser.mli > parser.mli.depends
 # Target: parser.cmi, tags: { byte, compile, extension:mli, file:parser.mli, interf, ocaml, quiet }
-/usr/bin/ocamlc.opt -c -o parser.cmi parser.mli # cached
+/usr/bin/ocamlc.opt -c -o parser.cmi parser.mli
 # Target: lexer.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:lexer.cmo, file:lexer.ml, implem, ocaml, quiet }
-/usr/bin/ocamlc.opt -c -o lexer.cmo lexer.ml # cached
+/usr/bin/ocamlc.opt -c -o lexer.cmo lexer.ml
 # Target: main.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet }
-/usr/bin/ocamlc.opt -c -o main.cmo main.ml # cached
+/usr/bin/ocamlc.opt -c -o main.cmo main.ml
++ /usr/bin/ocamlc.opt -c -o main.cmo main.ml
+File "main.ml", line 4, characters 6-9:
+Warning 26: unused variable exp.
 # Target: parser.ml.depends, tags: { extension:ml, file:parser.ml, ocaml, ocamldep, quiet }
 /usr/bin/ocamldep.opt -modules parser.ml > parser.ml.depends
 # Target: parser.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:parser.cmo, file:parser.ml, implem, ocaml, quiet }

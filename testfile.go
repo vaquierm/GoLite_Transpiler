@@ -61,6 +61,13 @@ func goosefunction(x, y float32, z []*[]int) int {
 
 	print(1+1)
 
+	s[3:]
+	s[:4]
+	s[:]
+	s[3:3:3]
+	s[:3:3]
+
+
 	cap(xxx)
 
 	len(l.hi)

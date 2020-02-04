@@ -54,6 +54,8 @@ and primary_exp =
   | IndexExp of primary_exp * exp * int
   (* Function call (func name, inputs, line number) *)
   | FuncCall of string * (exp list) * int
+  (* Slice expression (slice, begin, end, cap, line number) *)
+  | SliceExp of primary_exp * exp * exp * (exp option) * int
   (* Unsure Cast or Function call (name of identifier, exp to cast or func input, line number) *)
   | UnsureTypeFuncCall of string * exp * int
   (* Append expression (slice, exp, line number) *)
@@ -104,8 +106,8 @@ and statement =
   | WhileStm of (exp option) * block * int
   (* For loops (Init, Condition, Increment, body, line number) *)
   | ForStm of (statement option) * (exp option) * (statement option) * block * int
-  (* Print statement (exp to print, line number) *)
-  | Print of exp * int
+  (* Print statement (exp to print, new line, line number) *)
+  | Print of exp * bool * int
 and block =
   (* List of statements the block is made of *)
   | StmsBlock of statement list
