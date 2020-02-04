@@ -41,7 +41,25 @@ func goosefunction(x, y float32, z []*[]int) int {
 
 		}
 		if x:= 3; x == 3 {
-			
+
+		}
+	}
+
+	if x:= foo(); x==1 {
+
+	} else {
+		continue;
+	}
+
+	if x==goose {
+
+	} else if x == goose && x == love {
+
+	}
+
+	for ; q; ; {
+		if i ==1 {
+			i++
 		}
 	}
 }

@@ -144,7 +144,7 @@ rule token = parse
   | "range"                     { return RANGE }
   | "type"                      { return TYPE }
   | "continue"                  { return CONTINUE }
-  | "for"                       { return FOR }
+  | "for"                       { return (FOR (get_line_num lexbuf)) }
   | "import"                    { return IMPORT }
   | "return"                    { return RETURN }
   | "var"                       { return VAR }

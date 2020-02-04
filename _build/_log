@@ -30,8 +30,6 @@ File "parser.mly", line 28, characters 13-20:
 Warning: the token DEFAULT is unused.
 File "parser.mly", line 28, characters 48-53:
 Warning: the token DEFER is unused.
-File "parser.mly", line 30, characters 27-30:
-Warning: the token FOR is unused.
 File "parser.mly", line 31, characters 33-36:
 Warning: the token LEN is unused.
 File "parser.mly", line 31, characters 12-17:
@@ -77,8 +75,6 @@ File "parser.mly", line 28, characters 13-20:
 Warning: the token DEFAULT is unused.
 File "parser.mly", line 28, characters 48-53:
 Warning: the token DEFER is unused.
-File "parser.mly", line 30, characters 27-30:
-Warning: the token FOR is unused.
 File "parser.mly", line 31, characters 33-36:
 Warning: the token LEN is unused.
 File "parser.mly", line 31, characters 12-17:
@@ -98,9 +94,9 @@ Warning: the token THREEDOT is unused.
 File "parser.mly", line 57, characters 0-5:
 Warning: the precedence level assigned to DOT is never useful.
 # Target: parser.mli.depends, tags: { extension:mli, file:parser.mli, ocaml, ocamldep, quiet }
-/usr/bin/ocamldep.opt -modules parser.mli > parser.mli.depends # cached
+/usr/bin/ocamldep.opt -modules parser.mli > parser.mli.depends
 # Target: parser.cmi, tags: { byte, compile, extension:mli, file:parser.mli, interf, ocaml, quiet }
-/usr/bin/ocamlc.opt -c -o parser.cmi parser.mli # cached
+/usr/bin/ocamlc.opt -c -o parser.cmi parser.mli
 # Target: lexer.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:lexer.cmo, file:lexer.ml, implem, ocaml, quiet }
 /usr/bin/ocamlc.opt -c -o lexer.cmo lexer.ml # cached
 # Target: main.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet }

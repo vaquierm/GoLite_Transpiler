@@ -58,7 +58,7 @@ type token =
   | GO
   | GEQ of (int)
   | FUNC
-  | FOR
+  | FOR of (int)
   | FLOATTYPE
   | FLOATLITERAL of (float)
   | FALLTHROUGH

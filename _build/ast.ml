@@ -92,6 +92,10 @@ and statement =
   | IfStm of exp * block * (block option) * int
   (* A block statement *)
   | BlockStm of block
+  (* While loops (Condition, body, line number) *)
+  | WhileStm of (exp option) * block * int
+  (* For loops (Init, Condition, Increment, body, line number) *)
+  | ForStm of (statement option) * (exp option) * (statement option) * block * int
 and block =
   (* List of statements the block is made of *)
   | StmsBlock of statement list

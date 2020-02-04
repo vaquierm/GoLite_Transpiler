@@ -3861,7 +3861,7 @@ and __ocaml_lex_token_rec lexbuf __ocaml_lex_state =
 
   | 71 ->
 # 147 "lexer.mll"
-                                ( return FOR )
+                                ( return (FOR (get_line_num lexbuf)) )
 # 3866 "lexer.ml"
 
   | 72 ->

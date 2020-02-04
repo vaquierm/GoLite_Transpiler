@@ -24,10 +24,10 @@
 
 %token <string * int>IDENTIFIER
 
-%token<int> IF
+%token<int> IF FOR
 %token BREAK DEFAULT FUNC INTERFACE SELECT CASE DEFER GO
 %token MAP STRUCT CHAN ELSE GOTO PACKAGE SWITCH CONS FALLTHROUGH
-%token RANGE TYPE CONTINUE FOR IMPORT RETURN VAR
+%token RANGE TYPE CONTINUE IMPORT RETURN VAR
 %token <int>PRINT PRINTLN APPEND LEN CAP
 
 %token <string>COMMENT
@@ -222,6 +222,14 @@ statement_list
   | statement_list FALLTHROUGH SEMICOLON      { failwith "fallthrough statements are not supported in GoLite" }
   | statement_list simple_statement           { $2::$1 }
   | statement_list if_statement               { $2::$1 }
+  | statement_list for_statement              {
+    let for_stm = match $2 with
+    | Ast.ForStm (None, cond, None, block, line) ->
+      Ast.WhileStm (cond, block, line)
+    | _ -> $2
+    in
+    for_stm::$1
+  }
 
 simple_statement
   : exp SEMICOLON                             { Ast.ExpStm ($1, $2) }
@@ -275,6 +283,21 @@ if_statement
     let inner = Ast.IfStm ($3, $4, None, $1)
     in
     Ast.BlockStm (Ast.StmsBlock [$2; inner])
+  }
+
+for_statement
+  : FOR exp? body       { Ast.WhileStm ($2, $3, $1) }
+  | FOR simple_statement exp? SEMICOLON simple_statement body {
+    Ast.ForStm (Some $2, $3, Some $5, $6, $1)
+  }
+  | FOR SEMICOLON exp? SEMICOLON simple_statement body {
+    Ast.ForStm (None, $3, Some $5, $6, $1)
+  }
+  | FOR simple_statement exp? SEMICOLON SEMICOLON body {
+    Ast.ForStm (Some $2, $3, None, $6, $1)
+  }
+  | FOR SEMICOLON exp? SEMICOLON SEMICOLON body {
+    Ast.ForStm (None, $3, None, $6, $1)
   }
 
 
