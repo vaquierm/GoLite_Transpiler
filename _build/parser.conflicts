@@ -1,29 +1,34 @@
 
-** Conflict (shift/reduce) in state 164.
-** Token involved: SEMICOLON
+** Conflict (reduce/reduce) in state 46.
+** Token involved: RPAR
 ** This state is reached from start after reading:
 
-package_clause import_decls top_level_decls FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) LCURLY statement_list RCURLY 
+package_clause import_decls top_level_decls VAR ident_list LSQUARE LPAR IDENTIFIER 
 
 ** The derivations that appear below have the following common factor:
 ** (The question mark symbol (?) represents the spot where the derivations begin to differ.)
 
 start 
 package_clause import_decls top_level_decls EOF 
-                            top_level_decls func_decl 
-                                            (?)
+                            top_level_decls var_decls 
+                                            VAR var_spec 
+                                                ident_list typeT SEMICOLON 
+                                                           LSQUARE exp RSQUARE typeT 
+                                                                   (?)
 
-** In state 164, looking ahead at SEMICOLON, reducing production
-** option(SEMICOLON) -> 
+** In state 46, looking ahead at RPAR, reducing production
+** primary_exp -> IDENTIFIER 
 ** is permitted because of the following sub-derivation:
 
-FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) body SEMICOLON // lookahead token appears
-                                                            LCURLY statement_list RCURLY option(SEMICOLON) // lookahead token is inherited
-                                                                                         . 
+LPAR exp RPAR // lookahead token appears
+     primary_exp // lookahead token is inherited
+     IDENTIFIER . 
 
-** In state 164, looking ahead at SEMICOLON, shifting is permitted
-** because of the following sub-derivation:
+** In state 46, looking ahead at RPAR, reducing production
+** typeT -> IDENTIFIER 
+** is permitted because of the following sub-derivation:
 
-FUNC IDENTIFIER LPAR option(func_params) RPAR option(typeT) body SEMICOLON 
-                                                            LCURLY statement_list RCURLY option(SEMICOLON) 
-                                                                                         . SEMICOLON 
+primary_exp 
+typeT LPAR option(exp_list) RPAR 
+LPAR typeT RPAR // lookahead token appears
+     IDENTIFIER . 

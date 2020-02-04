@@ -18,7 +18,7 @@ func goosefunction(x, y float32, z []*[]int) int {
 	continue;
 	break;
 	return 7+4
-	id := 7 + 1
+	id := ((7) + 1)
 
 	var (
 		hello = 3

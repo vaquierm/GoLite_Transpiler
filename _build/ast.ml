@@ -56,6 +56,8 @@ and primary_exp =
   | FuncCall of string * (exp list) * int
   (* Unsure Cast or Function call (name of identifier, exp to cast or func input, line number) *)
   | UnsureTypeFuncCall of string * exp * int
+  (* Temp constructor for conflicts *)
+  | TempPrimExp of typeT
 
 type variable_decl =
   (* Last int is line number *)

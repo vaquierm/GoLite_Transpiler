@@ -118,8 +118,7 @@ func_params
   | func_params COMMA ident_list typeT          { (List.map (fun iden -> (iden, $4)) $3) @ $1 }
 
 typeT
-  : LPAR typeT RPAR   { $2 }
-  | IDENTIFIER        { Ast.DefinedType ((fst $1), None) }
+  : IDENTIFIER        { Ast.DefinedType ((fst $1), None) }
   | LSQUARE exp RSQUARE typeT { Ast.ArrayType ($4, $2) }
   | LSQUARE RSQUARE typeT { Ast.SliceType $3 }
   | MULT typeT        { Ast.PointerType $2 }
@@ -149,7 +148,8 @@ exp_list
   | exp_list COMMA exp            { $3::$1 }
 
 exp
-  : exp PLUS exp                            { Ast.Binop ($1, Ast.BPlus, $3, $2) }
+  : LPAR exp RPAR                           { $2 }
+  | exp PLUS exp                            { Ast.Binop ($1, Ast.BPlus, $3, $2) }
   | exp MINUS exp                           { Ast.Binop ($1, Ast.BMinus, $3, $2) }
   | exp MULT exp                            { Ast.Binop ($1, Ast.Mult, $3, $2) }
   | exp DIV exp                             { Ast.Binop ($1, Ast.Div, $3, $2) }
@@ -286,7 +286,9 @@ if_statement
   }
 
 for_statement
-  : FOR exp? body       { Ast.WhileStm ($2, $3, $1) }
+  : FOR exp? body {
+    Ast.WhileStm ($2, $3, $1)
+  }
   | FOR simple_statement exp? SEMICOLON simple_statement body {
     Ast.ForStm (Some $2, $3, Some $5, $6, $1)
   }
