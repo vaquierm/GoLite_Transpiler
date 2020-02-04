@@ -81,8 +81,8 @@ type type_decl =
   TypeDecl of typeT * string * int
 
 type func_decl =
-  (* List of inputs (id, type), return type, block, line number *)
-  | FuncDecl of ((string * typeT) list) * typeT * block * int
+  (* Function name, List of inputs (id, type), return type, block, line number *)
+  | FuncDecl of string * ((string * typeT) list) * typeT * block * int
 and statement = 
   (* Type declaration statement *)
   | TypeDeclStm of type_decl

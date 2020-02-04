@@ -60,7 +60,25 @@
 %%
 
 /* Productions */
-start : package_clause import_decls top_level_decls EOF       { Ast.Program ($1, $3) };
+start : package_clause import_decls top_level_decls EOF       {
+    let main = ref (Ast.TopFuncDecl (Ast.FuncDecl ("", [], Ast.VoidType, Ast.StmsBlock [], -1))) in
+    let rec extract_main decls =
+    match decls with
+    | [] -> []
+    | d::decls' ->
+      begin match d with
+      | Ast.TopFuncDecl (Ast.FuncDecl ("main", [], Ast.VoidType, _, _)) ->
+        main := d;
+        decls'
+      | _ -> d::(extract_main decls')
+      end
+    in
+    let witout_main = extract_main $3 in
+    if List.length witout_main == List.length $3 then
+      failwith "The program must have a function called main which takes no arguments and returns nothing"
+    else
+      Ast.Program ($1, witout_main @ [!main])
+  };
 
 package_clause
   : PACKAGE IDENTIFIER SEMICOLON { Ast.Package (fst $2) }
@@ -110,7 +128,7 @@ func_decl
       | None -> Ast.VoidType
       | Some t -> t
       in
-      Ast.FuncDecl (params, retType, $7, (snd $2))
+      Ast.FuncDecl ((fst $2), params, retType, $7, (snd $2))
     }
 
 func_params

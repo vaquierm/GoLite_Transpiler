@@ -12,6 +12,10 @@ var (
 	goose string = "Love"
 )
 
+func main() {
+
+}
+
 type a [int(goose)]int;
 
 func goosefunction(x, y float32, z []*[]int) int {
@@ -66,6 +70,7 @@ func goosefunction(x, y float32, z []*[]int) int {
 	s[:]
 	s[3:3:3]
 	s[:3:3]
+
 
 
 	cap(xxx)
