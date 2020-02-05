@@ -1,14 +1,25 @@
 let lexbuf = Lexing.from_channel stdin in
 try
-  print_string "Parsing file...\n";
   let exp = Parser.start Lexer.token lexbuf in 
   ()
 with
-  | Failure msg        -> print_endline ("Failure in " ^ msg)
-  | Parser.Error       -> 
-    let break_pos = !(Lexer.last_pos) in 
-      let break_line = break_pos.Lexing.pos_lnum in
-        let break_col_end = break_pos.Lexing.pos_cnum - break_pos.Lexing.pos_bol in
-          let break_text = !(Lexer.last_text) in
-            let break_col_begin = break_col_end - (String.length break_text) in
-          print_endline ("Line " ^ string_of_int break_line ^ ", charachters " ^ string_of_int break_col_begin ^ "-" ^ string_of_int break_col_end ^ ": Syntax Error")
+  | Failure msg -> print_endline msg
+  | Exceptions.LexerError msg -> print_endline msg
+  | Exceptions.UnsuportedError (msg, line, char_opt) -> 
+    let char_pos = begin match char_opt with
+    | None -> ""
+    | Some (start_pos, end_pos) -> ", charachters " ^ string_of_int start_pos ^ "-" ^ string_of_int end_pos
+    end in 
+      let text = "Line " ^ string_of_int line ^ char_pos
+      in
+        print_endline (text ^ "\nUnsupported Error: " ^ msg)
+  | Parser.Error -> 
+    let break_text = !(Lexer.last_text) in
+      let pos_text = Lexer.get_error_pos_mgs () in
+        print_endline (pos_text ^ "\nSyntax Error: Unexpected '" ^ break_text ^ "'")
+  | Exceptions.SyntaxError (msg, line_opt) ->
+    let line_text = begin match line_opt with
+    | None -> ""
+    | Some line -> "Line " ^ string_of_int line ^ "\n"
+    end in
+      print_endline (line_text ^ "Syntax Error: " ^ msg)

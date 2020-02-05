@@ -5,11 +5,28 @@
 
   let get = Lexing.lexeme
   let get_line_num buf = let p = buf.lex_curr_p in p.pos_lnum
+  let get_char_end buf = let p = buf.lex_curr_p in p.pos_cnum - p.pos_bol
+  let get_char_start buf = (get_char_end buf) - (String.length (get buf))
   
   (* The position of the last consumed token is kept*)
   let last_pos = ref Lexing.dummy_pos
   (* Last text *)
   let last_text = ref ""
+
+  (* This function gets a text indicating the last place a token was accepted *)
+  let get_error_pos_mgs () =
+  let break_pos = !last_pos in 
+      let break_line = break_pos.pos_lnum in
+        let break_col_end = break_pos.pos_cnum - break_pos.pos_bol in
+          let break_text = !last_text in
+            let break_col_begin = break_col_end - (String.length break_text) in
+              ("Line " ^ string_of_int break_line ^ ", charachters " ^ string_of_int break_col_begin ^ "-" ^ string_of_int break_col_end)
+
+  (* This function just gets a message of the line number of the last accepted token *)
+  let get_error_line_msg () =
+  let break_pos = !last_pos in 
+      let break_line = break_pos.pos_lnum in
+        ("Line " ^ string_of_int break_line)
   
   (*
   This reference keeps track of the last token
@@ -135,14 +152,14 @@ rule token = parse
   | "break"                     { update_pos lexbuf; return BREAK }
   | "default"                   { update_pos lexbuf; return DEFAULT }
   | "func"                      { update_pos lexbuf; return FUNC }
-  | "interface"                 { update_pos lexbuf; return INTERFACE }
+  | "interface"                 { update_pos lexbuf; return (INTERFACE (get_line_num lexbuf)) }
   | "select"                    { update_pos lexbuf; return SELECT }
   | "case"                      { update_pos lexbuf; return CASE }
   | "defer"                     { update_pos lexbuf; return DEFER }
   | "go"                        { update_pos lexbuf; return GO }
   | "map"                       { update_pos lexbuf; return MAP }
   | "struct"                    { update_pos lexbuf; return STRUCT }
-  | "chan"                      { update_pos lexbuf; return CHAN }
+  | "chan"                      { update_pos lexbuf; return (CHAN (get_line_num lexbuf)) }
   | "else"                      { update_pos lexbuf; return ELSE }
   | "goto"                      { update_pos lexbuf; return GOTO }
   | "package"                   { update_pos lexbuf; return PACKAGE }
@@ -154,7 +171,7 @@ rule token = parse
   | "type"                      { update_pos lexbuf; return TYPE }
   | "continue"                  { update_pos lexbuf; return CONTINUE }
   | "for"                       { update_pos lexbuf; return (FOR (get_line_num lexbuf)) }
-  | "import"                    { update_pos lexbuf; return IMPORT }
+  | "import"                    { update_pos lexbuf; return (IMPORT (get_line_num lexbuf)) }
   | "return"                    { update_pos lexbuf; return RETURN }
   | "var"                       { update_pos lexbuf; return VAR }
   | "print"                     { update_pos lexbuf; return (PRINT (get_line_num lexbuf)) }
@@ -167,7 +184,7 @@ rule token = parse
   | "float32"                   { update_pos lexbuf; return FLOATTYPE }
   | "rune"                      { update_pos lexbuf; return RUNETYPE }
   | "string"                    { update_pos lexbuf; return STRINGTYPE }
-  | unsuportedType              { update_pos lexbuf; failwith ("The type " ^ get lexbuf ^ " is unsuported in GoLite") }
+  | unsuportedType              { update_pos lexbuf; raise (Exceptions.UnsuportedError (("The type '" ^ get lexbuf ^ "' is unsuported in GoLite"), get_line_num lexbuf, Some (get_char_start lexbuf, get_char_end lexbuf))) }
 
   | identifier                  { update_pos lexbuf; return (IDENTIFIER (get lexbuf, get_line_num lexbuf)) }
 
@@ -188,7 +205,7 @@ rule token = parse
   | '`'([^'''] | "\'")*'`'      { update_pos lexbuf; let c = get lexbuf in return (RAWSTRINGLITERAL (String.sub c 1 ((String.length c) - 2))) }
   | '"'([^'"'] | "\\\"")*'"'    { update_pos lexbuf; let c = get lexbuf in return (STRINGLITERAL (String.sub c 1 ((String.length c) - 2))) }
 
-  | _                           { update_pos lexbuf; let p = lexbuf.lex_curr_p in failwith ("Unexpected char '" ^ (get lexbuf) ^ "' in line " ^ (string_of_int p.pos_lnum) ^ " at position " ^ (string_of_int (p.pos_cnum - p.pos_bol))) }
+  | _                           { update_pos lexbuf; let p = lexbuf.lex_curr_p in raise (Exceptions.LexerError ("Line " ^ (string_of_int p.pos_lnum) ^ ", charachter " ^ (string_of_int (p.pos_cnum - p.pos_bol))  ^ "\nLexer Error: Unexpected char '" ^ (get lexbuf) ^ "'")) }
 
 
 

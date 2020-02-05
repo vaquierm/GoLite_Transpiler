@@ -48,8 +48,8 @@ type token =
   | LEN of (int)
   | LCURLY
   | INTTYPE
-  | INTERFACE
-  | IMPORT
+  | INTERFACE of (int)
+  | IMPORT of (int)
   | IF of (int)
   | IDENTIFIER of (string * int)
   | HEXINTLITERAL of (string)
@@ -76,7 +76,7 @@ type token =
   | COMMENT of (string)
   | COMMA
   | COLON
-  | CHAN
+  | CHAN of (int)
   | CASE
   | CAP of (int)
   | BREAK

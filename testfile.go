@@ -4,18 +4,21 @@ var a struct {
 	a int
 } = 4
 
-var a, b, c =4, "hello", 5.6;
+var a, b, c = 4, "hello", 5.6;
+
+var evan int
 
 var (
-	n, m *int
+	n, m *[]int
 	e = 5
 	goose string = "Love"
 )
 
-type hello [3]int;
+type hello [int(e)]int;
+
 
 func main() {
-
+	q := 1
 }
 
 type a [int(goose)]int;
@@ -37,7 +40,9 @@ func goosefunction(x, y float32, z []*[]int) int {
 		j float32
 	}
 
-	if a; 1==1 {
+
+	
+	if err := foo(); err==1 {
 		continue
 	}
 	else if 3 {
@@ -72,8 +77,6 @@ func goosefunction(x, y float32, z []*[]int) int {
 	s[:]
 	s[3:3:3]
 	s[:3:3]
-
-
 
 	cap(xxx)
 
