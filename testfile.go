@@ -12,7 +12,7 @@ var (
 	goose string = "Love"
 )
 
-type hello [3]int
+type hello [3]int;
 
 func main() {
 

@@ -2,9 +2,9 @@
 # Target: main.ml.depends, tags: { extension:ml, file:main.ml, ocaml, ocamldep, quiet }
 /usr/bin/ocamldep.opt -modules main.ml > main.ml.depends # cached
 # Target: lexer.mll, tags: { extension:mll, file:lexer.mll, lexer, ocaml, ocamllex, quiet }
-/usr/bin/ocamllex.opt -q lexer.mll
+/usr/bin/ocamllex.opt -q lexer.mll # cached
 # Target: lexer.ml.depends, tags: { extension:ml, file:lexer.ml, ocaml, ocamldep, quiet }
-/usr/bin/ocamldep.opt -modules lexer.ml > lexer.ml.depends
+/usr/bin/ocamldep.opt -modules lexer.ml > lexer.ml.depends # cached
 # Target: parser.mly.depends, tags: { extension:mly, file:parser.mly, infer, menhir_ocamldep, ocaml, ocamldep, quiet }
 menhir -v --raw-depend --ocamldep '/usr/bin/ocamldep.opt -modules' parser.mly > parser.mly.depends # cached
 # Target: ast.ml.depends, tags: { extension:ml, file:ast.ml, ocaml, ocamldep, quiet }
@@ -18,16 +18,13 @@ menhir -v --ocamlc /usr/bin/ocamlc.opt --infer parser.mly # cached
 # Target: parser.cmi, tags: { byte, compile, extension:mli, file:parser.mli, interf, ocaml, quiet }
 /usr/bin/ocamlc.opt -c -o parser.cmi parser.mli # cached
 # Target: lexer.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:lexer.cmo, file:lexer.ml, implem, ocaml, quiet }
-/usr/bin/ocamlc.opt -c -o lexer.cmo lexer.ml
+/usr/bin/ocamlc.opt -c -o lexer.cmo lexer.ml # cached
 # Target: main.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:main.cmo, file:main.ml, implem, ocaml, quiet }
-/usr/bin/ocamlc.opt -c -o main.cmo main.ml
-+ /usr/bin/ocamlc.opt -c -o main.cmo main.ml
-File "main.ml", line 4, characters 6-9:
-Warning 26: unused variable exp.
+/usr/bin/ocamlc.opt -c -o main.cmo main.ml # cached
 # Target: parser.ml.depends, tags: { extension:ml, file:parser.ml, ocaml, ocamldep, quiet }
 /usr/bin/ocamldep.opt -modules parser.ml > parser.ml.depends # cached
 # Target: parser.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:parser.cmo, file:parser.ml, implem, ocaml, quiet }
 /usr/bin/ocamlc.opt -c -o parser.cmo parser.ml # cached
 # Target: main.byte, tags: { byte, dont_link_with, extension:byte, file:main.byte, link, ocaml, program, quiet }
-/usr/bin/ocamlc.opt ast.cmo parser.cmo lexer.cmo main.cmo -o main.byte
+/usr/bin/ocamlc.opt ast.cmo parser.cmo lexer.cmo main.cmo -o main.byte # cached
 # Compilation successful.
