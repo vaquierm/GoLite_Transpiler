@@ -1,7 +1,3 @@
-type package_clause =
-  (* Name of package *)
-  | Package of string
-
 type base =
   | Dec
   | Oct
@@ -119,6 +115,10 @@ type top_level_decl =
   | TopFuncDecl of func_decl
   (* Variable declaration *)
   | TopVarDecl of variable_decl
+
+type package_clause =
+  (* Name of package *)
+  | Package of string
 
 type program =
   | Program of package_clause * (top_level_decl list)

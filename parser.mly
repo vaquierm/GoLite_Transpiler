@@ -90,9 +90,9 @@ import_decls
 
 top_level_decls
   :                                                 { [] }
-  | top_level_decls type_decls                      { (List.map (fun var -> Ast.TopTypeDecl var) $2) @ $1 }
-  | top_level_decls var_decls                       { (List.map (fun var -> Ast.TopVarDecl var) $2) @ $1 }
-  | top_level_decls func_decl                       { (Ast.TopFuncDecl $2) :: $1 }
+  | top_level_decls type_decls                      { $1 @ (List.map (fun var -> Ast.TopTypeDecl var) $2) }
+  | top_level_decls var_decls                       { $1 @ (List.map (fun var -> Ast.TopVarDecl var) $2) }
+  | top_level_decls func_decl                       { $1 @ [(Ast.TopFuncDecl $2)] }
 
 type_decls
   : TYPE type_spec                                  { [$2] }
@@ -100,7 +100,7 @@ type_decls
 
 type_specs
   : type_spec                                       { [$1] }
-  | type_specs type_spec                            { $2::$1 }
+  | type_specs type_spec                            { $1 @ [$2] }
 
 type_spec
   : IDENTIFIER ASSIGN typeT SEMICOLON               { raise (Exceptions.UnsuportedError ("Type aliases are unsuported in GoLite", (snd $1), None)) }
@@ -112,7 +112,7 @@ var_decls
 
 var_specs
   : var_spec                                        { $1 }
-  | var_specs var_spec                              { $2 @ $1 }
+  | var_specs var_spec                              { $1 @ $2 }
 
 var_spec
   : ident_list typeT SEMICOLON                      { List.map (fun iden -> Ast.VarDeclTypeNoInit ($2, iden, $3)) $1 }
@@ -134,7 +134,7 @@ func_decl
 
 func_params
   : ident_list typeT                              { List.map (fun iden -> (iden, $2)) $1 }
-  | func_params COMMA ident_list typeT            { (List.map (fun iden -> (iden, $4)) $3) @ $1 }
+  | func_params COMMA ident_list typeT            { $1 @ (List.map (fun iden -> (iden, $4)) $3) }
 
 typeT
   : IDENTIFIER                                    { Ast.DefinedType ((fst $1), None) }
@@ -160,11 +160,11 @@ field_decls
 
 ident_list
   : IDENTIFIER                                    { [(fst $1)] }
-  | ident_list COMMA IDENTIFIER                   { (fst $3)::$1 }
+  | ident_list COMMA IDENTIFIER                   { $1 @ [fst $3] }
 
 exp_list
   : exp                                           { [$1] }
-  | exp_list COMMA exp                            { $3::$1 }
+  | exp_list COMMA exp                            { $1 @ [$3] }
 
 exp
   : LPAR exp RPAR                                 { $2 }
@@ -250,24 +250,24 @@ body : LCURLY statement_list RCURLY SEMICOLON?    { Ast.StmsBlock $2 }
 
 statement_list
   :                                               { [] }
-  | statement_list body                           { (Ast.BlockStm $2)::$1  }
+  | statement_list body                           { $1 @ [Ast.BlockStm $2] }
   | statement_list var_decls                      { (List.map (fun d -> Ast.VarDeclStm d) $2) @ $1 }
   | statement_list type_decls                     { (List.map (fun d -> Ast.TypeDeclStm d) $2) @ $1 }
   | statement_list GO exp SEMICOLON               { raise (Exceptions.UnsuportedError ("go statements are unsuported in GoLite", $4, None)) }
-  | statement_list RETURN exp? SEMICOLON          { (Ast.Return ($3, $4))::$1 }
-  | statement_list BREAK SEMICOLON                { (Ast.Break)::$1 }
-  | statement_list CONTINUE SEMICOLON             { (Ast.Continue)::$1 }
+  | statement_list RETURN exp? SEMICOLON          { $1 @ [Ast.Return ($3, $4)] }
+  | statement_list BREAK SEMICOLON                { $1 @ [Ast.Break] }
+  | statement_list CONTINUE SEMICOLON             { $1 @ [Ast.Continue] }
   | statement_list GOTO IDENTIFIER SEMICOLON      { raise (Exceptions.UnsuportedError ("goto statements are unsuported in GoLite", $4, None)) }
   | statement_list FALLTHROUGH SEMICOLON          { raise (Exceptions.UnsuportedError ("fallthrough statements are unsuported in GoLite", $3, None)) }
-  | statement_list simple_statement               { $2::$1 }
-  | statement_list if_statement                   { $2::$1 }
+  | statement_list simple_statement               { $1 @ [$2] }
+  | statement_list if_statement                   { $1 @ [$2] }
   | statement_list for_statement                  {
     let for_stm = match $2 with
     | Ast.ForStm (None, cond, None, block, line) ->
       Ast.WhileStm (cond, block, line)
     | _ -> $2
     in
-    for_stm::$1
+    $1 @ [for_stm]
   }
 
 simple_statement
