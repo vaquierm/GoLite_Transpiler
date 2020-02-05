@@ -12,6 +12,8 @@ var (
 	goose string = "Love"
 )
 
+type hello [3]int
+
 func main() {
 
 }
@@ -76,6 +78,11 @@ func goosefunction(x, y float32, z []*[]int) int {
 	cap(xxx)
 
 	len(l.hi)
+
+
+	for (i < 4) {
+
+	}
 
 	for ; q; ; {
 		if i ==1 {

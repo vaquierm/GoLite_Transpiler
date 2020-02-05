@@ -3,8 +3,7 @@
   open Parser
   open Lexing
   let get = Lexing.lexeme
-  let pos = Lexing.lexeme_start_p
-  let get_line_num buf = let p = pos buf in p.pos_lnum
+  let get_line_num buf = let p = buf.lex_curr_p in p.pos_lnum
 
   (*
   This reference keeps track of the last token
@@ -65,7 +64,7 @@
 (* Tokens *)
 
 rule token = parse
-  | eol                         { if is_semicolon_required !previous_token then return (SEMICOLON (get_line_num lexbuf)) else token lexbuf }
+  | eol                         { let curr_line = (get_line_num lexbuf) in Lexing.new_line lexbuf; if is_semicolon_required !previous_token then return (SEMICOLON (curr_line)) else token lexbuf }
   | (' ' | tab)                 { token lexbuf }
   | eof                         { return EOF }
 
@@ -179,7 +178,7 @@ rule token = parse
   | '`'([^'''] | "\'")*'`'      { let c = get lexbuf in return (RAWSTRINGLITERAL (String.sub c 1 ((String.length c) - 2))) }
   | '"'([^'"'] | "\\\"")*'"'    { let c = get lexbuf in return (STRINGLITERAL (String.sub c 1 ((String.length c) - 2))) }
 
-  | _                           { let p = pos lexbuf in failwith ("Unexpected char '" ^ (get lexbuf) ^ "' in line " ^ (string_of_int p.pos_lnum) ^ " at position " ^ (string_of_int p.pos_bol)) }
+  | _                           { let p = lexbuf.lex_curr_p in failwith ("Unexpected char '" ^ (get lexbuf) ^ "' in line " ^ (string_of_int p.pos_lnum) ^ " at position " ^ (string_of_int (p.pos_cnum - p.pos_bol))) }
 
 
 
