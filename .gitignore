@@ -1,0 +1,5 @@
+_build/
+parser.automation
+goLite_compiler
+goLite_complier.byte
+testfile.go

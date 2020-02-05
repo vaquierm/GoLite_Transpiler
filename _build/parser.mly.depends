@@ -1,2 +1,0 @@
-parser.ml: Ast Exceptions Lexing List
-parser.mli: Ast Lexing
