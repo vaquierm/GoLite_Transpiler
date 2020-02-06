@@ -62,13 +62,13 @@
 
 /* Productions */
 start : package_clause import_decls top_level_decls EOF       {
-    let main = ref (Ast.TopFuncDecl (Ast.FuncDecl ("", [], Ast.VoidType, Ast.StmsBlock [], -1))) in
+    let main = ref (Ast.TopFuncDecl (Ast.FuncDecl ("", [], None, Ast.StmsBlock [], -1))) in
     let rec extract_main decls =
     match decls with
     | [] -> []
     | d::decls' ->
       begin match d with
-      | Ast.TopFuncDecl (Ast.FuncDecl ("main", [], Ast.VoidType, _, _)) ->
+      | Ast.TopFuncDecl (Ast.FuncDecl ("main", [], None, _, _)) ->
         main := d;
         decls'
       | _ -> d::(extract_main decls')
@@ -90,9 +90,9 @@ import_decls
 
 top_level_decls
   :                                                 { [] }
-  | top_level_decls type_decls                      { (List.map (fun var -> Ast.TopTypeDecl var) $2) @ $1 }
-  | top_level_decls var_decls                       { (List.map (fun var -> Ast.TopVarDecl var) $2) @ $1 }
-  | top_level_decls func_decl                       { (Ast.TopFuncDecl $2) :: $1 }
+  | top_level_decls type_decls                      { $1 @ (List.map (fun var -> Ast.TopTypeDecl var) $2) }
+  | top_level_decls var_decls                       { $1 @ (List.map (fun var -> Ast.TopVarDecl var) $2) }
+  | top_level_decls func_decl                       { $1 @ [(Ast.TopFuncDecl $2)] }
 
 type_decls
   : TYPE type_spec                                  { [$2] }
@@ -100,7 +100,7 @@ type_decls
 
 type_specs
   : type_spec                                       { [$1] }
-  | type_specs type_spec                            { $2::$1 }
+  | type_specs type_spec                            { $1 @ [$2] }
 
 type_spec
   : IDENTIFIER ASSIGN typeT SEMICOLON               { raise (Exceptions.UnsuportedError ("Type aliases are unsuported in GoLite", (snd $1), None)) }
@@ -112,7 +112,7 @@ var_decls
 
 var_specs
   : var_spec                                        { $1 }
-  | var_specs var_spec                              { $2 @ $1 }
+  | var_specs var_spec                              { $1 @ $2 }
 
 var_spec
   : ident_list typeT SEMICOLON                      { List.map (fun iden -> Ast.VarDeclTypeNoInit ($2, iden, $3)) $1 }
@@ -125,16 +125,12 @@ func_decl
       | None -> []
       | Some p -> p
       in
-      let retType = match $6 with
-      | None -> Ast.VoidType
-      | Some t -> t
-      in
-      Ast.FuncDecl ((fst $2), params, retType, $7, (snd $2))
+      Ast.FuncDecl ((fst $2), params, $6, $7, (snd $2))
     }
 
 func_params
   : ident_list typeT                              { List.map (fun iden -> (iden, $2)) $1 }
-  | func_params COMMA ident_list typeT            { (List.map (fun iden -> (iden, $4)) $3) @ $1 }
+  | func_params COMMA ident_list typeT            { $1 @ (List.map (fun iden -> (iden, $4)) $3) }
 
 typeT
   : IDENTIFIER                                    { Ast.DefinedType ((fst $1), None) }
@@ -160,11 +156,11 @@ field_decls
 
 ident_list
   : IDENTIFIER                                    { [(fst $1)] }
-  | ident_list COMMA IDENTIFIER                   { (fst $3)::$1 }
+  | ident_list COMMA IDENTIFIER                   { $1 @ [fst $3] }
 
 exp_list
   : exp                                           { [$1] }
-  | exp_list COMMA exp                            { $3::$1 }
+  | exp_list COMMA exp                            { $1 @ [$3] }
 
 exp
   : LPAR exp RPAR                                 { $2 }
@@ -175,7 +171,7 @@ exp
   | exp BINAND exp                                { Ast.Binop ($1, Ast.BinAND, $3, $2) }
   | exp BINOR exp                                 { Ast.Binop ($1, Ast.BinOR, $3, $2) }
   | exp BINXOR exp                                { Ast.Binop ($1, Ast.BinXOR, $3, $2) }
-  | exp BINANDNOT exp                             { Ast.Binop ($1, Ast.BinANDNOT, $3, $2) }
+  | exp BINANDNOT exp                             { Ast.Binop ($1, Ast.BinAND, Ast.Unary (Ast.UBinNOT, $3, $2), $2) }
   | exp RSHIFT exp                                { Ast.Binop ($1, Ast.Rshift, $3, $2) }
   | exp LSHIFT exp                                { Ast.Binop ($1, Ast.Lshift, $3, $2) }
   | exp MOD exp                                   { Ast.Binop ($1, Ast.Mod, $3, $2) }
@@ -204,7 +200,8 @@ primary_exp
   | OCTINTLITERAL                                 { Ast.IntLit ($1, Ast.Oct) }
   | HEXINTLITERAL                                 { Ast.IntLit ($1, Ast.Hex) }
   | RUNELITERAL                                   { Ast.RuneLit ($1) }
-  | STRINGLITERAL                                 { Ast.StrLit ($1) }
+  | STRINGLITERAL                                 { Ast.StrLit ($1, false) }
+  | RAWSTRINGLITERAL                              { Ast.StrLit ($1, true) }
   | primary_exp DOT IDENTIFIER                    { Ast.SelectExp ($1, (fst $3), (snd $3)) }
   | primary_exp LSQUARE exp RSQUARE               { Ast.IndexExp ($1, $3, $2) }
   | primary_exp DOT LPAR typeT RPAR               { raise (Exceptions.UnsuportedError ("Type assertions are unsupported in GoLite", $3, None)) }
@@ -246,28 +243,28 @@ primary_exp
   | LEN LPAR primary_exp RPAR                     { Ast.LenExp ($3, $2) }
   | CAP LPAR primary_exp RPAR                     { Ast.CapExp ($3, $2) }
 
-body : LCURLY statement_list RCURLY SEMICOLON?    { Ast.StmsBlock $2 }
+body : LCURLY statement_list RCURLY SEMICOLON?    { Ast.StmsBlock (List.rev $2) }
 
 statement_list
   :                                               { [] }
-  | statement_list body                           { (Ast.BlockStm $2)::$1  }
-  | statement_list var_decls                      { (List.map (fun d -> Ast.VarDeclStm d) $2) @ $1 }
-  | statement_list type_decls                     { (List.map (fun d -> Ast.TypeDeclStm d) $2) @ $1 }
+  | statement_list body                           { Ast.BlockStm $2 :: $1 }
+  | statement_list var_decls                      { (List.map (fun d -> Ast.VarDeclStm d) $2)  @ $1 }
+  | statement_list type_decls                     { (List.map (fun d -> Ast.TypeDeclStm d) $2) @ $1}
   | statement_list GO exp SEMICOLON               { raise (Exceptions.UnsuportedError ("go statements are unsuported in GoLite", $4, None)) }
-  | statement_list RETURN exp? SEMICOLON          { (Ast.Return ($3, $4))::$1 }
-  | statement_list BREAK SEMICOLON                { (Ast.Break)::$1 }
-  | statement_list CONTINUE SEMICOLON             { (Ast.Continue)::$1 }
+  | statement_list RETURN exp? SEMICOLON          { Ast.Return ($3, $4) :: $1 }
+  | statement_list BREAK SEMICOLON                { Ast.Break :: $1 }
+  | statement_list CONTINUE SEMICOLON             { Ast.Continue :: $1 }
   | statement_list GOTO IDENTIFIER SEMICOLON      { raise (Exceptions.UnsuportedError ("goto statements are unsuported in GoLite", $4, None)) }
   | statement_list FALLTHROUGH SEMICOLON          { raise (Exceptions.UnsuportedError ("fallthrough statements are unsuported in GoLite", $3, None)) }
-  | statement_list simple_statement               { $2::$1 }
-  | statement_list if_statement                   { $2::$1 }
+  | statement_list simple_statement               { $2 :: $1 }
+  | statement_list if_statement                   { $2 :: $1 }
   | statement_list for_statement                  {
     let for_stm = match $2 with
     | Ast.ForStm (None, cond, None, block, line) ->
       Ast.WhileStm (cond, block, line)
     | _ -> $2
     in
-    for_stm::$1
+    for_stm :: $1
   }
 
 simple_statement
@@ -282,7 +279,7 @@ simple_statement
   | exp BINANDEQ exp SEMICOLON                    { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinAND, $3, $4), $4) }
   | exp BINOREQ exp SEMICOLON                     { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinOR, $3, $4), $4) }
   | exp BINXOREQ exp SEMICOLON                    { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinXOR, $3, $4), $4) }
-  | exp BINANDNOTEQ exp SEMICOLON                 { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinANDNOT, $3, $4), $4) }
+  | exp BINANDNOTEQ exp SEMICOLON                 { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinAND, Ast.Unary (Ast.UBinNOT, $3, $4), $4), $4) }
   | exp RSHIFTEQ exp SEMICOLON                    { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Rshift, $3, $4), $4) }
   | exp LSHIFTEQ exp SEMICOLON                    { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Lshift, $3, $4), $4) }
   | exp MODEQ exp SEMICOLON                       { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Mod, $3, $4), $4) }

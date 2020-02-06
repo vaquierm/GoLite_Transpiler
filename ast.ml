@@ -1,7 +1,3 @@
-type package_clause =
-  (* Name of package *)
-  | Package of string
-
 type base =
   | Dec
   | Oct
@@ -9,7 +5,7 @@ type base =
   | Hex
 
 type binary_op =
-  | BPlus | BMinus | Mult | Div | BinAND | BinOR | BinXOR | BinANDNOT
+  | BPlus | BMinus | Mult | Div | BinAND | BinOR | BinXOR
   | Rshift | Lshift | Mod | BoolAND | BoolOR | EQ | GT | LT | GEQ | LEQ | NEQ
 
 type unary_op =
@@ -31,7 +27,6 @@ type typeT =
   | FloatType
   | StrType
   | RuneType
-  | VoidType
 and exp =
   (* Arithmetic: Last int is the line number *)
   | Binop of exp * binary_op * exp * int
@@ -45,7 +40,8 @@ and primary_exp =
   | FloatLit of float
   | IntLit of string * base
   | RuneLit of string
-  | StrLit of string
+  (* String content, bool for raw string or not *)
+  | StrLit of string * bool
   (* Cast of expression to other type, last int is line number *)
   | CastExp of typeT * exp * int
   (* Selection of field (exp to select from, field to select, line number) *)
@@ -64,8 +60,6 @@ and primary_exp =
   | LenExp of primary_exp * int
   (* Capacity expression (slice or array, line number) *)
   | CapExp of primary_exp * int
-  (* Temp constructor for conflicts *)
-  | TempPrimExp of typeT
 
 type variable_decl =
   (* Last int is line number *)
@@ -80,10 +74,7 @@ type type_decl =
   (* Type of the declaration, name of type, line number *)
   TypeDecl of typeT * string * int
 
-type func_decl =
-  (* Function name, List of inputs (id, type), return type, block, line number *)
-  | FuncDecl of string * ((string * typeT) list) * typeT * block * int
-and statement = 
+type statement = 
   (* Type declaration statement *)
   | TypeDeclStm of type_decl
   (* Variable declaration statement *)
@@ -112,6 +103,10 @@ and block =
   (* List of statements the block is made of *)
   | StmsBlock of statement list
 
+type func_decl =
+  (* Function name, List of inputs (id, type), return type, block, line number *)
+  | FuncDecl of string * ((string * typeT) list) * (typeT option) * block * int
+
 type top_level_decl = 
   (* Type declaration *)
   | TopTypeDecl of type_decl
@@ -119,6 +114,10 @@ type top_level_decl =
   | TopFuncDecl of func_decl
   (* Variable declaration *)
   | TopVarDecl of variable_decl
+
+type package_clause =
+  (* Name of package *)
+  | Package of string
 
 type program =
   | Program of package_clause * (top_level_decl list)

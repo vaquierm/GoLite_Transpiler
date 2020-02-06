@@ -188,13 +188,13 @@ rule token = parse
 
   | identifier                  { update_pos lexbuf; return (IDENTIFIER (get lexbuf, get_line_num lexbuf)) }
 
-  | ("//"_*eol)                 { update_pos lexbuf; let c = get lexbuf in return (COMMENT (String.trim(String.sub c 2 ((String.length c) - 1)))) }
-  | ("/*"_*"*/")                { update_pos lexbuf; let c = get lexbuf in return (BLOCKCOMMENT (String.sub c 2 ((String.length c) - 3))) }
+  | ("//"_*eol)                 { update_pos lexbuf; let c = get lexbuf in return (COMMENT (String.trim(String.sub c 2 ((String.length c) - 2)))) }
+  | ("/*"_*"*/")                { update_pos lexbuf; let c = get lexbuf in return (BLOCKCOMMENT (String.sub c 2 ((String.length c) - 4))) }
 
   | decIntLiteral               { update_pos lexbuf; return (DECINTLITERAL (get lexbuf)) }
-  | binIntLiteral               { update_pos lexbuf; let c = get lexbuf in return (BININTLITERAL (String.sub c 2 ((String.length c) - 1))) }
-  | octIntLiteral               { update_pos lexbuf; let c = get lexbuf in return (OCTINTLITERAL (String.sub c 2 ((String.length c) - 1))) }
-  | hexIntLiteral               { update_pos lexbuf; let c = get lexbuf in return (HEXINTLITERAL (String.sub c 2 ((String.length c) - 1))) }
+  | binIntLiteral               { update_pos lexbuf; let c = get lexbuf in return (BININTLITERAL (String.sub c 2 ((String.length c) - 2))) }
+  | octIntLiteral               { update_pos lexbuf; let c = get lexbuf in return (OCTINTLITERAL (String.sub c 2 ((String.length c) - 2))) }
+  | hexIntLiteral               { update_pos lexbuf; let c = get lexbuf in return (HEXINTLITERAL (String.sub c 2 ((String.length c) - 2))) }
 
   | ("true" | "false")          { update_pos lexbuf; return (BOOLLITERAL (bool_of_string (get lexbuf))) }
 

@@ -1,7 +1,7 @@
 let lexbuf = Lexing.from_channel stdin in
 try
-  let exp = Parser.start Lexer.token lexbuf in 
-  ()
+  let program = Parser.start Lexer.token lexbuf in 
+    print_string (Prettyp.program_str program)
 with
   | Failure msg -> print_endline msg
   | Exceptions.LexerError msg -> print_endline msg
