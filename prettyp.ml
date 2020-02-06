@@ -117,9 +117,20 @@ let type_decl_str decl n =
     "type " ^ name ^ " " ^ typeT_str t n ^";\n"
 ;;
 
+let var_decl_str decl n =
+  match decl with
+  | VarDeclTypeInit (t, id, e, _) ->
+    indents n ^ "var " ^ id ^ typeT_str t n ^ " = " ^ exp_str e n ^ ";\n"
+  | VarDeclNoTypeInit (id, e, _) ->
+    indents n ^ "var " ^ id ^ " = " ^ exp_str e n ^ ";\n"
+  | VarDeclTypeNoInit (t, id, _) ->
+    indents n ^ "var " ^ id ^ typeT_str t n ^ ";\n"
+;;
+
 let top_level_decl_str decl =
   match decl with
   | TopTypeDecl type_decl -> type_decl_str type_decl 0
+  | TopVarDecl var_decl -> var_decl_str var_decl 0
   | _ ->  ""
 ;;
 
