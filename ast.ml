@@ -74,10 +74,7 @@ type type_decl =
   (* Type of the declaration, name of type, line number *)
   TypeDecl of typeT * string * int
 
-type func_decl =
-  (* Function name, List of inputs (id, type), return type, block, line number *)
-  | FuncDecl of string * ((string * typeT) list) * (typeT option) * block * int
-and statement = 
+type statement = 
   (* Type declaration statement *)
   | TypeDeclStm of type_decl
   (* Variable declaration statement *)
@@ -105,6 +102,10 @@ and statement =
 and block =
   (* List of statements the block is made of *)
   | StmsBlock of statement list
+
+type func_decl =
+  (* Function name, List of inputs (id, type), return type, block, line number *)
+  | FuncDecl of string * ((string * typeT) list) * (typeT option) * block * int
 
 type top_level_decl = 
   (* Type declaration *)

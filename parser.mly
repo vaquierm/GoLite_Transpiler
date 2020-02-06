@@ -243,28 +243,28 @@ primary_exp
   | LEN LPAR primary_exp RPAR                     { Ast.LenExp ($3, $2) }
   | CAP LPAR primary_exp RPAR                     { Ast.CapExp ($3, $2) }
 
-body : LCURLY statement_list RCURLY SEMICOLON?    { Ast.StmsBlock $2 }
+body : LCURLY statement_list RCURLY SEMICOLON?    { Ast.StmsBlock (List.rev $2) }
 
 statement_list
   :                                               { [] }
-  | statement_list body                           { $1 @ [Ast.BlockStm $2] }
-  | statement_list var_decls                      { (List.map (fun d -> Ast.VarDeclStm d) $2) @ $1 }
-  | statement_list type_decls                     { (List.map (fun d -> Ast.TypeDeclStm d) $2) @ $1 }
+  | statement_list body                           { Ast.BlockStm $2 :: $1 }
+  | statement_list var_decls                      { (List.map (fun d -> Ast.VarDeclStm d) $2)  @ $1 }
+  | statement_list type_decls                     { (List.map (fun d -> Ast.TypeDeclStm d) $2) @ $1}
   | statement_list GO exp SEMICOLON               { raise (Exceptions.UnsuportedError ("go statements are unsuported in GoLite", $4, None)) }
-  | statement_list RETURN exp? SEMICOLON          { $1 @ [Ast.Return ($3, $4)] }
-  | statement_list BREAK SEMICOLON                { $1 @ [Ast.Break] }
-  | statement_list CONTINUE SEMICOLON             { $1 @ [Ast.Continue] }
+  | statement_list RETURN exp? SEMICOLON          { Ast.Return ($3, $4) :: $1 }
+  | statement_list BREAK SEMICOLON                { Ast.Break :: $1 }
+  | statement_list CONTINUE SEMICOLON             { Ast.Continue :: $1 }
   | statement_list GOTO IDENTIFIER SEMICOLON      { raise (Exceptions.UnsuportedError ("goto statements are unsuported in GoLite", $4, None)) }
   | statement_list FALLTHROUGH SEMICOLON          { raise (Exceptions.UnsuportedError ("fallthrough statements are unsuported in GoLite", $3, None)) }
-  | statement_list simple_statement               { $1 @ [$2] }
-  | statement_list if_statement                   { $1 @ [$2] }
+  | statement_list simple_statement               { $2 :: $1 }
+  | statement_list if_statement                   { $2 :: $1 }
   | statement_list for_statement                  {
     let for_stm = match $2 with
     | Ast.ForStm (None, cond, None, block, line) ->
       Ast.WhileStm (cond, block, line)
     | _ -> $2
     in
-    $1 @ [for_stm]
+    for_stm :: $1
   }
 
 simple_statement

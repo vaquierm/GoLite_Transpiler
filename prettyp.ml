@@ -1,9 +1,19 @@
 open Ast
 
-(* Get a string containing n \t charachters *)
+(* Number of spaces per indent *)
+let s_in = 4;;
+
+let indent =
+  let rec make_indent n =
+    if n = 0 then "" else " " ^ make_indent (n-1)
+  in
+  make_indent s_in
+;;
+
+(* Get a string containing n indent charachters *)
 let indents n =
   let rec indents_tr n acc =
-    if n = 0 then acc else indents_tr (n-1) ("    " ^ acc)
+    if n = 0 then acc else indents_tr (n-1) (indent ^ acc)
   in
   indents_tr n ""
 ;;
@@ -91,7 +101,7 @@ and prim_exp_str p_exp n =
   | SelectExp (p_exp', field, _) -> prim_exp_str p_exp' n ^ "." ^ field
   | IndexExp (p_exp', e, _) -> prim_exp_str p_exp' n ^ "[" ^ exp_str e n ^ "]"
   | FuncCall (name, e_list, _) ->
-    if List.length e_list = 0 then "" else
+    if List.length e_list = 0 then name ^ "()" else
       let (last, rest) = get_last e_list in
       let args = List.fold_right (
         fun e acc -> 
@@ -124,14 +134,62 @@ let var_decl_str decl n =
   | VarDeclNoTypeInit (id, e, _) ->
     indents n ^ "var " ^ id ^ " = " ^ exp_str e n ^ ";\n"
   | VarDeclTypeNoInit (t, id, _) ->
-    indents n ^ "var " ^ id ^ typeT_str t n ^ ";\n"
+    indents n ^ "var " ^ id ^ " " ^ typeT_str t n ^ ";\n"
+;;
+
+let rec block_str b n =
+  match b with
+  | StmsBlock stm_list ->
+    let stms_str = List.fold_left (fun acc s -> acc ^ stm_str s (n+1)) "" stm_list in
+      "{\n" ^ stms_str ^ indents n ^ "}\n"
+and stm_str stm n =
+  match stm with
+  | TypeDeclStm decl -> type_decl_str decl n
+  | VarDeclStm decl -> var_decl_str decl n
+  | Return (exp_op, _) ->
+    let return_str = begin match exp_op with None -> "" | Some e -> exp_str e n end in
+      indents n ^ "return " ^ return_str ^ ";\n"
+  | Break -> indents n ^ "break;\n"
+  | Continue -> indents n ^ "continue;\n"
+  | ExpStm (e, _) -> indents n ^ exp_str e n ^ ";\n"
+  | AssignStm (lhs, rhs, _) -> indents n ^ exp_str lhs n ^ " = " ^ exp_str rhs n ^ ";\n"
+  | IfStm (cond, if_b, else_b_opt, _) ->
+    let else_str = match else_b_opt with None -> "" | Some b -> indents n ^ "else " ^ block_str b n in
+      indents n ^ "if " ^ exp_str cond n ^ " " ^ block_str if_b n ^ else_str
+  | BlockStm b -> indents n ^ block_str b n
+  | WhileStm (cond_op, b, _) ->
+    let cond_str = match cond_op with None -> "" | Some cond -> exp_str cond n in
+      indents n ^ "for " ^ cond_str ^ " " ^ block_str b n
+  | ForStm (init_opt, cond_opt, update_opt, b, _) ->
+    let init_str = match init_opt with None -> ";" | Some init -> let s = stm_str init n in String.sub s (s_in * n) ((String.length s) - (s_in * n) - 1) in
+    let update_str = match update_opt with None -> ";" | Some update -> let s = stm_str update n in String.sub s (s_in * n) ((String.length s) - (s_in * n) - 1) in
+    let cond_str = match cond_opt with None -> ";" | Some cond -> exp_str cond n ^ ";" in
+    indents n ^ "for " ^ init_str ^ " " ^ cond_str ^ " " ^ update_str ^ " " ^ block_str b n
+  | Print (e, nl, _) ->
+    let p = if nl then "println" else "print" in
+    indents n ^ p ^ "(" ^ exp_str e n ^ ");\n"
+;;
+
+
+let func_decl_str decl n =
+  match decl with
+  | FuncDecl (name, args, t_opt, b, _) ->
+    let arg_str = if List.length args = 0 then "" else
+      let ((id_l, t_l), rest) = get_last args in
+        List.fold_right (fun (id, t) acc -> id ^ " " ^ typeT_str t n ^ ", " ^ acc) rest (id_l ^ " " ^ typeT_str t_l n)
+      in
+      let ret_str = match t_opt with
+      | None -> ""
+      | Some t -> typeT_str t n ^ " "
+      in
+      indents n ^ "func " ^ name ^ "(" ^ arg_str ^ ") " ^ ret_str ^ block_str b n
 ;;
 
 let top_level_decl_str decl =
   match decl with
   | TopTypeDecl type_decl -> type_decl_str type_decl 0
   | TopVarDecl var_decl -> var_decl_str var_decl 0
-  | _ ->  ""
+  | TopFuncDecl func_decl ->  func_decl_str func_decl 0
 ;;
 
 let pkg_str pkg_clause =
@@ -144,5 +202,5 @@ let program_str prog =
   | Program (pkg_clause, decls) ->
     let pkg = pkg_str pkg_clause in
       let decls = List.map top_level_decl_str decls in
-        pkg ^ (List.fold_left (fun d acc -> d ^ acc) "" decls) ^ "\n"
+        pkg ^ (List.fold_left (fun acc d -> d ^ acc) "" decls) ^ "\n"
 ;;
