@@ -124,13 +124,13 @@ and prim_exp_str p_exp n =
 let type_decl_str decl n =
   match decl with
   | TypeDecl (t, name, _) ->
-    "type " ^ name ^ " " ^ typeT_str t n ^";\n"
+    indents n ^ "type " ^ name ^ " " ^ typeT_str t n ^";\n"
 ;;
 
 let var_decl_str decl n =
   match decl with
   | VarDeclTypeInit (t, id, e, _) ->
-    indents n ^ "var " ^ id ^ typeT_str t n ^ " = " ^ exp_str e n ^ ";\n"
+    indents n ^ "var " ^ id ^ " " ^ typeT_str t n ^ " = " ^ exp_str e n ^ ";\n"
   | VarDeclNoTypeInit (id, e, _) ->
     indents n ^ "var " ^ id ^ " = " ^ exp_str e n ^ ";\n"
   | VarDeclTypeNoInit (t, id, _) ->
@@ -202,5 +202,5 @@ let program_str prog =
   | Program (pkg_clause, decls) ->
     let pkg = pkg_str pkg_clause in
       let decls = List.map top_level_decl_str decls in
-        pkg ^ (List.fold_left (fun acc d -> d ^ acc) "" decls) ^ "\n"
+        pkg ^ (List.fold_left (fun acc d -> acc ^ d) "" decls) ^ "\n"
 ;;
