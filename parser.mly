@@ -62,13 +62,13 @@
 
 /* Productions */
 start : package_clause import_decls top_level_decls EOF       {
-    let main = ref (Ast.TopFuncDecl (Ast.FuncDecl ("", [], Ast.VoidType, Ast.StmsBlock [], -1))) in
+    let main = ref (Ast.TopFuncDecl (Ast.FuncDecl ("", [], None, Ast.StmsBlock [], -1))) in
     let rec extract_main decls =
     match decls with
     | [] -> []
     | d::decls' ->
       begin match d with
-      | Ast.TopFuncDecl (Ast.FuncDecl ("main", [], Ast.VoidType, _, _)) ->
+      | Ast.TopFuncDecl (Ast.FuncDecl ("main", [], None, _, _)) ->
         main := d;
         decls'
       | _ -> d::(extract_main decls')
@@ -125,11 +125,7 @@ func_decl
       | None -> []
       | Some p -> p
       in
-      let retType = match $6 with
-      | None -> Ast.VoidType
-      | Some t -> t
-      in
-      Ast.FuncDecl ((fst $2), params, retType, $7, (snd $2))
+      Ast.FuncDecl ((fst $2), params, $6, $7, (snd $2))
     }
 
 func_params
@@ -175,7 +171,7 @@ exp
   | exp BINAND exp                                { Ast.Binop ($1, Ast.BinAND, $3, $2) }
   | exp BINOR exp                                 { Ast.Binop ($1, Ast.BinOR, $3, $2) }
   | exp BINXOR exp                                { Ast.Binop ($1, Ast.BinXOR, $3, $2) }
-  | exp BINANDNOT exp                             { Ast.Binop ($1, Ast.BinANDNOT, $3, $2) }
+  | exp BINANDNOT exp                             { Ast.Binop ($1, Ast.BinAND, Ast.Unary (Ast.UBinNOT, $3, $2), $2) }
   | exp RSHIFT exp                                { Ast.Binop ($1, Ast.Rshift, $3, $2) }
   | exp LSHIFT exp                                { Ast.Binop ($1, Ast.Lshift, $3, $2) }
   | exp MOD exp                                   { Ast.Binop ($1, Ast.Mod, $3, $2) }
@@ -204,7 +200,8 @@ primary_exp
   | OCTINTLITERAL                                 { Ast.IntLit ($1, Ast.Oct) }
   | HEXINTLITERAL                                 { Ast.IntLit ($1, Ast.Hex) }
   | RUNELITERAL                                   { Ast.RuneLit ($1) }
-  | STRINGLITERAL                                 { Ast.StrLit ($1) }
+  | STRINGLITERAL                                 { Ast.StrLit ($1, false) }
+  | RAWSTRINGLITERAL                              { Ast.StrLit ($1, true) }
   | primary_exp DOT IDENTIFIER                    { Ast.SelectExp ($1, (fst $3), (snd $3)) }
   | primary_exp LSQUARE exp RSQUARE               { Ast.IndexExp ($1, $3, $2) }
   | primary_exp DOT LPAR typeT RPAR               { raise (Exceptions.UnsuportedError ("Type assertions are unsupported in GoLite", $3, None)) }
@@ -282,7 +279,7 @@ simple_statement
   | exp BINANDEQ exp SEMICOLON                    { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinAND, $3, $4), $4) }
   | exp BINOREQ exp SEMICOLON                     { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinOR, $3, $4), $4) }
   | exp BINXOREQ exp SEMICOLON                    { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinXOR, $3, $4), $4) }
-  | exp BINANDNOTEQ exp SEMICOLON                 { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinANDNOT, $3, $4), $4) }
+  | exp BINANDNOTEQ exp SEMICOLON                 { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BinAND, Ast.Unary (Ast.UBinNOT, $3, $4), $4), $4) }
   | exp RSHIFTEQ exp SEMICOLON                    { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Rshift, $3, $4), $4) }
   | exp LSHIFTEQ exp SEMICOLON                    { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Lshift, $3, $4), $4) }
   | exp MODEQ exp SEMICOLON                       { Ast.AssignStm ($1, Ast.Binop ($1, Ast.Mod, $3, $4), $4) }
