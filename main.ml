@@ -1,7 +1,9 @@
 let lexbuf = Lexing.from_channel stdin in
 try
   let program = Parser.start Lexer.token lexbuf in 
-    print_string (Prettyp.program_str program)
+    print_string (Prettyp.program_str program);
+    let weeded_prog = Weeding.weed_program program in
+    print_string (Prettyp.program_str weeded_prog);
 with
   | Failure msg -> print_endline msg
   | Exceptions.LexerError msg -> print_endline msg
