@@ -9,12 +9,12 @@ open Typecheck
 exception NotInitializedVar
 
 type scope = {
-  (* Types declared in this scope: (type name, underlying type, used) *)
-  mutable t: (string * typeT * bool) list;
-  (* Vars declared in this scope: (var name, type, used, initialized) *)
-  mutable v: (string * typeT * bool * bool) list;
-  (* funcs declared in this scope: (func name, inputs types, return type, used) *)
-  mutable f: (string * typeT list * typeT option * bool) list;
+  (* Types declared in this scope: (type name, underlying type, used, line num) *)
+  mutable t: (string * typeT * bool * int) list;
+  (* Vars declared in this scope: (var name, type, used, initialized, line num) *)
+  mutable v: (string * typeT * bool * bool * int) list;
+  (* funcs declared in this scope: (func name, inputs types, return type, used, line num) *)
+  mutable f: (string * typeT list * typeT option * bool * int) list;
 }
 
 type env = scope list
@@ -31,9 +31,9 @@ let list_to_string l f =
 ;;
 
 let print_scope s =
-  let t_str = list_to_string s.t (fun (id, t, u) -> "(" ^ id ^ ", " ^ Prettyp.typeT_str t 0 ^ ", " ^ string_of_bool u ^ ")") in
-  let v_str = list_to_string s.v (fun (id, t, u, i) -> "(" ^ id ^ ", " ^ Prettyp.typeT_str t 0 ^ ", " ^ string_of_bool u ^ ", " ^ string_of_bool i ^ ")") in
-  let f_str = list_to_string s.f (fun (id, t_l, t_r, u) -> "(" ^ id ^ ", [" ^ (list_to_string t_l (fun t -> Prettyp.typeT_str t 0)) ^ "], " ^ (match t_r with None -> "void" | Some t -> Prettyp.typeT_str t 0) ^ ", " ^ string_of_bool u ^ ")") in
+  let t_str = list_to_string s.t (fun (id, t, u, l) -> "(" ^ id ^ ", " ^ Prettyp.typeT_str t 0 ^ ", " ^ string_of_bool u ^ ", " ^ string_of_int l ^ ")") in
+  let v_str = list_to_string s.v (fun (id, t, u, i, l) -> "(" ^ id ^ ", " ^ Prettyp.typeT_str t 0 ^ ", " ^ string_of_bool u ^ ", " ^ string_of_bool i ^ ", " ^ string_of_int l ^ ")") in
+  let f_str = list_to_string s.f (fun (id, t_l, t_r, u, l) -> "(" ^ id ^ ", [" ^ (list_to_string t_l (fun t -> Prettyp.typeT_str t 0)) ^ "], " ^ (match t_r with None -> "void" | Some t -> Prettyp.typeT_str t 0) ^ ", " ^ string_of_bool u ^ ", " ^ string_of_int l ^ ")") in
   print_string ("{\nT: " ^ t_str ^ "\nV: " ^ v_str ^ "\nF: " ^ f_str ^ "\n}\n")
 ;;
 
@@ -49,10 +49,43 @@ let empty_env = [empty_scope]
 let push_scope env = empty_scope :: env
 ;;
 
+(* Go through all variables, types and func of the scope and checks if any declarations were unused *)
+let warn_unused s =
+  let rec warn_v vs =
+    match vs with
+    | [] -> ()
+    | (id, _, used, _, l)::vs' ->
+      if not (used) then
+        Exceptions.new_warning (Exceptions.Warning ("The variable " ^ id ^ " was declared and never referenced", l));
+      warn_v vs'
+  in
+  let rec warn_t ts =
+    match ts with
+    | [] -> ()
+    | (id, _, used, l)::ts' ->
+      if not (used) then
+        Exceptions.new_warning (Exceptions.Warning ("The type " ^ id ^ " was declared and never referenced", l));
+      warn_t ts'
+  in
+  let rec warn_f fs =
+    match fs with
+    | [] -> ()
+    | (id, _, _, used, l)::fs' ->
+      if id != "main" && not (used) then
+        Exceptions.new_warning (Exceptions.Warning ("The function " ^ id ^ " was declared and never referenced", l));
+      warn_f fs'
+  in
+  warn_v s.v;
+  warn_t s.t;
+  warn_f s.f
+;;
+
 let pop_scope env =
-  if List.length env < 2 then
+  if List.length env = 2 then
     failwith ("Cannot pop scope from env of lenght: " ^ string_of_int (List.length env))
-  else List.tl env
+  else 
+    warn_unused (List.hd env);
+    List.tl env
 ;;
 
 (* 
@@ -65,12 +98,12 @@ let get_var_s id s ass =
   let rec get_var' vars =
     match vars with
     | [] -> []
-    | (id', t, used, init) :: vars' when id' = id ->
+    | (id', t, used, init, l) :: vars' when id' = id ->
       v := Some t;
       if not(ass) && not(init) then
         raise NotInitializedVar
       else
-        (id', t, true, (if ass then true else init)) :: vars'
+        (id', t, true, (if ass then true else init), l) :: vars'
     | v'::vars' -> v'::(get_var' vars')
   in
   s.v <- get_var' s.v;
@@ -86,9 +119,9 @@ let get_func_s id s =
   let rec get_func' funcs =
     match funcs with
     | [] -> []
-    | (id', in_t, r_t, _) :: funcs' when id' = id ->
+    | (id', in_t, r_t, _, l) :: funcs' when id' = id ->
       f := Some (in_t, r_t);
-      (id', in_t, r_t, true) :: funcs'
+      (id', in_t, r_t, true, l) :: funcs'
     | v'::funcs' -> v'::(get_func' funcs')
   in
   s.f <- get_func' s.f;
@@ -103,9 +136,9 @@ let get_type_s id s =
   let rec get_type' types =
     match types with
     | [] -> []
-    | (id', t', _) :: types' when id' = id ->
+    | (id', t', _, l) :: types' when id' = id ->
       t := Some t';
-      (id', t', true) :: types'
+      (id', t', true, l) :: types'
     | v'::types' -> v'::(get_type' types')
   in
   s.t <- get_type' s.t;
@@ -127,47 +160,46 @@ let rec get_type id env l =
 
 (* Check if an ID already exists in this scope, if so thow an exception *)
 let check_exists s id l =
-    let var_exist = List.exists (fun (id', _, _, _) -> id' = id) s.v in
-    let type_exists = List.exists (fun (id', _, _) -> id' = id) s.t in
-    let func_exists = List.exists (fun (id', _, _, _) -> id' = id) s.f in
-    if var_exist then
-      raise (Exceptions.SyntaxError ("A variable with name '" ^ id ^ "' already exisits in this scope", Some l))
-    else if type_exists then
-      raise (Exceptions.SyntaxError ("A type with name '" ^ id ^ "' already exisits in this scope", Some l))
-    else if func_exists then
-      raise (Exceptions.SyntaxError ("A function with name '" ^ id ^ "' already exisits in this scope", Some l))
-    else ()
+  let def_l = ref 0 in
+  let var_exist = List.exists (fun (id', _, _, _, l') -> if id' = id then (def_l := l'; true) else false) s.v in
+  let type_exists = List.exists (fun (id', _, _, l') -> if id' = id then (def_l := l'; true) else false) s.t in
+  let func_exists = List.exists (fun (id', _, _, _, l') -> if id' = id then (def_l := l'; true) else false) s.f in
+  if var_exist then
+    raise (Exceptions.SyntaxError ("A variable with name '" ^ id ^ "' was already defined in this scope on line " ^ string_of_int (!def_l), Some l))
+  else if type_exists then
+    raise (Exceptions.SyntaxError ("A type with name '" ^ id ^ "' was already defined in this scope on line " ^ string_of_int (!def_l), Some l))
+  else if func_exists then
+    raise (Exceptions.SyntaxError ("A function with name '" ^ id ^ "' was already defined in this scope on line " ^ string_of_int (!def_l), Some l))
+  else ()
 ;;
 
 let var_decl env v_decl =
   print_env env;
-  let def_l = ref 0 in
   let v_tup = match v_decl with
-  | VarDeclTypeInit (t, id, _, l) -> def_l := l; (id, t, false, true)
-  | VarDeclNoTypeInit (id, e, l) -> def_l := l; (id, type_exp e, false, true)
-  | VarDeclTypeNoInit (t, id, l) -> def_l := l; (id, t, false, false)
+  | VarDeclTypeInit (t, id, _, l) -> (id, t, false, true, l)
+  | VarDeclNoTypeInit (id, e, l) -> (id, type_exp e, false, true, l)
+  | VarDeclTypeNoInit (t, id, l) -> (id, t, false, false, l)
   in
-  let (id, _, _ , _) = v_tup in
+  let (id, _, _, _, l) = v_tup in
     if List.length env = 0 then
       failwith "The environement is empty"
     else
       let s = List.hd env in
-      check_exists s id !def_l;
+      check_exists s id l;
       s.v <- (v_tup :: s.v)
 ;;
 
 let type_decl env t_decl =
   print_env env;
-  let def_l = ref 0 in
   let t_tup = match t_decl with
-  | TypeDecl (t, id, l) -> def_l := l; (id, t, false)
+  | TypeDecl (t, id, l) -> (id, t, false, l)
   in
-  let (id, _, _) = t_tup in
+  let (id, _, _, l) = t_tup in
     if List.length env = 0 then
       failwith "The environement is empty"
     else
       let s = List.hd env in
-      check_exists s id !def_l;
+      check_exists s id l;
       s.t <- (t_tup :: s.t)
 ;;
       

@@ -48,7 +48,12 @@ let weed_top_decls decls =
       | _ -> d::(weed_decls decls')
       end;
   in
-  weed_decls decls
+  if List.length env != 1 then
+    failwith ("The environement must be of length 1 after weeding top level. Instead is is of length " ^ string_of_int (List.length env))
+  else
+    let weeded_decls = weed_decls decls in
+      Env.warn_unused (List.hd env);
+      weeded_decls
 ;;
 
 let weed_program prog =
