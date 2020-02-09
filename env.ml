@@ -71,7 +71,7 @@ let warn_unused s =
     match fs with
     | [] -> ()
     | (id, _, _, used, l)::fs' ->
-      if id != "main" && not (used) then
+      if not(id = "main") && not (used) then
         Exceptions.new_warning (Exceptions.Warning ("The function " ^ id ^ " was declared and never referenced", l));
       warn_f fs'
   in
@@ -128,9 +128,7 @@ let get_func_s id s =
   !f
 ;;
 
-(* 
-Get the type from an id in the scope
-*)
+(* Get the type from an id in the scope *)
 let get_type_s id s =
   let t = ref None in
   let rec get_type' types =
@@ -148,7 +146,7 @@ let get_type_s id s =
 (* Get the type from an id in the env *)
 let rec get_type id env l =
   match env with
-  | [] -> raise (Exceptions.SyntaxError ("The identifier '" ^ id ^ "' was never defined", Some l))
+  | [] -> raise (Exceptions.SyntaxError ("The type '" ^ id ^ "' was never defined", Some l))
   | s::env' ->
     let t_opt = get_type_s id s in
     begin match t_opt with
@@ -156,7 +154,6 @@ let rec get_type id env l =
     | Some t -> t
     end
 ;;
-
 
 (* Check if an ID already exists in this scope, if so thow an exception *)
 let check_exists s id l =
@@ -203,6 +200,18 @@ let type_decl env t_decl =
       s.t <- (t_tup :: s.t)
 ;;
       
-
+let func_decl env f_decl =
+  print_env env;
+  let f_tup = match f_decl with
+  | FuncDecl (id, inputs, out_opt, _, l) -> (id, List.map snd inputs, out_opt, false, l)
+  in
+  let (id, _, _, _, l) = f_tup in
+  if List.length env = 0 then
+    failwith "The environement is empty"
+  else
+    let s = List.hd env in
+    check_exists s id l;
+    s.f <- (f_tup :: s.f)
+;;
 
   
