@@ -60,7 +60,7 @@ Get the type of this variable id
 If the ass is true, the var will be marked as initialized in the env
 This will also mark the var as used
 *)
-let get_var id s ass =
+let get_var_s id s ass =
   let v = ref None in
   let rec get_var' vars =
     match vars with
@@ -81,7 +81,7 @@ let get_var id s ass =
 Get the type signature of this function
 This will mark the func as used
 *)
-let get_func id s =
+let get_func_s id s =
   let f = ref None in
   let rec get_func' funcs =
     match funcs with
@@ -96,10 +96,9 @@ let get_func id s =
 ;;
 
 (* 
-Get the underlying type of a defined type
-This will mark the type as used
+Get the type from an id in the scope
 *)
-let get_type id s =
+let get_type_s id s =
   let t = ref None in
   let rec get_type' types =
     match types with
@@ -111,6 +110,18 @@ let get_type id s =
   in
   s.t <- get_type' s.t;
   !t
+;;
+
+(* Get the type from an id in the env *)
+let rec get_type id env l =
+  match env with
+  | [] -> raise (Exceptions.SyntaxError ("The identifier '" ^ id ^ "' was never defined", Some l))
+  | s::env' ->
+    let t_opt = get_type_s id s in
+    begin match t_opt with
+    | None -> get_type id env' l
+    | Some t -> t
+    end
 ;;
 
 
@@ -143,6 +154,21 @@ let var_decl env v_decl =
       let s = List.hd env in
       check_exists s id !def_l;
       s.v <- (v_tup :: s.v)
+;;
+
+let type_decl env t_decl =
+  print_env env;
+  let def_l = ref 0 in
+  let t_tup = match t_decl with
+  | TypeDecl (t, id, l) -> def_l := l; (id, t, false)
+  in
+  let (id, _, _) = t_tup in
+    if List.length env = 0 then
+      failwith "The environement is empty"
+    else
+      let s = List.hd env in
+      check_exists s id !def_l;
+      s.t <- (t_tup :: s.t)
 ;;
       
 

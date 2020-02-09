@@ -72,9 +72,9 @@ let rec typeT_str t n =
   | SliceType t' -> "[" ^ "]" ^ typeT_str t' n
   | PointerType t' -> "*" ^ typeT_str t' n
   | StructType f_list ->
-    let f_str = List.fold_left (
-      fun acc (id, t') ->
-        acc ^ indents (n+1) ^ id ^ " " ^ typeT_str t' (n+1) ^ ";\n") "" f_list
+    let f_str = List.fold_right (
+      fun (id, t') acc ->
+        acc ^ indents (n+1) ^ id ^ " " ^ typeT_str t' (n+1) ^ ";\n") f_list ""
     in
       "struct {\n" ^ f_str ^ indents n ^ "}"
   | IntType -> "int"
@@ -140,15 +140,15 @@ let var_decl_str decl n =
 let rec block_str b n =
   match b with
   | StmsBlock stm_list ->
-    let stms_str = List.fold_left (fun acc s -> acc ^ stm_str s (n+1)) "" stm_list in
+    let stms_str = List.fold_right (fun s acc -> acc ^ stm_str s (n+1)) stm_list "" in
       "{\n" ^ stms_str ^ indents n ^ "}\n"
 and stm_str stm n =
   match stm with
   | TypeDeclStm decl -> type_decl_str decl n
   | VarDeclStm decl -> var_decl_str decl n
   | Return (exp_op, _) ->
-    let return_str = begin match exp_op with None -> "" | Some e -> exp_str e n end in
-      indents n ^ "return " ^ return_str ^ ";\n"
+    let return_str = begin match exp_op with None -> "" | Some e -> " " ^ exp_str e n end in
+      indents n ^ "return" ^ return_str ^ ";\n"
   | Break -> indents n ^ "break;\n"
   | Continue -> indents n ^ "continue;\n"
   | ExpStm (e, _) -> indents n ^ exp_str e n ^ ";\n"
@@ -202,5 +202,5 @@ let program_str prog =
   | Program (pkg_clause, decls) ->
     let pkg = pkg_str pkg_clause in
       let decls = List.map top_level_decl_str decls in
-        pkg ^ (List.fold_left (fun acc d -> acc ^ d) "" decls) ^ "\n"
+        pkg ^ (List.fold_right (fun d acc -> acc ^ d) decls "") ^ "\n"
 ;;

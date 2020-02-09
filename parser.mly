@@ -90,9 +90,9 @@ import_decls
 
 top_level_decls
   :                                                 { [] }
-  | top_level_decls type_decls                      { $1 @ (List.map (fun var -> Ast.TopTypeDecl var) $2) }
-  | top_level_decls var_decls                       { $1 @ (List.map (fun var -> Ast.TopVarDecl var) $2) }
-  | top_level_decls func_decl                       { $1 @ [(Ast.TopFuncDecl $2)] }
+  | top_level_decls type_decls                      { (List.map (fun var -> Ast.TopTypeDecl var) $2) @ $1 }
+  | top_level_decls var_decls                       { (List.map (fun var -> Ast.TopVarDecl var) $2) @ $1 }
+  | top_level_decls func_decl                       { [(Ast.TopFuncDecl $2)] @ $1 }
 
 type_decls
   : TYPE type_spec                                  { [$2] }
@@ -112,12 +112,20 @@ var_decls
 
 var_specs
   : var_spec                                        { $1 }
-  | var_specs var_spec                              { $1 @ $2 }
+  | var_specs var_spec                              { $2 @ $1 }
 
 var_spec
   : ident_list typeT SEMICOLON                      { List.map (fun iden -> Ast.VarDeclTypeNoInit ($2, iden, $3)) $1 }
-  | ident_list typeT ASSIGN exp_list SEMICOLON      { List.map2 (fun iden exp -> Ast.VarDeclTypeInit ($2, iden, exp, $5)) $1 $4 }
-  | ident_list ASSIGN exp_list SEMICOLON            { List.map2 (fun iden exp -> Ast.VarDeclNoTypeInit (iden, exp, $4)) $1 $3 }
+  | ident_list typeT ASSIGN exp_list SEMICOLON      { 
+    if List.length $1 != List.length $4 then
+      raise (Exceptions.SyntaxError ("Assignment mismatch. " ^ (string_of_int (List.length $1)) ^ " variables but " ^ (string_of_int (List.length $4)) ^ " values", Some $5))
+    else
+      List.map2 (fun iden exp -> Ast.VarDeclTypeInit ($2, iden, exp, $5)) $1 $4 }
+  | ident_list ASSIGN exp_list SEMICOLON            {
+    if List.length $1 != List.length $3 then
+      raise (Exceptions.SyntaxError ("Assignment mismatch. " ^ (string_of_int (List.length $1)) ^ " variables but " ^ (string_of_int (List.length $3)) ^ " values", Some $4))
+    else
+      List.map2 (fun iden exp -> Ast.VarDeclNoTypeInit (iden, exp, $4)) $1 $3 }
 
 func_decl
   : FUNC IDENTIFIER LPAR func_params? RPAR typeT? body              { 
@@ -156,11 +164,11 @@ field_decls
 
 ident_list
   : IDENTIFIER                                    { [(fst $1)] }
-  | ident_list COMMA IDENTIFIER                   { $1 @ [fst $3] }
+  | ident_list COMMA IDENTIFIER                   { (fst $3) :: $1 }
 
 exp_list
   : exp                                           { [$1] }
-  | exp_list COMMA exp                            { $1 @ [$3] }
+  | exp_list COMMA exp                            { $3 :: $1 }
 
 exp
   : LPAR exp RPAR                                 { $2 }
@@ -243,7 +251,7 @@ primary_exp
   | LEN LPAR primary_exp RPAR                     { Ast.LenExp ($3, $2) }
   | CAP LPAR primary_exp RPAR                     { Ast.CapExp ($3, $2) }
 
-body : LCURLY statement_list RCURLY SEMICOLON?    { Ast.StmsBlock (List.rev $2) }
+body : LCURLY statement_list RCURLY SEMICOLON?    { Ast.StmsBlock $2 }
 
 statement_list
   :                                               { [] }

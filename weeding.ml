@@ -24,6 +24,16 @@ let weed_var_decl d env =
   weeded_decl
 ;;
 
+let weed_type_decl d env =
+  let weeded_decl = match d with
+  | TypeDecl (DefinedType (t_id, None), id, l) ->
+    TypeDecl (DefinedType (t_id, Some (Env.get_type t_id env l)), id, l)
+  | _ -> d
+  in 
+  Env.type_decl env d;
+  weeded_decl
+;;
+
 let weed_top_decls decls =
   let env = Env.empty_env in
   let rec weed_decls decls =
@@ -33,6 +43,8 @@ let weed_top_decls decls =
       begin match d with
       | TopVarDecl v_decl ->
         (TopVarDecl (weed_var_decl v_decl env))::(weed_decls decls')
+      | TopTypeDecl t_decl ->
+        (TopTypeDecl (weed_type_decl t_decl env)::(weed_decls decls'))
       | _ -> d::(weed_decls decls')
       end;
   in
