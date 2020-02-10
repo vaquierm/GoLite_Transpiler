@@ -19,7 +19,7 @@ type scope = {
 
 type env = scope list
 
-let empty_scope = {
+let empty_scope () = {
   t = [];
   v = [];
   f = [];
@@ -38,15 +38,19 @@ let print_scope s =
 ;;
 
 let rec print_env env =
-  match env with
-  | s::env' ->  print_scope s; print_env env'
-  | [] -> ()
+  print_string "Printing env\n";
+  let rec print_env' env =
+    match env with
+    | s::env' ->  print_scope s; print_env' env'
+    | [] -> print_string "\n"
+  in
+  print_env' env
 ;;
 
-let empty_env = [empty_scope]
+let empty_env = [empty_scope ()]
 ;;
 
-let push_scope env = empty_scope :: env
+let push_scope env = (empty_scope ()) :: env
 ;;
 
 (* Go through all variables, types and func of the scope and checks if any declarations were unused *)
@@ -170,8 +174,16 @@ let check_exists s id l =
   else ()
 ;;
 
+let open_function_scope env f =
+  match f with
+  | FuncDecl (_, inputs, _, _, l) ->
+    let func_scope = empty_scope () in
+      func_scope.v <- List.map (fun (id, t) -> (id, t, false, true, l)) inputs;
+      func_scope :: env
+;;
+
 let var_decl env v_decl =
-  print_env env;
+  (* print_env env;*)
   let v_tup = match v_decl with
   | VarDeclTypeInit (t, id, _, l) -> (id, t, false, true, l)
   | VarDeclNoTypeInit (id, e, l) -> (id, type_exp e, false, true, l)
@@ -187,7 +199,7 @@ let var_decl env v_decl =
 ;;
 
 let type_decl env t_decl =
-  print_env env;
+  (* print_env env;*)
   let t_tup = match t_decl with
   | TypeDecl (t, id, l) -> (id, t, false, l)
   in
@@ -201,7 +213,7 @@ let type_decl env t_decl =
 ;;
       
 let func_decl env f_decl =
-  print_env env;
+  (* print_env env;*)
   let f_tup = match f_decl with
   | FuncDecl (id, inputs, out_opt, _, l) -> (id, List.map snd inputs, out_opt, false, l)
   in

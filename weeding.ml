@@ -19,6 +19,10 @@ open Typecheck
 let weed_var_decl d env =
   let weeded_decl = match d with
   | VarDeclNoTypeInit (id, e, l) -> VarDeclTypeInit (type_exp e, id, e, l)
+  | VarDeclTypeInit (DefinedType (t_id, None), id, e, l) ->
+    VarDeclTypeInit (DefinedType (t_id, Some (Env.get_type t_id env l)), id, e, l)
+  | VarDeclTypeNoInit (DefinedType(t_id, None), id, l) ->
+    VarDeclTypeNoInit (DefinedType (t_id, Some (Env.get_type t_id env l)), id, l)
   | _ -> d
   in
   Env.var_decl env d;
@@ -57,6 +61,22 @@ let weed_func_decl d env =
   weeded_decl
 ;;
 
+(* Weed the function body *)
+let weed_func_body f env =
+  match f with
+  | FuncDecl (name, in_list, out_opt, b, l) ->
+    let func_env = Env.open_function_scope env f in
+    print_string ("Function: " ^ name ^ "\n");
+    Env.print_env func_env;
+    f
+;;
+
+(*
+Weed all top level declarations
+Start with variables and types definitions
+Next weed the function declarations
+Finally weed inside the function bodies
+*)
 let weed_top_decls decls =
   let env = Env.empty_env in
   let rec weed_top_decls' decls =
@@ -81,13 +101,24 @@ let weed_top_decls decls =
       | _ -> d::(weed_top_func_decls decls')
       end;
   in
+  let rec weed_func_bodies decls =
+    match decls with
+    | [] -> []
+    | d::decls' ->
+      begin match d with
+      | TopFuncDecl f_decl ->
+        (TopFuncDecl (weed_func_body f_decl env))::(weed_func_bodies decls')
+      | _ -> d::(weed_func_bodies decls')
+      end;
+  in
   let weeded_decls = weed_top_decls' decls in
     let weeded_all_decls = weed_top_func_decls weeded_decls in
-    if List.length env != 1 then
-      failwith ("The environement must be of length 1 after weeding top level. Instead is is of length " ^ string_of_int (List.length env))
-    else
-      Env.warn_unused (List.hd env);
-      weeded_all_decls
+      let weeded_func_bodies = weed_func_bodies weeded_all_decls in
+        if List.length env != 1 then
+          failwith ("The environement must be of length 1 after weeding top level. Instead is is of length " ^ string_of_int (List.length env))
+        else
+          Env.warn_unused (List.hd env);
+          weeded_func_bodies
 ;;
 
 let weed_program prog =
