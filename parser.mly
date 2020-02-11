@@ -141,7 +141,7 @@ func_params
   | func_params COMMA ident_list typeT            { $1 @ (List.map (fun iden -> (iden, $4)) $3) }
 
 typeT
-  : IDENTIFIER                                    { Ast.DefinedType ((fst $1), None) }
+  : IDENTIFIER                                    { Ast.DefinedType ((fst $1), None, (snd $1)) }
   | LSQUARE exp RSQUARE typeT                     { Ast.ArrayType ($4, $2) }
   | LSQUARE RSQUARE typeT                         { Ast.SliceType $3 }
   | MULT typeT                                    { Ast.PointerType $2 }
@@ -220,12 +220,12 @@ primary_exp
     in
     if List.length args == 1 then
       begin match $1 with
-      | Ast.DefinedType (x, _) -> Ast.UnsureTypeFuncCall (x, (List.hd args), $2)
+      | Ast.DefinedType (x, _, _) -> Ast.UnsureTypeFuncCall (x, (List.hd args), $2)
       | _ -> Ast.CastExp ($1, (List.hd args), $2)
       end
     else
       begin match $1 with
-      | Ast.DefinedType (x, _) -> Ast.FuncCall (x, args, $2)
+      | Ast.DefinedType (x, _, _) -> Ast.FuncCall (x, args, $2)
       | _ -> raise (Exceptions.SyntaxError ("A cast expression must have exactly one argument", Some $2))
       end
   }

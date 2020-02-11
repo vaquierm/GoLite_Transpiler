@@ -67,7 +67,7 @@ let base_str b =
 
 let rec typeT_str t n =
   match t with
-  | DefinedType (name, _) -> name
+  | DefinedType (name, _, _) -> name
   | ArrayType (t', e) -> "[" ^ exp_str e n ^ "]" ^ typeT_str t' n
   | SliceType t' -> "[" ^ "]" ^ typeT_str t' n
   | PointerType t' -> "*" ^ typeT_str t' n

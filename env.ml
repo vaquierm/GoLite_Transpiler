@@ -152,6 +152,29 @@ let rec get_type id env l =
     end
 ;;
 
+(* Get the type of a variable in the environement *)
+let rec get_var id env l =
+  match env with
+  | [] -> raise (Exceptions.SyntaxError ("The variable '" ^ id ^ "' was never defined", Some l))
+  | s::env' ->
+    let v_opt = get_var_s id s in
+    begin match v_opt with
+    | None -> get_var id env' l
+    | Some t -> t
+    end
+;;
+
+(* Get the function input and output types from the environement *)
+let rec get_func id env l =
+  match env with
+  | [] -> raise (Exceptions.SyntaxError ("The function '" ^ id ^ "' was never defined", Some l))
+  | s::env' ->
+    let f_opt = get_func_s id s in
+    begin match f_opt with
+    | None -> get_func id env' l
+    | Some t -> t
+    end
+
 (* Check if an ID already exists in this scope, if so thow an exception *)
 let check_exists s id l =
   let def_l = ref 0 in
@@ -192,7 +215,7 @@ let var_decl env v_decl =
   (* print_env env;*)
   let v_tup = match v_decl with
   | VarDeclTypeInit (t, id, _, l) -> (id, t, false, l)
-  | VarDeclNoTypeInit (id, e, l) -> (id, type_exp e, false, l)
+  | VarDeclNoTypeInit (id, e, l) -> (id, type_exp e env, false, l)
   | VarDeclTypeNoInit (t, id, l) -> (id, t, false, l)
   in
   let (id, _, _, l) = v_tup in

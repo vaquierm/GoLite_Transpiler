@@ -12,8 +12,8 @@ type unary_op =
   | UMinus | UBinNOT | BoolNOT | Ref | DeRef
 
 type typeT =
-  (* Type from identifier: string of type, real type*)
-  | DefinedType of string * (typeT option)
+  (* Type from identifier: string of type, underlying type, line *)
+  | DefinedType of string * (typeT option) * int
   (* Array type: Element type, experession for size of array *)
   | ArrayType of typeT * exp
   (* Slice type: type of element *)
