@@ -8,6 +8,6 @@ let rec type_exp exp env =
   | _ -> IntType
 and type_prim_exp p_exp env =
   match p_exp with
-  (*| Var (x, l) -> Env.get_var x env l*)
+  | Var (x, l) -> Env.get_var x env l
   | _ -> IntType
 ;;

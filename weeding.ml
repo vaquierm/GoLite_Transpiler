@@ -40,11 +40,11 @@ and weed_exp e env =
   | PrimExp p_exp -> PrimExp (weed_prim_exp p_exp env)
 and weed_prim_exp p_exp env =
   match p_exp with
-  | Var (x, l) -> let _ = Env.get_var x env in p_exp
+  | Var (x, l) -> let _ = Env.get_var x env l in p_exp
   | CastExp (t, e, l) -> CastExp (weed_type t env, weed_exp e env, l)
   | SelectExp (p_exp', field, l) -> SelectExp (weed_prim_exp p_exp' env, field, l)
   | IndexExp (p_exp', e, l) -> IndexExp (weed_prim_exp p_exp' env, weed_exp e env, l)
-  | FuncCall (name, e_list, l) -> FuncCall (name, List.map (fun e -> weed_exp e env) e_list, l)
+  | FuncCall (name, e_list, l) -> let _ = Env.get_func name env l in FuncCall (name, List.map (fun e -> weed_exp e env) e_list, l)
   | SliceExp (p_exp', e_b, e_e, e_m_opt, l) ->
       let weeded_e_m = begin match e_m_opt with
       | None -> None
@@ -73,7 +73,7 @@ let weed_var_decl d env =
   | VarDeclTypeInit (t, id, e, l) -> VarDeclTypeInit (weed_type t env, id, e, l)
   | VarDeclTypeNoInit (t, id, l) -> VarDeclTypeNoInit (weed_type t env, id, l)
   in
-  Env.var_decl env d;
+  Env.var_decl env weeded_decl;
   weeded_decl
 ;;
 

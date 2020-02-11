@@ -4,7 +4,6 @@ for the scope and environement
 *)
 
 open Ast
-open Typecheck
 
 type scope = {
   (* Types declared in this scope: (type name, underlying type, used, line num) *)
@@ -174,6 +173,7 @@ let rec get_func id env l =
     | None -> get_func id env' l
     | Some t -> t
     end
+;;
 
 (* Check if an ID already exists in this scope, if so thow an exception *)
 let check_exists s id l =
@@ -212,11 +212,10 @@ let open_function_scope env f =
 ;;
 
 let var_decl env v_decl =
-  (* print_env env;*)
   let v_tup = match v_decl with
   | VarDeclTypeInit (t, id, _, l) -> (id, t, false, l)
-  | VarDeclNoTypeInit (id, e, l) -> (id, type_exp e env, false, l)
   | VarDeclTypeNoInit (t, id, l) -> (id, t, false, l)
+  | VarDeclNoTypeInit (id, e, l) -> failwith "Cannot add variable to env without knowing type"
   in
   let (id, _, _, l) = v_tup in
     if List.length env = 0 then
@@ -228,7 +227,6 @@ let var_decl env v_decl =
 ;;
 
 let type_decl env t_decl =
-  (* print_env env;*)
   let t_tup = match t_decl with
   | TypeDecl (t, id, l) -> (id, t, false, l)
   in
@@ -242,7 +240,6 @@ let type_decl env t_decl =
 ;;
       
 let func_decl env f_decl =
-  (* print_env env;*)
   let f_tup = match f_decl with
   | FuncDecl (id, inputs, out_opt, _, l) -> (id, List.map snd inputs, out_opt, false, l)
   in
