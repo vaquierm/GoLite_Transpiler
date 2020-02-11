@@ -251,7 +251,7 @@ primary_exp
   | LEN LPAR primary_exp RPAR                     { Ast.LenExp ($3, $2) }
   | CAP LPAR primary_exp RPAR                     { Ast.CapExp ($3, $2) }
 
-body : LCURLY statement_list RCURLY SEMICOLON?    { Ast.StmsBlock $2 }
+body : LCURLY statement_list RCURLY SEMICOLON?    { Ast.StmsBlock (List.rev $2) }
 
 statement_list
   :                                               { [] }

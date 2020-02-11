@@ -44,7 +44,7 @@ let rec print_env env =
   print_env' env
 ;;
 
-let empty_env = [empty_scope ()]
+let empty_env () = [empty_scope ()]
 ;;
 
 let push_scope env = (empty_scope ()) :: env
@@ -139,6 +139,21 @@ let get_type_s id s =
   !t
 ;;
 
+(* Throw if the id exists in the scop and was not what we thought it was *)
+let check_others s id expected l =
+  let def_l = ref 0 in
+  let var_exist = List.exists (fun (id', _, _, l') -> if id' = id then (def_l := l'; true) else false) s.v in
+  let type_exists = List.exists (fun (id', _, _, l') -> if id' = id then (def_l := l'; true) else false) s.t in
+  let func_exists = List.exists (fun (id', _, _, _, l') -> if id' = id then (def_l := l'; true) else false) s.f in
+  if var_exist then
+    raise (Exceptions.SyntaxError (id ^ " is not a " ^ expected ^ ", it is a variable declared on line " ^ string_of_int (!def_l), Some l))
+  else if type_exists then
+    raise (Exceptions.SyntaxError (id ^ " is not a " ^ expected ^ ", it is a type declared on line " ^ string_of_int (!def_l), Some l))
+  else if func_exists then
+    raise (Exceptions.SyntaxError (id ^ " is not a " ^ expected ^ ", it is a function declared on line " ^ string_of_int (!def_l), Some l))
+  else ()
+;;
+
 (* Get the type from an id in the env *)
 let rec get_type id env l =
   match env with
@@ -146,7 +161,7 @@ let rec get_type id env l =
   | s::env' ->
     let t_opt = get_type_s id s in
     begin match t_opt with
-    | None -> get_type id env' l
+    | None -> check_others s id "type" l; get_type id env' l
     | Some t -> t
     end
 ;;
@@ -158,7 +173,7 @@ let rec get_var id env l =
   | s::env' ->
     let v_opt = get_var_s id s in
     begin match v_opt with
-    | None -> get_var id env' l
+    | None -> check_others s id "variable" l; get_var id env' l
     | Some t -> t
     end
 ;;
@@ -170,7 +185,7 @@ let rec get_func id env l =
   | s::env' ->
     let f_opt = get_func_s id s in
     begin match f_opt with
-    | None -> get_func id env' l
+    | None -> check_others s id "function" l; get_func id env' l
     | Some t -> t
     end
 ;;
@@ -250,6 +265,23 @@ let func_decl env f_decl =
     let s = List.hd env in
     check_exists s id l;
     s.f <- (f_tup :: s.f)
+;;
+
+let build_top_level_env top_decls =
+  let env = empty_env () in
+    let rec declare decls =
+      match decls with
+      | [] -> ()
+      | d::decls' ->
+        begin match d with
+        | TopVarDecl v_decl -> var_decl env v_decl;
+        | TopTypeDecl t_decl -> type_decl env t_decl;
+        | TopFuncDecl f_decl -> func_decl env f_decl;
+        declare decls'
+        end
+    in
+    declare top_decls;
+    env
 ;;
 
   

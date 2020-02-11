@@ -4,6 +4,7 @@ try
     print_string (Prettyp.program_str program);
     let weeded_prog = Weeding.weed_program program in
     print_string (Prettyp.program_str weeded_prog);
+    Typecheck.typecheck_program weeded_prog;
     Exceptions.print_warnings ();
 with
   | Failure msg -> print_endline msg

@@ -151,7 +151,17 @@ and weed_block b env =
 and weed_statements stms env =
   match stms with
   | [] -> []
-  | s::stms' -> (weed_statement s env)::(weed_statements stms' env)
+  | s::stms' ->
+    let weeded_statement = (weed_statement s env) in
+      begin match weeded_statement with
+      | Return (_, l) ->
+        let remain_len = List.length stms' in
+        if remain_len > 0 then
+          Exceptions.new_warning (Exceptions.Warning ((string_of_int remain_len) ^ " unreachable statement" ^ (if remain_len > 1 then "s" else "") ^ " after return statement", l));
+        [weeded_statement]
+      | _ -> weeded_statement::(weed_statements stms' env)
+      end
+      
 ;;
 
 (*
@@ -175,7 +185,7 @@ Next weed the function declarations
 Finally weed inside the function bodies
 *)
 let weed_top_decls decls =
-  let env = Env.empty_env in
+  let env = Env.empty_env () in
   let rec weed_top_decls' decls =
     match decls with
     | [] -> []
