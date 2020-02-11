@@ -78,7 +78,7 @@ start : package_clause import_decls top_level_decls EOF       {
     if List.length witout_main == List.length $3 then
       raise (Exceptions.SyntaxError ("The program must have a function called main which takes no arguments and returns nothing", None))
     else
-      Ast.Program ($1, witout_main @ [!main])
+      Ast.Program ($1, (!main)::witout_main)
   };
 
 package_clause
@@ -256,8 +256,8 @@ body : LCURLY statement_list RCURLY SEMICOLON?    { Ast.StmsBlock $2 }
 statement_list
   :                                               { [] }
   | statement_list body                           { Ast.BlockStm $2 :: $1 }
-  | statement_list var_decls                      { (List.map (fun d -> Ast.VarDeclStm d) $2)  @ $1 }
-  | statement_list type_decls                     { (List.map (fun d -> Ast.TypeDeclStm d) $2) @ $1}
+  | statement_list var_decls                      { (List.map (fun d -> Ast.VarDeclStm d) $2) @ $1 }
+  | statement_list type_decls                     { (List.map (fun d -> Ast.TypeDeclStm d) $2) @ $1 }
   | statement_list GO exp SEMICOLON               { raise (Exceptions.UnsuportedError ("go statements are unsuported in GoLite", $4, None)) }
   | statement_list RETURN exp? SEMICOLON          { Ast.Return ($3, $4) :: $1 }
   | statement_list BREAK SEMICOLON                { Ast.Break :: $1 }
@@ -277,8 +277,8 @@ statement_list
 
 simple_statement
   : exp SEMICOLON                                 { Ast.ExpStm ($1, $2) }
-  | exp PLUSPLUS SEMICOLON                        { Ast.ExpStm (Ast.Binop ($1, Ast.BPlus, $1, $3), $3) }
-  | exp MINUSMINUS SEMICOLON                      { Ast.ExpStm (Ast.Binop ($1, Ast.BMinus, $1, $3), $3) }
+  | exp PLUSPLUS SEMICOLON                        { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BPlus, Ast.PrimExp (Ast.IntLit ("1", Ast.Dec)), $3), $3) }
+  | exp MINUSMINUS SEMICOLON                      { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BMinus, Ast.PrimExp (Ast.IntLit ("1", Ast.Dec)), $3), $3) }
   | exp ASSIGN exp SEMICOLON                      { Ast.AssignStm ($1, $3, $4) }
   | exp PLUSEQ exp SEMICOLON                      { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BPlus, $3, $4), $4) }
   | exp MINUSEQ exp SEMICOLON                     { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BMinus, $3, $4), $4) }

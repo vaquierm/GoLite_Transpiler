@@ -176,7 +176,7 @@ let func_decl_str decl n =
   | FuncDecl (name, args, t_opt, b, _) ->
     let arg_str = if List.length args = 0 then "" else
       let ((id_l, t_l), rest) = get_last args in
-        List.fold_right (fun (id, t) acc -> id ^ " " ^ typeT_str t n ^ ", " ^ acc) rest (id_l ^ " " ^ typeT_str t_l n)
+        List.fold_left (fun acc (id, t) -> id ^ " " ^ typeT_str t n ^ ", " ^ acc) (id_l ^ " " ^ typeT_str t_l n) rest
       in
       let ret_str = match t_opt with
       | None -> ""
