@@ -24,10 +24,10 @@
 
 %token <string * int>IDENTIFIER
 
-%token<int> IF FOR
+%token<int> IF FOR STRUCT
 %token<int> IMPORT INTERFACE CHAN
 %token BREAK DEFAULT FUNC SELECT CASE DEFER GO
-%token MAP STRUCT ELSE GOTO PACKAGE SWITCH CONS FALLTHROUGH
+%token MAP ELSE GOTO PACKAGE SWITCH CONS FALLTHROUGH
 %token RANGE TYPE CONTINUE RETURN VAR
 %token <int>PRINT PRINTLN APPEND LEN CAP
 
@@ -148,7 +148,7 @@ typeT
   | MAP RSQUARE typeT RSQUARE typeT               { raise (Exceptions.UnsuportedError ("Map types are unsuported in GoLite", $2, None)) }
   | INTERFACE                                     { raise (Exceptions.UnsuportedError ("Interface types are unsupported in GoLite", $1, None)) }
   | CHAN RECEIVE?                                 { raise (Exceptions.UnsuportedError ("Channel types are unsupported in GoLite", $1, None)) }
-  | STRUCT LCURLY field_decls RCURLY              { Ast.StructType $3 }
+  | STRUCT LCURLY field_decls RCURLY              { Ast.StructType ($3, $1) }
   | INTTYPE                                       { Ast.IntType }
   | FLOATTYPE                                     { Ast.FloatType }
   | STRINGTYPE                                    { Ast.StrType }

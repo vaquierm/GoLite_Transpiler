@@ -67,6 +67,18 @@ and type_prim_exp p_exp env =
   | RuneLit _ -> RuneType
   | BoolLit _ -> BoolType
   | StrLit _ -> StrType
+  | SelectExp (p_exp, field, l) ->
+    let t = type_prim_exp p_exp env in
+    let t_u = resolve_type t in
+    let field_not_found () = raise (Exceptions.TypeError ("The type '" ^ Prettyp.typeT_str t 0 ^ "' doe not have any field '" ^ field ^ "'", l)) in
+      begin match t_u with
+      | StructType (f_l, _) ->
+        let field_type = ref IntType in
+        if List.exists (fun (f, t) -> if f = field then (field_type := t; true) else false) f_l then
+          !field_type
+        else field_not_found ()
+      | _ -> field_not_found ()
+      end
   | _ -> IntType
 and type_unary u env =
   match u with

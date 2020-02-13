@@ -24,14 +24,18 @@ let rec weed_type t env =
   | ArrayType (t', e) -> ArrayType (weed_type t' env, weed_exp e env)
   | SliceType t' -> SliceType (weed_type t' env)
   | PointerType t' -> PointerType (weed_type t' env)
-  | StructType fields ->
+  | StructType (fields, l) ->
     let rec weed_fields acc fields' =
       begin match fields' with
       | [] -> acc
-      | (id, t)::fields'' -> weed_fields ((id, weed_type t env)::acc) fields''
+      | (id, t)::fields'' -> 
+        if List.exists (fun (id', t') -> id = id') fields'' then
+          raise (Exceptions.SyntaxError ("Multiple fields with name '" ^ id ^ "' defined in struct", Some l))
+        else
+          weed_fields ((id, weed_type t env)::acc) fields''
       end
     in
-      StructType (weed_fields [] fields)
+      StructType (weed_fields [] fields, l)
   | IntType | FloatType | StrType | RuneType | BoolType | DefinedType _ -> t
 and weed_exp e env =
   match e with

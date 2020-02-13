@@ -158,7 +158,7 @@ rule token = parse
   | "defer"                     { update_pos lexbuf; return DEFER }
   | "go"                        { update_pos lexbuf; return GO }
   | "map"                       { update_pos lexbuf; return MAP }
-  | "struct"                    { update_pos lexbuf; return STRUCT }
+  | "struct"                    { update_pos lexbuf; return (STRUCT (get_line_num lexbuf)) }
   | "chan"                      { update_pos lexbuf; return (CHAN (get_line_num lexbuf)) }
   | "else"                      { update_pos lexbuf; return ELSE }
   | "goto"                      { update_pos lexbuf; return GOTO }

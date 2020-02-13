@@ -20,8 +20,8 @@ type typeT =
   | SliceType of typeT
   (* Pointer type: type pointing to *)
   | PointerType of typeT
-  (* Struct type: List of (name of flield, type of field) *)
-  | StructType of (string * typeT) list
+  (* Struct type: List of (name of flield, type of field), line number *)
+  | StructType of ((string * typeT) list) * int
   (* Primitive types *)
   | IntType
   | FloatType
