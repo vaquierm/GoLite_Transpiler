@@ -10,13 +10,29 @@ let rec resolve_type t =
   | _ -> t
 ;;
 
-let is_numeric t =
+let is_whole_num t =
   let underlying_t = resolve_type t in
     match underlying_t with
-    | IntType | RuneType | FloatType -> true
+    | IntType | RuneType -> true
     | _ -> false
 ;;
 
+let is_numeric t =
+  is_whole_num t || t = FloatType
+;;
+
+(* True if the expression is a literal *)
+let is_literal exp =
+  match exp with
+  | PrimExp p_exp ->
+    begin match p_exp with
+    | FloatLit _ | IntLit _ | RuneLit _ | BoolLit _ | StrLit _ -> true
+    | _ -> false
+    end
+  | _ -> false
+;; 
+
+(* True if the reference operator '&' can be used un the expression *)
 let can_reference e =
   match e with
   | PrimExp p_exp ->
@@ -27,9 +43,20 @@ let can_reference e =
   | _ -> false 
 ;;
 
+(* True if the binary operator is compatible with the type t *)
+let op_compatible b_op t =
+  let u_t = resolve_type t in
+  match b_op with
+  | BPlus -> (is_numeric u_t || u_t = StrType)
+  | BMinus | Mult | Div -> is_numeric u_t
+  | BinAND | BinOR | BinXOR | Rshift | Lshift | Mod -> is_whole_num u_t
+  | BoolAND | BoolOR -> u_t = BoolType
+  | _ -> true
+;;
+
 let rec type_exp exp env =
   match exp with
-  | Binop (e1, op, e2, l) -> IntType
+  | Binop _ -> type_binop exp env
   | Unary _ -> type_unary exp env
   | PrimExp p_exp -> type_prim_exp p_exp env
 and type_prim_exp p_exp env =
@@ -53,7 +80,7 @@ and type_unary u env =
       else
         e_t
     | UBinNOT ->
-      if not(is_numeric u_t) || (u_t == FloatType) then
+      if not(is_whole_num u_t) then
         raise (Exceptions.TypeError ("The bitwise NOT operator cannot be applied to type '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
       else
         e_t
@@ -74,6 +101,34 @@ and type_unary u env =
       end
     end
   | _ -> failwith ("'" ^ (Prettyp.exp_str u 0) ^ "' is not a unary expression")
+and type_binop b_exp env =
+  match b_exp with
+  | Binop (e1, op, e2, l) ->
+    let e1_lit = is_literal e1 in
+    let e2_lit = is_literal e2 in
+    let has_literal = (e1_lit || e2_lit) in
+    let e1_t = type_exp e1 env in
+    let e2_t = type_exp e2 env in
+    let e1_t_u = resolve_type e1_t in
+    let e2_t_u = resolve_type e2_t in
+    if not (op_compatible op e1_t_u) then
+      raise (Exceptions.TypeError ("Invalid operation '" ^ Prettyp.binop_str op ^ "' (operator not defined on type '" ^ Prettyp.typeT_str e1_t 0 ^ "')", l))
+    else
+      if has_literal then
+        if not (e1_t_u = e2_t_u) then
+          raise (Exceptions.TypeError ("Invalid operation '" ^ Prettyp.binop_str op ^ "' (mismatched types '" ^ Prettyp.typeT_str e1_t 0 ^ "' and '" ^ Prettyp.typeT_str e2_t 0 ^ "')", l))
+        else
+          begin match e1_lit, e2_lit with
+          | true, false -> e2_t
+          | false, true -> e1_t
+          | _ -> e2_t
+          end
+      else
+        if not (e1_t = e2_t) then
+          raise (Exceptions.TypeError ("Invalid operation '" ^ Prettyp.binop_str op ^ "' (mismatched types '" ^ Prettyp.typeT_str e1_t 0 ^ "' and '" ^ Prettyp.typeT_str e2_t 0 ^ "')", l))
+        else
+          e1_t
+  | _ -> failwith ("'" ^ (Prettyp.exp_str b_exp 0) ^ "' is not a binop expression")
 ;;
 
 let rec type_stm stm env =
