@@ -32,7 +32,7 @@ let rec weed_type t env =
       end
     in
       StructType (weed_fields [] fields)
-  | IntType | FloatType | StrType | RuneType | DefinedType _ -> t
+  | IntType | FloatType | StrType | RuneType | BoolType | DefinedType _ -> t
 and weed_exp e env =
   match e with
   | Binop (e1, op, e2, l) -> Binop (weed_exp e1 env, op, weed_exp e2 env, l)
@@ -63,7 +63,7 @@ and weed_prim_exp p_exp env =
   | AppendExp (p_exp', e, l) -> AppendExp (weed_prim_exp p_exp' env, weed_exp e env, l)
   | LenExp (p_exp', l) -> LenExp (weed_prim_exp p_exp' env, l)
   | CapExp (p_exp', l) -> CapExp (weed_prim_exp p_exp' env, l)
-  | FloatLit _ | IntLit _ | RuneLit _ | StrLit _ -> p_exp
+  | FloatLit _ | IntLit _ | RuneLit _ | StrLit _ | BoolLit _ -> p_exp
 ;;
 
 (* Weed the variable declaration *)

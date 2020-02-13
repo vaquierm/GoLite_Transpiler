@@ -7,7 +7,7 @@ try
     Typecheck.typecheck_program weeded_prog;
     Exceptions.print_warnings ();
 with
-  | Failure msg -> print_endline msg
+  | Failure msg -> print_endline ("Unexpected error: " ^ msg)
   | Exceptions.LexerError msg -> print_endline msg
   | Exceptions.UnsuportedError (msg, line, char_opt) -> 
     let char_pos = begin match char_opt with
@@ -27,3 +27,5 @@ with
     | Some line -> "Line " ^ string_of_int line ^ "\n"
     end in
       print_endline (line_text ^ "Syntax Error: " ^ msg)
+  | Exceptions.TypeError (msg, line) ->
+    print_endline ("Line " ^ string_of_int line ^ "\nType Error: " ^ msg)

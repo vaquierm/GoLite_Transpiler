@@ -3,6 +3,8 @@ exception LexerError of string
 exception UnsuportedError of string * int * ((int * int) option)
 (* Messge, line number *)
 exception SyntaxError of string * (int option)
+(* Message, line number *)
+exception TypeError of string * int
 
 (* Warnings (message, line number) *)
 type warning = Warning of string * int

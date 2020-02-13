@@ -210,6 +210,7 @@ primary_exp
   | RUNELITERAL                                   { Ast.RuneLit ($1) }
   | STRINGLITERAL                                 { Ast.StrLit ($1, false) }
   | RAWSTRINGLITERAL                              { Ast.StrLit ($1, true) }
+  | BOOLLITERAL                                   { Ast.BoolLit ($1) }
   | primary_exp DOT IDENTIFIER                    { Ast.SelectExp ($1, (fst $3), (snd $3)) }
   | primary_exp LSQUARE exp RSQUARE               { Ast.IndexExp ($1, $3, $2) }
   | primary_exp DOT LPAR typeT RPAR               { raise (Exceptions.UnsuportedError ("Type assertions are unsupported in GoLite", $3, None)) }

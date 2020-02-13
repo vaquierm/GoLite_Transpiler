@@ -81,6 +81,7 @@ let rec typeT_str t n =
   | FloatType -> "float32"
   | StrType -> "string"
   | RuneType -> "rune"
+  | BoolType -> "bool"
 and exp_str exp n =
   match exp with
   | Binop (e1, op, e2, _) ->
@@ -97,6 +98,7 @@ and prim_exp_str p_exp n =
   | StrLit (s, raw) ->
     let tick = if raw then "`" else "\"" in
       tick ^ s ^ tick
+  | BoolLit b -> string_of_bool b
   | CastExp (t, e, _) -> typeT_str t n ^ "(" ^ exp_str e n ^ ")"
   | SelectExp (p_exp', field, _) -> prim_exp_str p_exp' n ^ "." ^ field
   | IndexExp (p_exp', e, _) -> prim_exp_str p_exp' n ^ "[" ^ exp_str e n ^ "]"

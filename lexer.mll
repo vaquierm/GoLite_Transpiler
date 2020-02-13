@@ -186,8 +186,6 @@ rule token = parse
   | "string"                    { update_pos lexbuf; return STRINGTYPE }
   | unsuportedType              { update_pos lexbuf; raise (Exceptions.UnsuportedError (("The type '" ^ get lexbuf ^ "' is unsuported in GoLite"), get_line_num lexbuf, Some (get_char_start lexbuf, get_char_end lexbuf))) }
 
-  | identifier                  { update_pos lexbuf; return (IDENTIFIER (get lexbuf, get_line_num lexbuf)) }
-
   | ("//"_*eol)                 { update_pos lexbuf; let c = get lexbuf in return (COMMENT (String.trim(String.sub c 2 ((String.length c) - 2)))) }
   | ("/*"_*"*/")                { update_pos lexbuf; let c = get lexbuf in return (BLOCKCOMMENT (String.sub c 2 ((String.length c) - 4))) }
 
@@ -201,6 +199,8 @@ rule token = parse
   | floatLiteral                { update_pos lexbuf; return (FLOATLITERAL (float_of_string (get lexbuf))) }
 
   | runeLiteral                 { update_pos lexbuf; let c = get lexbuf in return (RUNELITERAL (String.sub c 1 ((String.length c) - 2))) }
+
+  | identifier                  { update_pos lexbuf; return (IDENTIFIER (get lexbuf, get_line_num lexbuf)) }
 
   | '`'([^'''] | "\'")*'`'      { update_pos lexbuf; let c = get lexbuf in return (RAWSTRINGLITERAL (String.sub c 1 ((String.length c) - 2))) }
   | '"'([^'"'] | "\\\"")*'"'    { update_pos lexbuf; let c = get lexbuf in return (STRINGLITERAL (String.sub c 1 ((String.length c) - 2))) }

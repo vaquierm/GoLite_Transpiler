@@ -27,6 +27,7 @@ type typeT =
   | FloatType
   | StrType
   | RuneType
+  | BoolType
 and exp =
   (* Arithmetic: Last int is the line number *)
   | Binop of exp * binary_op * exp * int
@@ -40,6 +41,7 @@ and primary_exp =
   | FloatLit of float
   | IntLit of string * base
   | RuneLit of string
+  | BoolLit of bool
   (* String content, bool for raw string or not *)
   | StrLit of string * bool
   (* Cast of expression to other type, last int is line number *)
