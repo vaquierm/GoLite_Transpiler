@@ -168,7 +168,7 @@ ident_list
 
 exp_list
   : exp                                           { [$1] }
-  | exp_list COMMA exp                            { $3 :: $1 }
+  | exp_list COMMA exp                            { $1 @ [$3] }
 
 exp
   : LPAR exp RPAR                                 { $2 }

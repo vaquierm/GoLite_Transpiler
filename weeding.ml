@@ -73,7 +73,15 @@ and weed_prim_exp p_exp env =
 (* Weed the variable declaration *)
 let weed_var_decl d env =
   let weeded_decl = match d with
-  | VarDeclNoTypeInit (id, e, l) -> let weeded_e = weed_exp e env in VarDeclTypeInit (type_exp weeded_e env, id, weeded_e, l)
+  | VarDeclNoTypeInit (id, e, l) ->
+    let weeded_e = weed_exp e env in
+      let weeded_t_op = type_exp weeded_e env in
+        let weeded_t =
+          begin match weeded_t_op with
+          | None -> raise (Exceptions.TypeError ("Cannot initialize variable '" ^ id ^ "' with expression '" ^ Prettyp.exp_str e 0 ^ "' that has no type.", l))
+          | Some t -> t
+          end in
+      VarDeclTypeInit (weeded_t, id, weeded_e, l)
   | VarDeclTypeInit (t, id, e, l) -> VarDeclTypeInit (weed_type t env, id, weed_exp e env, l)
   | VarDeclTypeNoInit (t, id, l) -> VarDeclTypeNoInit (weed_type t env, id, l)
   in
