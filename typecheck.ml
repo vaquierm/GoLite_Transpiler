@@ -85,16 +85,16 @@ and type_prim_exp p_exp env =
       end
   | UnsureTypeFuncCall (id, _, l) -> failwith ("Function call or cast '" ^ id ^ "' was never resolved during weeding on line " ^ (string_of_int l))
   | IndexExp (p_exp, e, l) ->
-    let p_t = type_prim_exp p_exp env in
-      if p_t = None then
-        raise (Exceptions.TypeError ("Cannot index expression '" ^ Prettyp.prim_exp_str p_exp 0 ^ "'", l))
-      else
-        let Some p_t = p_t in
-          begin match p_t with
-          | SliceType e_t -> Some e_t
-          | ArrayType (e_t, _) -> Some e_t
-          | _ -> raise (Exceptions.TypeError ("Cannot index type '" ^ Prettyp.typeT_str p_t 0 ^ "'", l))
-          end
+    let p_t_op = type_prim_exp p_exp env in
+      let p_t = begin match p_t_op with
+      | None -> raise (Exceptions.TypeError ("Cannot index expression '" ^ Prettyp.prim_exp_str p_exp 0 ^ "'", l))
+      | Some t -> t
+      end in
+        begin match p_t with
+        | SliceType e_t -> Some e_t
+        | ArrayType (e_t, _) -> Some e_t
+        | _ -> raise (Exceptions.TypeError ("Cannot index type '" ^ Prettyp.typeT_str p_t 0 ^ "'", l))
+        end
   | FuncCall (name, in_l, l) ->
       let (in_t_l, out_t) = Env.get_func name env l in
         let rec check_input_types in_l in_t_l =
@@ -117,6 +117,26 @@ and type_prim_exp p_exp env =
           else
             check_input_types in_l in_t_l;
             out_t
+  | SliceExp (p_exp, e_s, e_e, e_m_op, l) ->
+    let p_exp_t_op = type_prim_exp p_exp env in
+    let p_exp_t = begin match p_exp_t_op with
+    | Some (SliceType t) -> SliceType t
+    | Some t -> raise (Exceptions.TypeError ("The expression '" ^ Prettyp.prim_exp_str p_exp 0 ^ "' of type " ^ Prettyp.typeT_str t 0 ^ " cannot be sliced", l))
+    | None -> raise (Exceptions.TypeError ("The expression '" ^ Prettyp.prim_exp_str p_exp 0 ^ "' cannot be sliced", l))
+    end in
+    let check_int_type e =
+      match type_exp e env with
+      | Some (IntType) -> ()
+      | Some t -> raise (Exceptions.TypeError ("The expression '" ^ Prettyp.exp_str e 0 ^ "' must have type int. Got '" ^ Prettyp.typeT_str t 0 ^ "'", l))
+      | None -> raise (Exceptions.TypeError ("The expression '" ^ Prettyp.exp_str e 0 ^ "' must have type int. Got no type", l))
+    in
+      check_int_type e_s;
+      check_int_type e_e;
+      begin match e_m_op with
+      | None -> ()
+      | Some e_m -> check_int_type e_m
+      end;
+      Some p_exp_t
   | _ -> Some IntType
 and type_unary u env =
   match u with
