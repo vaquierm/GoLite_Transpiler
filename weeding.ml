@@ -73,7 +73,7 @@ and weed_prim_exp p_exp env =
 (* Weed the variable declaration *)
 let weed_var_decl d env =
   let weeded_decl = match d with
-  | VarDeclNoTypeInit (id, e, l) -> VarDeclTypeInit (type_exp e env, id, weed_exp e env, l)
+  | VarDeclNoTypeInit (id, e, l) -> let weeded_e = weed_exp e env in VarDeclTypeInit (type_exp weeded_e env, id, weeded_e, l)
   | VarDeclTypeInit (t, id, e, l) -> VarDeclTypeInit (weed_type t env, id, weed_exp e env, l)
   | VarDeclTypeNoInit (t, id, l) -> VarDeclTypeNoInit (weed_type t env, id, l)
   in

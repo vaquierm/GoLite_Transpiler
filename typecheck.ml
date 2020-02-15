@@ -79,6 +79,31 @@ and type_prim_exp p_exp env =
         else field_not_found ()
       | _ -> field_not_found ()
       end
+  | UnsureTypeFuncCall (id, _, l) -> failwith ("Function call or cast '" ^ id ^ "' was never resolved during weeding on line " ^ (string_of_int l))
+  | IndexExp (p_exp, e, l) ->
+    let p_t = type_prim_exp p_exp env in
+      begin match p_t with
+      | SliceType e_t -> e_t
+      | ArrayType (e_t, _) -> e_t
+      | _ -> raise (Exceptions.TypeError ("Cannot index type '" ^ Prettyp.typeT_str p_t 0 ^ "'", l))
+      end
+  | FuncCall (name, in_l, l) ->
+      let (in_t_l, out_t) = Env.get_func name env l in
+        let rec check_input_types in_l in_t_l =
+          begin match in_l, in_t_l with
+          | [], [] -> ()
+          | e::in_l', t::in_t_l' ->
+            let e_t = type_exp e env in
+              if e_t = t then check_input_types in_l' in_t_l'
+              else raise (Exceptions.TypeError ("In function call '" ^ name ^ "', expression '" ^ Prettyp.exp_str e 0 ^ "' has type '" ^ Prettyp.typeT_str e_t 0 ^ "'. Expected '" ^ Prettyp.typeT_str t 0 ^ "'", l))
+          | _ -> failwith "The the type list length and ecpression lest length do not macth"
+          end
+          in
+          if not(List.length in_l = List.length in_t_l) then
+            raise (Exceptions.TypeError ("The function '" ^ name ^ "' expects " ^ string_of_int (List.length in_t_l) ^ " arguments. Got " ^ string_of_int (List.length in_l) ^ ".", l))
+          else
+            check_input_types in_l in_t_l;
+            let Some x = out_t in x
   | _ -> IntType
 and type_unary u env =
   match u with
