@@ -137,6 +137,32 @@ and type_prim_exp p_exp env =
       | Some e_m -> check_int_type e_m
       end;
       Some p_exp_t
+  | LenExp (p_exp, l) | CapExp (p_exp, l) ->
+    let p_exp_t_op = type_prim_exp p_exp env in
+    let p_exp_t = begin match p_exp_t_op with
+    | None -> raise (Exceptions.TypeError ("Invalid argument type 'None' for len", l))
+    | Some t -> t
+    end in
+      begin match p_exp_t with
+      | SliceType _ | ArrayType _ -> Some IntType
+      | _ -> raise (Exceptions.TypeError ("Invalid argument type '" ^ Prettyp.typeT_str p_exp_t 0 ^ "' for len", l))
+      end
+  | AppendExp (p_exp, e, l) ->
+    let p_exp_t_op = type_prim_exp p_exp env in
+      let e_t_op = type_exp e env in
+        begin match p_exp_t_op with
+        | None -> raise (Exceptions.TypeError ("Expression '" ^ Prettyp.prim_exp_str p_exp 0 ^ "' must be of type slice", l))
+        | Some (SliceType t) ->
+          let e_t = begin match e_t_op with
+          | None -> raise (Exceptions.TypeError ("Expression '" ^ Prettyp.exp_str e 0 ^ "' should be of type '" ^ Prettyp.typeT_str t 0 ^ "'", l))
+          | Some t -> t
+          end in
+            if t = e_t then
+              Some (SliceType t)
+            else
+              raise (Exceptions.TypeError ("Type mismatch. Element to be appended myst be of type '" ^ Prettyp.typeT_str t 0 ^ "'. Got '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
+        | Some t -> raise (Exceptions.TypeError ("Expression '" ^ Prettyp.prim_exp_str p_exp 0 ^ "' must be of type slice. Got '" ^ Prettyp.typeT_str t 0 ^ "'", l))
+        end
   | _ -> Some IntType
 and type_unary u env =
   match u with
