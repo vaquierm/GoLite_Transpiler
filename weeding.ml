@@ -41,11 +41,29 @@ and weed_exp e env =
   match e with
   | Binop (e1, op, e2, l) -> Binop (weed_exp e1 env, op, weed_exp e2 env, l)
   | Unary (op, e, l) -> Unary (op, weed_exp e env, l)
-  | PrimExp p_exp -> PrimExp (weed_prim_exp p_exp env)
+  | PrimExp p_exp ->
+      let weeded_p_exp = weed_prim_exp p_exp env in
+        begin match weeded_p_exp with
+        | CastExp (t, e, l) -> (* This case is to remove all unecessary casts *)
+          let e_t_op = type_exp e env in
+            let e_t = begin match e_t_op with
+              | None -> raise (Exceptions.TypeError ("Cannot cast the expression '" ^ Prettyp.exp_str e 0 ^ "' as it has no value", l))
+              | Some t -> t
+              end in
+                if e_t = t then
+                  begin
+                    Exceptions.new_warning (Exceptions.Warning ("The cast to type '" ^ Prettyp.typeT_str t 0 ^ "' is unecessary.", l));
+                    e (* The cast was useless, just return the inner expression *)
+                  end
+                else
+                  PrimExp (weeded_p_exp)
+        | _ -> PrimExp (weeded_p_exp)
+        end
 and weed_prim_exp p_exp env =
   match p_exp with
   | Var (x, l) -> let _ = Env.get_var x env l in p_exp
-  | CastExp (t, e, l) -> CastExp (weed_type t env, weed_exp e env, l)
+  | CastExp (t, e, l) ->
+    CastExp (weed_type t env, weed_exp e env, l)
   | SelectExp (p_exp', field, l) -> SelectExp (weed_prim_exp p_exp' env, field, l)
   | IndexExp (p_exp', e, l) -> IndexExp (weed_prim_exp p_exp' env, weed_exp e env, l)
   | FuncCall (name, e_list, l) -> let _ = Env.get_func name env l in FuncCall (name, List.map (fun e -> weed_exp e env) e_list, l)
