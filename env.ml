@@ -279,11 +279,11 @@ let build_top_level_env top_decls =
       | [] -> ()
       | d::decls' ->
         begin match d with
-        | TopVarDecl v_decl -> var_decl env v_decl;
-        | TopTypeDecl t_decl -> type_decl env t_decl;
-        | TopFuncDecl f_decl -> func_decl env f_decl;
+        | TopVarDecl v_decl -> var_decl env v_decl
+        | TopTypeDecl t_decl -> type_decl env t_decl
+        | TopFuncDecl f_decl -> func_decl env f_decl
+        end;
         declare decls'
-        end
     in
     declare top_decls;
     env

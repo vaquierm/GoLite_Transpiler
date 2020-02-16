@@ -54,6 +54,13 @@ let op_compatible b_op t =
   | _ -> true
 ;;
 
+(* Checks if the rexpresison can be assigned to *)
+let is_assignable e =
+  match e with
+  | PrimExp (Var _) | PrimExp (SelectExp _) | PrimExp (IndexExp _) -> true
+  | _ -> false
+;;
+
 let rec type_exp exp env =
   match exp with
   | Binop _ -> type_binop exp env
@@ -279,6 +286,41 @@ let rec type_stm stm env =
   | VarDeclStm v_decl ->
     typecheck_var_decl v_decl env;
     None
+  | Return (None, _) -> None
+  | Return (Some e, l) ->
+    let e_t_op = type_exp e env in
+    begin match e_t_op with
+    | None -> raise (Exceptions.TypeError ("Cannot use '" ^ Prettyp.exp_str e 0 ^ "' as a value", l))
+    | Some _ -> e_t_op
+    end
+  | Continue -> None
+  | ExpStm (e, l) ->
+    let e_t_op = type_exp e env in
+    begin match e with
+    | PrimExp (FuncCall _) -> None
+    | _ ->
+      begin match e_t_op with
+      | None -> None
+      | Some _ -> raise (Exceptions.TypeError ("'" ^ Prettyp.exp_str e 0 ^ "' evaluated but not used", l))
+      end
+    end
+  | AssignStm (lhs, rhs, l) ->
+  if is_assignable lhs then
+    (let lhs_t_op = type_exp lhs env in
+      let rhs_t_op = type_exp rhs env in
+        let lhs_t = begin match lhs_t_op with
+        | None -> failwith "The left hand side should never be void since we chench for assignability"
+        | Some t -> t
+        end in
+          let rhs_t = begin match rhs_t_op with
+          | None -> raise (Exceptions.TypeError ("Cannot use '" ^ Prettyp.exp_str rhs 0 ^ "' as a value", l))
+          | Some t -> t
+          end in
+          if lhs_t = rhs_t then None
+          else raise (Exceptions.TypeError ("Type mismatch cannot assign type '" ^ Prettyp.typeT_str rhs_t 0 ^ "' to '" ^ Prettyp.typeT_str lhs_t 0 ^ "'", l))
+    )
+  else
+    raise (Exceptions.SyntaxError ("The expression '" ^ Prettyp.exp_str lhs 0 ^ "' is not assignable", Some l))
   | _ -> None
 and type_block b env =
   match b with
