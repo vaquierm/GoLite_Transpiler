@@ -253,8 +253,32 @@ and type_binop b_exp env =
   | _ -> failwith ("'" ^ (Prettyp.exp_str b_exp 0) ^ "' is not a binop expression")
 ;;
 
+let typecheck_var_decl v_decl env =
+  (* Add the decl to the environement *)
+  Env.var_decl env v_decl;
+  match v_decl with
+  | VarDeclTypeInit (t, id, e, l) ->
+    let e_t_op = type_exp e env in
+      let e_t = begin match e_t_op with
+      | None -> raise (Exceptions.TypeError ("Type mismatch. Expression '" ^ Prettyp.exp_str e 0 ^ "' is not of type '" ^ Prettyp.typeT_str t 0 ^ "'", l))
+      | Some t -> t
+      end in
+        if t = e_t then ()
+        else
+          raise (Exceptions.TypeError ("Type mismatch. Expression '" ^ Prettyp.exp_str e 0 ^ "' should be type '" ^ Prettyp.typeT_str t 0 ^ "'. Got '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
+  | VarDeclNoTypeInit (_, _, l) -> failwith ("Line " ^ string_of_int l ^ "\nDeclaration '" ^ Prettyp.var_decl_str v_decl 0 ^ "' never got its type resolved at weeding time")
+  | VarDeclTypeNoInit _ -> ()
+;;
+
 let rec type_stm stm env =
   match stm with
+  | TypeDeclStm t_decl ->
+    (* Add the declaration to the environement *)
+    Env.type_decl env t_decl;
+    None
+  | VarDeclStm v_decl ->
+    typecheck_var_decl v_decl env;
+    None
   | _ -> None
 and type_block b env =
   match b with
