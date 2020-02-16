@@ -1,9 +1,12 @@
 let lexbuf = Lexing.from_channel stdin in
 try
-  let program = Parser.start Lexer.token lexbuf in 
+  let program = print_endline "Parsing..."; Parser.start Lexer.token lexbuf in 
+    print_endline "\nOriginal program";
     print_string (Prettyp.program_str program);
-    let weeded_prog = Weeding.weed_program program in
+    let weeded_prog = print_endline "\nWeeding..."; Weeding.weed_program program in
+    print_endline "\nWeeded program";
     print_string (Prettyp.program_str weeded_prog);
+    print_endline "\nTypechecking...";
     Typecheck.typecheck_program weeded_prog;
     Exceptions.print_warnings ();
 with

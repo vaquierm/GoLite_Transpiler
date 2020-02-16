@@ -163,7 +163,23 @@ and type_prim_exp p_exp env =
               raise (Exceptions.TypeError ("Type mismatch. Element to be appended myst be of type '" ^ Prettyp.typeT_str t 0 ^ "'. Got '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
         | Some t -> raise (Exceptions.TypeError ("Expression '" ^ Prettyp.prim_exp_str p_exp 0 ^ "' must be of type slice. Got '" ^ Prettyp.typeT_str t 0 ^ "'", l))
         end
-  | _ -> Some IntType
+  | CastExp (t, e, l) ->
+    let e_t_op = type_exp e env in
+      let e_t = 
+        begin match e_t_op with
+        | None -> raise (Exceptions.TypeError ("Cannot cast the expression '" ^ Prettyp.exp_str e 0 ^ "' as it has no value", l))
+        | Some t -> t
+        end in
+          if e_t = t then
+            Exceptions.new_warning (Exceptions.Warning ("The cast to type '" ^ Prettyp.typeT_str t 0 ^ "' is unecessary.", l));
+          let t_u = resolve_type t in
+          let e_t_u = resolve_type e_t in
+          if is_numeric t_u && is_numeric e_t_u then
+            Some t
+          else if t_u = e_t_u then
+            Some t
+          else
+            raise (Exceptions.TypeError ("Cannot cast type '" ^ Prettyp.typeT_str e_t 0 ^ "' into '" ^ Prettyp.typeT_str t 0 ^ "'", l))
 and type_unary u env =
   match u with
   | Unary (op, e, l) ->

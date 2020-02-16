@@ -204,5 +204,5 @@ let program_str prog =
   | Program (pkg_clause, decls) ->
     let pkg = pkg_str pkg_clause in
       let decls = List.map top_level_decl_str decls in
-        pkg ^ (List.fold_right (fun d acc -> acc ^ d) decls "") ^ "\n"
+        pkg ^ (List.fold_right (fun d acc -> d ^ acc) decls "") ^ "\n"
 ;;

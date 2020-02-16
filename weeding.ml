@@ -58,7 +58,7 @@ and weed_prim_exp p_exp env =
   | UnsureTypeFuncCall (id, e, l) ->
       begin try
         let t = Env.get_type id env l in
-          CastExp (t, weed_exp e env, l)
+          weed_prim_exp (CastExp (t, weed_exp e env, l)) env
       with
         | Exceptions.SyntaxError _ ->
           let _ = Env.get_func id env l in
@@ -204,9 +204,11 @@ let weed_top_decls decls =
     | d::decls' ->
       begin match d with
       | TopVarDecl v_decl ->
-        (TopVarDecl (weed_var_decl v_decl env))::(weed_top_decls' decls')
+        let weeded_decl = weed_var_decl v_decl env in
+          (TopVarDecl weeded_decl)::(weed_top_decls' decls')
       | TopTypeDecl t_decl ->
-        (TopTypeDecl (weed_type_decl t_decl env)::(weed_top_decls' decls'))
+        let weeded_decl = weed_type_decl t_decl env in
+          (TopTypeDecl weeded_decl)::(weed_top_decls' decls')
       | _ -> d::(weed_top_decls' decls')
       end;
   in
@@ -216,7 +218,8 @@ let weed_top_decls decls =
     | d::decls' ->
       begin match d with
       | TopFuncDecl f_decl ->
-        (TopFuncDecl (weed_func_decl f_decl env))::(weed_top_func_decls decls')
+        let weeded_decl = weed_func_decl f_decl env in
+          (TopFuncDecl weeded_decl)::(weed_top_func_decls decls')
       | _ -> d::(weed_top_func_decls decls')
       end;
   in

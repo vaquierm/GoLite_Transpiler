@@ -78,7 +78,7 @@ start : package_clause import_decls top_level_decls EOF       {
     if List.length witout_main == List.length $3 then
       raise (Exceptions.SyntaxError ("The program must have a function called main which takes no arguments and returns nothing", None))
     else
-      Ast.Program ($1, (!main)::witout_main)
+      Ast.Program ($1, witout_main @ [!main])
   };
 
 package_clause
@@ -90,9 +90,9 @@ import_decls
 
 top_level_decls
   :                                                 { [] }
-  | top_level_decls type_decls                      { (List.map (fun var -> Ast.TopTypeDecl var) $2) @ $1 }
-  | top_level_decls var_decls                       { (List.map (fun var -> Ast.TopVarDecl var) $2) @ $1 }
-  | top_level_decls func_decl                       { [(Ast.TopFuncDecl $2)] @ $1 }
+  | top_level_decls type_decls                      { $1 @ (List.map (fun var -> Ast.TopTypeDecl var) $2) }
+  | top_level_decls var_decls                       { $1 @ (List.map (fun var -> Ast.TopVarDecl var) $2) }
+  | top_level_decls func_decl                       { $1 @ [(Ast.TopFuncDecl $2)] }
 
 type_decls
   : TYPE type_spec                                  { [$2] }

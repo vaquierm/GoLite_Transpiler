@@ -243,7 +243,12 @@ let var_decl env v_decl =
 
 let type_decl env t_decl =
   let t_tup = match t_decl with
-  | TypeDecl (t, id, l) -> (id, t, false, l)
+  | TypeDecl (t, id, l) ->
+    let underlying_type = begin match t with
+    | DefinedType (id', _, _) -> get_type id' env l
+    | _ -> t
+    end in
+    (id, DefinedType (id, Some underlying_type, l), false, l)
   in
   let (id, _, _, l) = t_tup in
     if List.length env = 0 then
