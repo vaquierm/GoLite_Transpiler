@@ -337,13 +337,17 @@ for_statement
     Ast.WhileStm ($2, $3, $1)
   }
   | FOR simple_statement exp? SEMICOLON simple_statement body {
-    Ast.ForStm (Some $2, $3, Some $5, $6, $1)
+    match $2 with
+    | VarDeclStm v_decl -> Ast.BlockStm (Ast.StmsBlock [$2; Ast.ForStm (None, $3, Some $5, $6, $1)])
+    | _ -> Ast.ForStm (Some $2, $3, Some $5, $6, $1)
   }
   | FOR SEMICOLON exp? SEMICOLON simple_statement body {
     Ast.ForStm (None, $3, Some $5, $6, $1)
   }
   | FOR simple_statement exp? SEMICOLON SEMICOLON body {
-    Ast.ForStm (Some $2, $3, None, $6, $1)
+    match $2 with
+    | VarDeclStm v_decl -> Ast.BlockStm (Ast.StmsBlock [$2; Ast.ForStm (None, $3, None, $6, $1)])
+    | _ -> Ast.ForStm (Some $2, $3, None, $6, $1)
   }
   | FOR SEMICOLON exp? SEMICOLON SEMICOLON body {
     Ast.ForStm (None, $3, None, $6, $1)
