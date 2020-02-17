@@ -307,6 +307,7 @@ let rec typecheck_stm stm env return_t_op =
       else
        raise (Exceptions.TypeError ("Expected return type '" ^ Prettyp.typeT_str return_t 0 ^ "'. Got '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
     end
+  | Break -> false
   | Continue -> false
   | ExpStm (e, l) ->
     let e_t_op = type_exp e env in
@@ -356,7 +357,44 @@ let rec typecheck_stm stm env return_t_op =
         let e_b_ret = typecheck_block e_b env return_t_op in
           b_ret = e_b_ret
       end
-  | _ -> false
+  | WhileStm (e_op, b, l) ->
+      begin match e_op with
+      | None ->
+        typecheck_block b env return_t_op
+      | Some e ->
+        let e_t_op = type_exp e env in
+          let e_t = begin match e_t_op with
+          | None -> raise (Exceptions.TypeError ("Expected condition of type bool", l))
+          | Some t -> t
+          end in
+            if e_t = BoolType then
+              let _ = typecheck_block b env return_t_op in
+                false
+            else
+              raise (Exceptions.TypeError ("Expected condition of type bool. Got '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
+      end
+  | ForStm (init_op, e_op, inc_op, b, l) ->
+    begin match init_op, inc_op with
+    | None, None -> ()
+    | Some init, None -> let _ = typecheck_stm init env return_t_op in ()
+    | None, Some inc -> let _ = typecheck_stm inc env return_t_op in ()
+    | Some init, Some inc -> let _ = (typecheck_stm init env return_t_op, typecheck_stm inc env return_t_op) in ()
+    end;
+    begin match e_op with
+      | None ->
+        typecheck_block b env return_t_op
+      | Some e ->
+        let e_t_op = type_exp e env in
+          let e_t = begin match e_t_op with
+          | None -> raise (Exceptions.TypeError ("Expected condition of type bool", l))
+          | Some t -> t
+          end in
+            if e_t = BoolType then
+              let _ = typecheck_block b env return_t_op in
+                false
+            else
+              raise (Exceptions.TypeError ("Expected condition of type bool. Got '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
+      end
 (* return_t_op is the expected return type option in scope *)
 and typecheck_block b env return_t_op =
   match b with
