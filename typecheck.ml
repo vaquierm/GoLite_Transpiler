@@ -277,30 +277,44 @@ let typecheck_var_decl v_decl env =
   | VarDeclTypeNoInit _ -> ()
 ;;
 
-let rec type_stm stm env =
+(*
+Typecheck the statement.
+Return true if the statement returns, false otherwise
+return_t_op is the expected return type option in scope
+*)
+let rec typecheck_stm stm env return_t_op =
   match stm with
   | TypeDeclStm t_decl ->
     (* Add the declaration to the environement *)
     Env.type_decl env t_decl;
-    None
+    false
   | VarDeclStm v_decl ->
     typecheck_var_decl v_decl env;
-    None
-  | Return (None, _) -> None
+    false
+  | Return (None, l) ->
+    begin match return_t_op with
+    | None -> true
+    | Some t -> raise (Exceptions.TypeError ("Expected return expression of type '" ^ Prettyp.typeT_str t 0 ^ "'", l))
+    end
   | Return (Some e, l) ->
     let e_t_op = type_exp e env in
-    begin match e_t_op with
-    | None -> raise (Exceptions.TypeError ("Cannot use '" ^ Prettyp.exp_str e 0 ^ "' as a value", l))
-    | Some _ -> e_t_op
+    begin match e_t_op, return_t_op with
+    | None, _ -> raise (Exceptions.TypeError ("Cannot use '" ^ Prettyp.exp_str e 0 ^ "' as a value", l))
+    | Some e_t, None -> raise (Exceptions.TypeError ("Expected no return expression", l))
+    | Some e_t, Some return_t ->
+      if e_t = return_t then
+        true
+      else
+       raise (Exceptions.TypeError ("Expected return type '" ^ Prettyp.typeT_str return_t 0 ^ "'. Got '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
     end
-  | Continue -> None
+  | Continue -> false
   | ExpStm (e, l) ->
     let e_t_op = type_exp e env in
     begin match e with
-    | PrimExp (FuncCall _) -> None
+    | PrimExp (FuncCall _) -> false
     | _ ->
       begin match e_t_op with
-      | None -> None
+      | None -> false
       | Some _ -> raise (Exceptions.TypeError ("'" ^ Prettyp.exp_str e 0 ^ "' evaluated but not used", l))
       end
     end
@@ -316,44 +330,63 @@ let rec type_stm stm env =
           | None -> raise (Exceptions.TypeError ("Cannot use '" ^ Prettyp.exp_str rhs 0 ^ "' as a value", l))
           | Some t -> t
           end in
-          if lhs_t = rhs_t then None
-          else raise (Exceptions.TypeError ("Type mismatch cannot assign type '" ^ Prettyp.typeT_str rhs_t 0 ^ "' to '" ^ Prettyp.typeT_str lhs_t 0 ^ "'", l))
+          if lhs_t = rhs_t then false
+          else raise (Exceptions.TypeError ("Type mismatch. Cannot assign type '" ^ Prettyp.typeT_str rhs_t 0 ^ "' to '" ^ Prettyp.typeT_str lhs_t 0 ^ "'", l))
     )
   else
     raise (Exceptions.SyntaxError ("The expression '" ^ Prettyp.exp_str lhs 0 ^ "' is not assignable", Some l))
-  | _ -> None
-and type_block b env =
+  | Print (e, _ , l) ->
+    let e_t_op = type_exp e env in
+      let _ = begin match e_t_op with
+      | None -> raise (Exceptions.TypeError ("Cannot use expression '" ^ Prettyp.exp_str e 0 ^ "' as value", l))
+      | Some t -> t
+      end in
+        false
+  | BlockStm b -> typecheck_block b env return_t_op
+  | IfStm (e, b, e_b_op, l) ->
+    begin match type_exp e env with
+    | None -> raise (Exceptions.TypeError ("The condition expression must be of type bool", l))
+    | Some BoolType -> ()
+    | Some t -> raise (Exceptions.TypeError ("The condition expression must be of type bool. Got '" ^ Prettyp.typeT_str t 0 ^ "'", l))
+    end;
+    let b_ret = typecheck_block b env return_t_op in
+      begin match e_b_op with
+      | None -> false (* Since it is not guaranteed to enter the if *)
+      | Some e_b ->
+        let e_b_ret = typecheck_block e_b env return_t_op in
+          b_ret = e_b_ret
+      end
+  | _ -> false
+(* return_t_op is the expected return type option in scope *)
+and typecheck_block b env return_t_op =
   match b with
   | StmsBlock stms ->
     let new_scope = Env.push_scope env in
-      type_stms_list stms new_scope
+      type_stms_list stms new_scope return_t_op
 (*
 The type of statement list will be Some t if there is a return statement
 at the end of the list
+return_t_op is the expected return type option in scope
 *)
-and type_stms_list stms env =
+and type_stms_list stms env return_t_op =
   match stms with
-  | [] -> None
+  | [] -> false
   | stm::stms' ->
-    let stm_t = type_stm stm env in
-    match stm_t with
-    | None -> type_stms_list stms' env
-    | Some _ -> stm_t
+    let stms_return = typecheck_stm stm env return_t_op in
+    if not (stms_return) then
+      type_stms_list stms' env return_t_op
+    else true
 ;;
 
 let typecheck_func f_decl env =
   match f_decl with
   | FuncDecl (name, in_list, out_opt, StmsBlock (stms), l) ->
     let func_env = Env.open_function_scope env f_decl in
-      let body_t_opt = type_stms_list stms func_env in
-        begin match body_t_opt, out_opt with
-        | Some t_b, Some t_o when not (t_b = t_o) ->
-          raise (Exceptions.TypeError ("The function expected a return type of '" ^ Prettyp.typeT_str t_o 0 ^ "', but instead got '" ^ Prettyp.typeT_str t_b 0 ^ "'", l))
-        | Some t_b, None ->
-          raise (Exceptions.TypeError ("The function should not return anything", l))
-        | None, Some t_o ->
-          raise (Exceptions.TypeError ("The function is missing a return statement of type '" ^ Prettyp.typeT_str t_o 0 ^ "'", l))
-        | _ -> ()
+      let ret = type_stms_list stms func_env out_opt in
+        begin match ret, out_opt with
+        | false, None | true, Some _ -> ()
+        | false, Some t -> raise (Exceptions.TypeError ("Not all code paths return type '" ^ Prettyp.typeT_str t 0 ^ "' in function '" ^ name ^ "'", l))
+        | true, None -> failwith ("Line " ^ string_of_int l ^ "\nTypecheckof body did not catch incorrect non void return")
         end
 ;;
 
