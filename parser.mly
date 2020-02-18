@@ -3,7 +3,7 @@
 
 %token EOF
 %token<int> LPAR RPAR
-%token LCURLY RCURLY
+%token<int> LCURLY RCURLY
 %token<int> LSQUARE RSQUARE
 %token COLON
 %token<int> SEMICOLON
@@ -62,7 +62,7 @@
 
 /* Productions */
 start : package_clause import_decls top_level_decls EOF       {
-    let main = ref (Ast.TopFuncDecl (Ast.FuncDecl ("", [], None, Ast.StmsBlock [], -1))) in
+    let main = ref (Ast.TopFuncDecl (Ast.FuncDecl ("", [], None, Ast.StmsBlock ([], 0), -1))) in
     let rec extract_main decls =
     match decls with
     | [] -> []
@@ -252,7 +252,7 @@ primary_exp
   | LEN LPAR primary_exp RPAR                     { Ast.LenExp ($3, $2) }
   | CAP LPAR primary_exp RPAR                     { Ast.CapExp ($3, $2) }
 
-body : LCURLY statement_list RCURLY SEMICOLON?    { Ast.StmsBlock (List.rev $2) }
+body : LCURLY statement_list RCURLY SEMICOLON?    { Ast.StmsBlock ((List.rev $2), $3) }
 
 statement_list
   :                                               { [] }
@@ -307,20 +307,20 @@ simple_statement
   | PRINTLN LPAR exp RPAR SEMICOLON               { Ast.Print ($3, true, $5) }
 
 if_statement
-  : IF simple_statement exp body ELSE if_statement{
-    let inner_else = Ast.StmsBlock ([$6])
+  : IF simple_statement exp body ELSE if_statement {
+    let inner_else = Ast.StmsBlock ([$6], Ast.if_stm_endline $6)
     in
     let inner = Ast.IfStm ($3, $4, Some inner_else, $1)
     in
-    Ast.BlockStm (Ast.StmsBlock [$2; inner])
+    Ast.BlockStm (Ast.StmsBlock ([$2; inner], Ast.if_stm_endline $6))
   }
   | IF simple_statement exp body ELSE body {
     let inner = Ast.IfStm ($3, $4, Some $6, $1)
     in
-    Ast.BlockStm (Ast.StmsBlock [$2; inner])
+    Ast.BlockStm (Ast.StmsBlock ([$2; inner], Ast.block_endline $6))
   }
   | IF exp body ELSE if_statement {
-    let b = Ast.StmsBlock ([$5])
+    let b = Ast.StmsBlock ([$5], Ast.if_stm_endline $5)
     in
     Ast.IfStm ($2, $3, Some b, $1) 
   }
@@ -329,7 +329,7 @@ if_statement
   | IF simple_statement exp body {
     let inner = Ast.IfStm ($3, $4, None, $1)
     in
-    Ast.BlockStm (Ast.StmsBlock [$2; inner])
+    Ast.BlockStm (Ast.StmsBlock ([$2; inner], Ast.block_endline $4))
   }
 
 for_statement
@@ -338,7 +338,7 @@ for_statement
   }
   | FOR simple_statement exp? SEMICOLON simple_statement body {
     match $2 with
-    | VarDeclStm v_decl -> Ast.BlockStm (Ast.StmsBlock [$2; Ast.ForStm (None, $3, Some $5, $6, $1)])
+    | Ast.VarDeclStm v_decl -> Ast.BlockStm (Ast.StmsBlock ([$2; Ast.ForStm (None, $3, Some $5, $6, $1)], Ast.block_endline $6))
     | _ -> Ast.ForStm (Some $2, $3, Some $5, $6, $1)
   }
   | FOR SEMICOLON exp? SEMICOLON simple_statement body {
@@ -346,7 +346,7 @@ for_statement
   }
   | FOR simple_statement exp? SEMICOLON SEMICOLON body {
     match $2 with
-    | VarDeclStm v_decl -> Ast.BlockStm (Ast.StmsBlock [$2; Ast.ForStm (None, $3, None, $6, $1)])
+    | Ast.VarDeclStm v_decl -> Ast.BlockStm (Ast.StmsBlock ([$2; Ast.ForStm (None, $3, None, $6, $1)], Ast.block_endline $6))
     | _ -> Ast.ForStm (Some $2, $3, None, $6, $1)
   }
   | FOR SEMICOLON exp? SEMICOLON SEMICOLON body {

@@ -398,7 +398,7 @@ let rec typecheck_stm stm env return_t_op =
 (* return_t_op is the expected return type option in scope *)
 and typecheck_block b env return_t_op =
   match b with
-  | StmsBlock stms ->
+  | StmsBlock (stms, _) ->
     let new_scope = Env.push_scope env in
       type_stms_list stms new_scope return_t_op
 (*
@@ -418,7 +418,7 @@ and type_stms_list stms env return_t_op =
 
 let typecheck_func f_decl env =
   match f_decl with
-  | FuncDecl (name, in_list, out_opt, StmsBlock (stms), l) ->
+  | FuncDecl (name, in_list, out_opt, StmsBlock (stms, _), l) ->
     let func_env = Env.open_function_scope env f_decl in
       let ret = type_stms_list stms func_env out_opt in
         begin match ret, out_opt with

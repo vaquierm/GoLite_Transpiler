@@ -141,7 +141,7 @@ let var_decl_str decl n =
 
 let rec block_str b n =
   match b with
-  | StmsBlock stm_list ->
+  | StmsBlock (stm_list, _) ->
     let stms_str = List.fold_right (fun s acc -> stm_str s (n+1) ^ acc) stm_list "" in
       "{\n" ^ stms_str ^ indents n ^ "}\n"
 and stm_str stm n =

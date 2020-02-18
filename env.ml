@@ -34,6 +34,23 @@ let print_scope s =
   print_string ("{\nT: " ^ t_str ^ "\nV: " ^ v_str ^ "\nF: " ^ f_str ^ "\n}\n")
 ;;
 
+let copy_scope s =
+  let copied_s = empty_scope () in
+    copied_s.t <- s.t;
+    copied_s.v <- s.v;
+    copied_s.f <- s.f;
+    copied_s
+;;
+
+let copy_env env =
+  let rec copy_env' env' =
+    match env' with
+    | [] -> []
+    | s::env'' -> (copy_scope s)::(copy_env' env'')
+  in
+  copy_env' env
+;;
+
 let rec print_env env =
   print_string "Printing env\n";
   let rec print_env' env =

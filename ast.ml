@@ -102,8 +102,8 @@ type statement =
   (* Print statement (exp to print, new line, line number) *)
   | Print of exp * bool * int
 and block =
-  (* List of statements the block is made of *)
-  | StmsBlock of statement list
+  (* List of statements the block is made of, last line of block *)
+  | StmsBlock of (statement list) * int
 
 type func_decl =
   (* Function name, List of inputs (id, type), return type, block, line number *)
@@ -123,3 +123,29 @@ type package_clause =
 
 type program =
   | Program of package_clause * (top_level_decl list)
+
+(* Gets the last line of a block *)
+let block_endline b =
+  match b with
+  | StmsBlock (_, l) -> l
+;;
+
+(* Gets the last line of an if statement *)
+let if_stm_endline if_stm =
+  match if_stm with
+  | IfStm (_, b, None, _) -> block_endline b
+  | IfStm (_, _, Some b, _) -> block_endline b
+  | _ -> failwith "Unexpected non if statement"
+;;
+
+(* Gets the last line of a statement *)
+let stm_endline s =
+  match s with
+  | BlockStm b -> block_endline b
+  | Return (_, l) -> l
+  | IfStm _ -> if_stm_endline s
+  | ForStm (_, _, _, b, _) -> block_endline b
+  | WhileStm (_, b, _) -> block_endline b
+  | _ -> failwith "Unexpected expression last line query"
+;;
+
