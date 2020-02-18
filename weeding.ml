@@ -29,6 +29,7 @@ let rec weed_type t env =
       begin match fields' with
       | [] -> acc
       | (id, t)::fields'' -> 
+        print_endline ("field: " ^ id);
         if List.exists (fun (id', t') -> id = id') fields'' then
           raise (Exceptions.SyntaxError ("Multiple fields with name '" ^ id ^ "' defined in struct", Some l))
         else
@@ -112,7 +113,7 @@ let weed_type_decl d env =
   let weeded_decl = match d with
   | TypeDecl (t, id, l) -> TypeDecl (weed_type t env, id, l)
   in 
-  Env.type_decl env d;
+  Env.type_decl env weeded_decl;
   weeded_decl
 ;;
 
