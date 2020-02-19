@@ -131,7 +131,7 @@ and type_prim_exp p_exp env =
                 end in
               if e_t = t then check_input_types in_l' in_t_l'
               else raise (Exceptions.TypeError ("In function call '" ^ name ^ "', expression '" ^ Prettyp.exp_str e 0 ^ "' has type '" ^ Prettyp.typeT_str e_t 0 ^ "'. Expected '" ^ Prettyp.typeT_str t 0 ^ "'", l))
-          | _ -> failwith "The the type list length and ecpression lest length do not macth"
+          | _ -> failwith ("Line " ^ string_of_int l ^ "\nThe the type list length and expression length length do not macth in function '" ^ name ^ "'")
           end
           in
           if not(List.length in_l = List.length in_t_l) then
@@ -340,7 +340,7 @@ let rec typecheck_stm stm env return_t_op =
     (let lhs_t_op = type_exp lhs env in
       let rhs_t_op = type_exp rhs env in
         let lhs_t = begin match lhs_t_op with
-        | None -> failwith "The left hand side should never be void since we chench for assignability"
+        | None -> failwith ("Line " ^ string_of_int l ^ "\nThe left hand side should never be void since we chench for assignability")
         | Some t -> if is_literal rhs then resolve_type t else t
         end in
           let rhs_t = begin match rhs_t_op with

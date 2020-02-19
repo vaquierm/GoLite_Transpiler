@@ -247,11 +247,11 @@ let var_decl env v_decl =
   let v_tup = match v_decl with
   | VarDeclTypeInit (t, id, _, l) -> (id, t, false, l)
   | VarDeclTypeNoInit (t, id, l) -> (id, t, false, l)
-  | VarDeclNoTypeInit (id, e, l) -> failwith "Cannot add variable to env without knowing type"
+  | VarDeclNoTypeInit (id, e, l) -> failwith ("Line " ^ string_of_int l ^ "\nCannot add variable to env without knowing type")
   in
   let (id, _, _, l) = v_tup in
     if List.length env = 0 then
-      failwith "The environement is empty"
+      failwith ("Line " ^ string_of_int l ^ "\nThe environement is empty so we cannot declare variable '" ^ id ^ "'")
     else
       let s = List.hd env in
       check_exists s id l;
@@ -269,7 +269,7 @@ let type_decl env t_decl =
   in
   let (id, _, _, l) = t_tup in
     if List.length env = 0 then
-      failwith "The environement is empty"
+      failwith ("Line " ^ string_of_int l ^ "\nThe environement is empty so we cannot declare type '" ^ id ^ "'")
     else
       let s = List.hd env in
       check_exists s id l;
@@ -290,7 +290,7 @@ let func_decl env f_decl =
   in
   let (id, _, _, _, l) = f_tup in
   if List.length env = 0 then
-    failwith "The environement is empty"
+    failwith ("Line " ^ string_of_int l ^ "\nThe environement is empty so we cannot declare function '" ^ id ^ "'")
   else
     let s = List.hd env in
     check_exists s id l;
