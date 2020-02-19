@@ -12,21 +12,22 @@ type unary_op =
   | UMinus | UBinNOT | BoolNOT | Ref | DeRef
 
 type typeT =
-  (* Type from identifier: string of type, real type*)
-  | DefinedType of string * (typeT option)
+  (* Type from identifier: string of type, underlying type, line *)
+  | DefinedType of string * (typeT option) * int
   (* Array type: Element type, experession for size of array *)
   | ArrayType of typeT * exp
   (* Slice type: type of element *)
   | SliceType of typeT
   (* Pointer type: type pointing to *)
   | PointerType of typeT
-  (* Struct type: List of (name of flield, type of field) *)
-  | StructType of (string * typeT) list
+  (* Struct type: List of (name of flield, type of field), line number *)
+  | StructType of ((string * typeT) list) * int
   (* Primitive types *)
   | IntType
   | FloatType
   | StrType
   | RuneType
+  | BoolType
 and exp =
   (* Arithmetic: Last int is the line number *)
   | Binop of exp * binary_op * exp * int
@@ -40,6 +41,7 @@ and primary_exp =
   | FloatLit of float
   | IntLit of string * base
   | RuneLit of string
+  | BoolLit of bool
   (* String content, bool for raw string or not *)
   | StrLit of string * bool
   (* Cast of expression to other type, last int is line number *)
@@ -81,10 +83,10 @@ type statement =
   | VarDeclStm of variable_decl
   (* Return statement (expression, line number) *)
   | Return of (exp option) * int
-  (* Break statement *)
-  | Break
-  (* Continue statement *)
-  | Continue
+  (* Break statement with line number*)
+  | Break of int
+  (* Continue statement with line number *)
+  | Continue of int
   (* Expression statement (exp, line number) *)
   | ExpStm of exp * int
   (* Assgnment statement (LHS, RHS, line number) *)
@@ -100,8 +102,8 @@ type statement =
   (* Print statement (exp to print, new line, line number) *)
   | Print of exp * bool * int
 and block =
-  (* List of statements the block is made of *)
-  | StmsBlock of statement list
+  (* List of statements the block is made of, last line of block *)
+  | StmsBlock of (statement list) * int
 
 type func_decl =
   (* Function name, List of inputs (id, type), return type, block, line number *)
@@ -121,3 +123,29 @@ type package_clause =
 
 type program =
   | Program of package_clause * (top_level_decl list)
+
+(* Gets the last line of a block *)
+let block_endline b =
+  match b with
+  | StmsBlock (_, l) -> l
+;;
+
+(* Gets the last line of an if statement *)
+let if_stm_endline if_stm =
+  match if_stm with
+  | IfStm (_, b, None, _) -> block_endline b
+  | IfStm (_, _, Some b, _) -> block_endline b
+  | _ -> failwith "Unexpected non if statement"
+;;
+
+(* Gets the last line of a statement *)
+let stm_endline s =
+  match s with
+  | BlockStm b -> block_endline b
+  | Return (_, l) -> l
+  | IfStm _ -> if_stm_endline s
+  | ForStm (_, _, _, b, _) -> block_endline b
+  | WhileStm (_, b, _) -> block_endline b
+  | _ -> failwith "Unexpected expression last line query"
+;;
+

@@ -1,9 +1,16 @@
 let lexbuf = Lexing.from_channel stdin in
 try
-  let program = Parser.start Lexer.token lexbuf in 
-    print_string (Prettyp.program_str program)
+  let program = print_endline "Parsing..."; Parser.start Lexer.token lexbuf in 
+    print_endline "\nOriginal program";
+    print_string (Prettyp.program_str program);
+    let weeded_prog = print_endline "\nWeeding..."; Weeding.weed_program program in
+    print_endline "\nWeeded program";
+    print_string (Prettyp.program_str weeded_prog);
+    print_endline "\nTypechecking...";
+    Typecheck.typecheck_program weeded_prog;
+    Exceptions.print_warnings ();
 with
-  | Failure msg -> print_endline msg
+  | Failure msg -> print_endline ("Unexpected error: " ^ msg)
   | Exceptions.LexerError msg -> print_endline msg
   | Exceptions.UnsuportedError (msg, line, char_opt) -> 
     let char_pos = begin match char_opt with
@@ -23,3 +30,5 @@ with
     | Some line -> "Line " ^ string_of_int line ^ "\n"
     end in
       print_endline (line_text ^ "Syntax Error: " ^ msg)
+  | Exceptions.TypeError (msg, line) ->
+    print_endline ("Line " ^ string_of_int line ^ "\nType Error: " ^ msg)

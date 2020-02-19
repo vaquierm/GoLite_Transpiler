@@ -48,7 +48,7 @@
   inserted into the token stream
   *)
   let is_semicolon_required = function
-    | RSQUARE _ | RPAR _ | RCURLY | BREAK | CONTINUE | FALLTHROUGH | RETURN
+    | RSQUARE _ | RPAR _ | RCURLY _ | BREAK | CONTINUE | FALLTHROUGH | RETURN
     | DECINTLITERAL _ | BININTLITERAL _ | OCTINTLITERAL _ | HEXINTLITERAL _
     | BOOLLITERAL _ | FLOATLITERAL _ | RUNELITERAL _ | STRINGLITERAL _ | RAWSTRINGLITERAL _ 
     | PLUSPLUS _ | MINUSMINUS _ | IDENTIFIER _
@@ -97,8 +97,8 @@ rule token = parse
 
   | '('                         { update_pos lexbuf; return (LPAR (get_line_num lexbuf)) }
   | ')'                         { update_pos lexbuf; return (RPAR (get_line_num lexbuf)) }
-  | '{'                         { update_pos lexbuf; return LCURLY }
-  | '}'                         { update_pos lexbuf; return RCURLY }
+  | '{'                         { update_pos lexbuf; return (LCURLY (get_line_num lexbuf)) }
+  | '}'                         { update_pos lexbuf; return (RCURLY (get_line_num lexbuf)) }
   | '['                         { update_pos lexbuf; return (LSQUARE (get_line_num lexbuf)) }
   | ']'                         { update_pos lexbuf; return (RSQUARE (get_line_num lexbuf)) }
   | ':'                         { update_pos lexbuf; return COLON }
@@ -158,7 +158,7 @@ rule token = parse
   | "defer"                     { update_pos lexbuf; return DEFER }
   | "go"                        { update_pos lexbuf; return GO }
   | "map"                       { update_pos lexbuf; return MAP }
-  | "struct"                    { update_pos lexbuf; return STRUCT }
+  | "struct"                    { update_pos lexbuf; return (STRUCT (get_line_num lexbuf)) }
   | "chan"                      { update_pos lexbuf; return (CHAN (get_line_num lexbuf)) }
   | "else"                      { update_pos lexbuf; return ELSE }
   | "goto"                      { update_pos lexbuf; return GOTO }
@@ -184,9 +184,8 @@ rule token = parse
   | "float32"                   { update_pos lexbuf; return FLOATTYPE }
   | "rune"                      { update_pos lexbuf; return RUNETYPE }
   | "string"                    { update_pos lexbuf; return STRINGTYPE }
+  | "bool"                      { update_pos lexbuf; return BOOLTYPE }
   | unsuportedType              { update_pos lexbuf; raise (Exceptions.UnsuportedError (("The type '" ^ get lexbuf ^ "' is unsuported in GoLite"), get_line_num lexbuf, Some (get_char_start lexbuf, get_char_end lexbuf))) }
-
-  | identifier                  { update_pos lexbuf; return (IDENTIFIER (get lexbuf, get_line_num lexbuf)) }
 
   | ("//"_*eol)                 { update_pos lexbuf; let c = get lexbuf in return (COMMENT (String.trim(String.sub c 2 ((String.length c) - 2)))) }
   | ("/*"_*"*/")                { update_pos lexbuf; let c = get lexbuf in return (BLOCKCOMMENT (String.sub c 2 ((String.length c) - 4))) }
@@ -201,6 +200,8 @@ rule token = parse
   | floatLiteral                { update_pos lexbuf; return (FLOATLITERAL (float_of_string (get lexbuf))) }
 
   | runeLiteral                 { update_pos lexbuf; let c = get lexbuf in return (RUNELITERAL (String.sub c 1 ((String.length c) - 2))) }
+
+  | identifier                  { update_pos lexbuf; return (IDENTIFIER (get lexbuf, get_line_num lexbuf)) }
 
   | '`'([^'''] | "\'")*'`'      { update_pos lexbuf; let c = get lexbuf in return (RAWSTRINGLITERAL (String.sub c 1 ((String.length c) - 2))) }
   | '"'([^'"'] | "\\\"")*'"'    { update_pos lexbuf; let c = get lexbuf in return (STRINGLITERAL (String.sub c 1 ((String.length c) - 2))) }

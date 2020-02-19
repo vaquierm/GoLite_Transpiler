@@ -67,20 +67,21 @@ let base_str b =
 
 let rec typeT_str t n =
   match t with
-  | DefinedType (name, _) -> name
+  | DefinedType (name, _, _) -> name
   | ArrayType (t', e) -> "[" ^ exp_str e n ^ "]" ^ typeT_str t' n
   | SliceType t' -> "[" ^ "]" ^ typeT_str t' n
   | PointerType t' -> "*" ^ typeT_str t' n
-  | StructType f_list ->
-    let f_str = List.fold_left (
-      fun acc (id, t') ->
-        acc ^ indents (n+1) ^ id ^ " " ^ typeT_str t' (n+1) ^ ";\n") "" f_list
+  | StructType (f_list, _) ->
+    let f_str = List.fold_right (
+      fun (id, t') acc ->
+        acc ^ indents (n+1) ^ id ^ " " ^ typeT_str t' (n+1) ^ ";\n") f_list ""
     in
       "struct {\n" ^ f_str ^ indents n ^ "}"
   | IntType -> "int"
   | FloatType -> "float32"
   | StrType -> "string"
   | RuneType -> "rune"
+  | BoolType -> "bool"
 and exp_str exp n =
   match exp with
   | Binop (e1, op, e2, _) ->
@@ -97,6 +98,7 @@ and prim_exp_str p_exp n =
   | StrLit (s, raw) ->
     let tick = if raw then "`" else "\"" in
       tick ^ s ^ tick
+  | BoolLit b -> string_of_bool b
   | CastExp (t, e, _) -> typeT_str t n ^ "(" ^ exp_str e n ^ ")"
   | SelectExp (p_exp', field, _) -> prim_exp_str p_exp' n ^ "." ^ field
   | IndexExp (p_exp', e, _) -> prim_exp_str p_exp' n ^ "[" ^ exp_str e n ^ "]"
@@ -139,18 +141,18 @@ let var_decl_str decl n =
 
 let rec block_str b n =
   match b with
-  | StmsBlock stm_list ->
-    let stms_str = List.fold_left (fun acc s -> acc ^ stm_str s (n+1)) "" stm_list in
+  | StmsBlock (stm_list, _) ->
+    let stms_str = List.fold_right (fun s acc -> stm_str s (n+1) ^ acc) stm_list "" in
       "{\n" ^ stms_str ^ indents n ^ "}\n"
 and stm_str stm n =
   match stm with
   | TypeDeclStm decl -> type_decl_str decl n
   | VarDeclStm decl -> var_decl_str decl n
   | Return (exp_op, _) ->
-    let return_str = begin match exp_op with None -> "" | Some e -> exp_str e n end in
-      indents n ^ "return " ^ return_str ^ ";\n"
-  | Break -> indents n ^ "break;\n"
-  | Continue -> indents n ^ "continue;\n"
+    let return_str = begin match exp_op with None -> "" | Some e -> " " ^ exp_str e n end in
+      indents n ^ "return" ^ return_str ^ ";\n"
+  | Break _ -> indents n ^ "break;\n"
+  | Continue _ -> indents n ^ "continue;\n"
   | ExpStm (e, _) -> indents n ^ exp_str e n ^ ";\n"
   | AssignStm (lhs, rhs, _) -> indents n ^ exp_str lhs n ^ " = " ^ exp_str rhs n ^ ";\n"
   | IfStm (cond, if_b, else_b_opt, _) ->
@@ -176,7 +178,7 @@ let func_decl_str decl n =
   | FuncDecl (name, args, t_opt, b, _) ->
     let arg_str = if List.length args = 0 then "" else
       let ((id_l, t_l), rest) = get_last args in
-        List.fold_right (fun (id, t) acc -> id ^ " " ^ typeT_str t n ^ ", " ^ acc) rest (id_l ^ " " ^ typeT_str t_l n)
+        List.fold_left (fun acc (id, t) -> id ^ " " ^ typeT_str t n ^ ", " ^ acc) (id_l ^ " " ^ typeT_str t_l n) rest
       in
       let ret_str = match t_opt with
       | None -> ""
@@ -202,5 +204,5 @@ let program_str prog =
   | Program (pkg_clause, decls) ->
     let pkg = pkg_str pkg_clause in
       let decls = List.map top_level_decl_str decls in
-        pkg ^ (List.fold_left (fun acc d -> acc ^ d) "" decls) ^ "\n"
+        pkg ^ (List.fold_right (fun d acc -> d ^ acc) decls "") ^ "\n"
 ;;

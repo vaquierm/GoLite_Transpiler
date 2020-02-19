@@ -3,7 +3,7 @@
 
 %token EOF
 %token<int> LPAR RPAR
-%token LCURLY RCURLY
+%token<int> LCURLY RCURLY
 %token<int> LSQUARE RSQUARE
 %token COLON
 %token<int> SEMICOLON
@@ -24,11 +24,11 @@
 
 %token <string * int>IDENTIFIER
 
-%token<int> IF FOR
+%token<int> IF FOR STRUCT
 %token<int> IMPORT INTERFACE CHAN
-%token BREAK DEFAULT FUNC SELECT CASE DEFER GO
-%token MAP STRUCT ELSE GOTO PACKAGE SWITCH CONS FALLTHROUGH
-%token RANGE TYPE CONTINUE RETURN VAR
+%token DEFAULT FUNC SELECT CASE DEFER GO CONTINUE BREAK
+%token MAP ELSE GOTO PACKAGE SWITCH CONS FALLTHROUGH
+%token RANGE TYPE RETURN VAR
 %token <int>PRINT PRINTLN APPEND LEN CAP
 
 %token <string>COMMENT
@@ -62,7 +62,7 @@
 
 /* Productions */
 start : package_clause import_decls top_level_decls EOF       {
-    let main = ref (Ast.TopFuncDecl (Ast.FuncDecl ("", [], None, Ast.StmsBlock [], -1))) in
+    let main = ref (Ast.TopFuncDecl (Ast.FuncDecl ("", [], None, Ast.StmsBlock ([], 0), -1))) in
     let rec extract_main decls =
     match decls with
     | [] -> []
@@ -112,12 +112,20 @@ var_decls
 
 var_specs
   : var_spec                                        { $1 }
-  | var_specs var_spec                              { $1 @ $2 }
+  | var_specs var_spec                              { $2 @ $1 }
 
 var_spec
   : ident_list typeT SEMICOLON                      { List.map (fun iden -> Ast.VarDeclTypeNoInit ($2, iden, $3)) $1 }
-  | ident_list typeT ASSIGN exp_list SEMICOLON      { List.map2 (fun iden exp -> Ast.VarDeclTypeInit ($2, iden, exp, $5)) $1 $4 }
-  | ident_list ASSIGN exp_list SEMICOLON            { List.map2 (fun iden exp -> Ast.VarDeclNoTypeInit (iden, exp, $4)) $1 $3 }
+  | ident_list typeT ASSIGN exp_list SEMICOLON      { 
+    if List.length $1 != List.length $4 then
+      raise (Exceptions.SyntaxError ("Assignment mismatch. " ^ (string_of_int (List.length $1)) ^ " variables but " ^ (string_of_int (List.length $4)) ^ " values", Some $5))
+    else
+      List.map2 (fun iden exp -> Ast.VarDeclTypeInit ($2, iden, exp, $5)) $1 $4 }
+  | ident_list ASSIGN exp_list SEMICOLON            {
+    if List.length $1 != List.length $3 then
+      raise (Exceptions.SyntaxError ("Assignment mismatch. " ^ (string_of_int (List.length $1)) ^ " variables but " ^ (string_of_int (List.length $3)) ^ " values", Some $4))
+    else
+      List.map2 (fun iden exp -> Ast.VarDeclNoTypeInit (iden, exp, $4)) $1 $3 }
 
 func_decl
   : FUNC IDENTIFIER LPAR func_params? RPAR typeT? body              { 
@@ -133,18 +141,19 @@ func_params
   | func_params COMMA ident_list typeT            { $1 @ (List.map (fun iden -> (iden, $4)) $3) }
 
 typeT
-  : IDENTIFIER                                    { Ast.DefinedType ((fst $1), None) }
+  : IDENTIFIER                                    { Ast.DefinedType ((fst $1), None, (snd $1)) }
   | LSQUARE exp RSQUARE typeT                     { Ast.ArrayType ($4, $2) }
   | LSQUARE RSQUARE typeT                         { Ast.SliceType $3 }
   | MULT typeT                                    { Ast.PointerType $2 }
   | MAP RSQUARE typeT RSQUARE typeT               { raise (Exceptions.UnsuportedError ("Map types are unsuported in GoLite", $2, None)) }
   | INTERFACE                                     { raise (Exceptions.UnsuportedError ("Interface types are unsupported in GoLite", $1, None)) }
   | CHAN RECEIVE?                                 { raise (Exceptions.UnsuportedError ("Channel types are unsupported in GoLite", $1, None)) }
-  | STRUCT LCURLY field_decls RCURLY              { Ast.StructType $3 }
+  | STRUCT LCURLY field_decls RCURLY              { Ast.StructType ($3, $1) }
   | INTTYPE                                       { Ast.IntType }
   | FLOATTYPE                                     { Ast.FloatType }
   | STRINGTYPE                                    { Ast.StrType }
   | RUNETYPE                                      { Ast.RuneType }
+  | BOOLTYPE                                      { Ast.BoolType }
 
 field_decls
   :                                               { [] }
@@ -156,7 +165,7 @@ field_decls
 
 ident_list
   : IDENTIFIER                                    { [(fst $1)] }
-  | ident_list COMMA IDENTIFIER                   { $1 @ [fst $3] }
+  | ident_list COMMA IDENTIFIER                   { (fst $3) :: $1 }
 
 exp_list
   : exp                                           { [$1] }
@@ -202,6 +211,7 @@ primary_exp
   | RUNELITERAL                                   { Ast.RuneLit ($1) }
   | STRINGLITERAL                                 { Ast.StrLit ($1, false) }
   | RAWSTRINGLITERAL                              { Ast.StrLit ($1, true) }
+  | BOOLLITERAL                                   { Ast.BoolLit ($1) }
   | primary_exp DOT IDENTIFIER                    { Ast.SelectExp ($1, (fst $3), (snd $3)) }
   | primary_exp LSQUARE exp RSQUARE               { Ast.IndexExp ($1, $3, $2) }
   | primary_exp DOT LPAR typeT RPAR               { raise (Exceptions.UnsuportedError ("Type assertions are unsupported in GoLite", $3, None)) }
@@ -212,12 +222,12 @@ primary_exp
     in
     if List.length args == 1 then
       begin match $1 with
-      | Ast.DefinedType (x, _) -> Ast.UnsureTypeFuncCall (x, (List.hd args), $2)
+      | Ast.DefinedType (x, _, _) -> Ast.UnsureTypeFuncCall (x, (List.hd args), $2)
       | _ -> Ast.CastExp ($1, (List.hd args), $2)
       end
     else
       begin match $1 with
-      | Ast.DefinedType (x, _) -> Ast.FuncCall (x, args, $2)
+      | Ast.DefinedType (x, _, _) -> Ast.FuncCall (x, args, $2)
       | _ -> raise (Exceptions.SyntaxError ("A cast expression must have exactly one argument", Some $2))
       end
   }
@@ -243,17 +253,17 @@ primary_exp
   | LEN LPAR primary_exp RPAR                     { Ast.LenExp ($3, $2) }
   | CAP LPAR primary_exp RPAR                     { Ast.CapExp ($3, $2) }
 
-body : LCURLY statement_list RCURLY SEMICOLON?    { Ast.StmsBlock (List.rev $2) }
+body : LCURLY statement_list RCURLY SEMICOLON?    { Ast.StmsBlock ((List.rev $2), $3) }
 
 statement_list
   :                                               { [] }
   | statement_list body                           { Ast.BlockStm $2 :: $1 }
-  | statement_list var_decls                      { (List.map (fun d -> Ast.VarDeclStm d) $2)  @ $1 }
-  | statement_list type_decls                     { (List.map (fun d -> Ast.TypeDeclStm d) $2) @ $1}
+  | statement_list var_decls                      { (List.map (fun d -> Ast.VarDeclStm d) $2) @ $1 }
+  | statement_list type_decls                     { (List.map (fun d -> Ast.TypeDeclStm d) $2) @ $1 }
   | statement_list GO exp SEMICOLON               { raise (Exceptions.UnsuportedError ("go statements are unsuported in GoLite", $4, None)) }
   | statement_list RETURN exp? SEMICOLON          { Ast.Return ($3, $4) :: $1 }
-  | statement_list BREAK SEMICOLON                { Ast.Break :: $1 }
-  | statement_list CONTINUE SEMICOLON             { Ast.Continue :: $1 }
+  | statement_list BREAK SEMICOLON                { (Ast.Break $3) :: $1 }
+  | statement_list CONTINUE SEMICOLON             { (Ast.Continue $3) :: $1 }
   | statement_list GOTO IDENTIFIER SEMICOLON      { raise (Exceptions.UnsuportedError ("goto statements are unsuported in GoLite", $4, None)) }
   | statement_list FALLTHROUGH SEMICOLON          { raise (Exceptions.UnsuportedError ("fallthrough statements are unsuported in GoLite", $3, None)) }
   | statement_list simple_statement               { $2 :: $1 }
@@ -269,8 +279,8 @@ statement_list
 
 simple_statement
   : exp SEMICOLON                                 { Ast.ExpStm ($1, $2) }
-  | exp PLUSPLUS SEMICOLON                        { Ast.ExpStm (Ast.Binop ($1, Ast.BPlus, $1, $3), $3) }
-  | exp MINUSMINUS SEMICOLON                      { Ast.ExpStm (Ast.Binop ($1, Ast.BMinus, $1, $3), $3) }
+  | exp PLUSPLUS SEMICOLON                        { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BPlus, Ast.PrimExp (Ast.IntLit ("1", Ast.Dec)), $3), $3) }
+  | exp MINUSMINUS SEMICOLON                      { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BMinus, Ast.PrimExp (Ast.IntLit ("1", Ast.Dec)), $3), $3) }
   | exp ASSIGN exp SEMICOLON                      { Ast.AssignStm ($1, $3, $4) }
   | exp PLUSEQ exp SEMICOLON                      { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BPlus, $3, $4), $4) }
   | exp MINUSEQ exp SEMICOLON                     { Ast.AssignStm ($1, Ast.Binop ($1, Ast.BMinus, $3, $4), $4) }
@@ -298,20 +308,20 @@ simple_statement
   | PRINTLN LPAR exp RPAR SEMICOLON               { Ast.Print ($3, true, $5) }
 
 if_statement
-  : IF simple_statement exp body ELSE if_statement{
-    let inner_else = Ast.StmsBlock ([$6])
+  : IF simple_statement exp body ELSE if_statement {
+    let inner_else = Ast.StmsBlock ([$6], Ast.if_stm_endline $6)
     in
     let inner = Ast.IfStm ($3, $4, Some inner_else, $1)
     in
-    Ast.BlockStm (Ast.StmsBlock [$2; inner])
+    Ast.BlockStm (Ast.StmsBlock ([$2; inner], Ast.if_stm_endline $6))
   }
   | IF simple_statement exp body ELSE body {
     let inner = Ast.IfStm ($3, $4, Some $6, $1)
     in
-    Ast.BlockStm (Ast.StmsBlock [$2; inner])
+    Ast.BlockStm (Ast.StmsBlock ([$2; inner], Ast.block_endline $6))
   }
   | IF exp body ELSE if_statement {
-    let b = Ast.StmsBlock ([$5])
+    let b = Ast.StmsBlock ([$5], Ast.if_stm_endline $5)
     in
     Ast.IfStm ($2, $3, Some b, $1) 
   }
@@ -320,7 +330,7 @@ if_statement
   | IF simple_statement exp body {
     let inner = Ast.IfStm ($3, $4, None, $1)
     in
-    Ast.BlockStm (Ast.StmsBlock [$2; inner])
+    Ast.BlockStm (Ast.StmsBlock ([$2; inner], Ast.block_endline $4))
   }
 
 for_statement
@@ -328,13 +338,17 @@ for_statement
     Ast.WhileStm ($2, $3, $1)
   }
   | FOR simple_statement exp? SEMICOLON simple_statement body {
-    Ast.ForStm (Some $2, $3, Some $5, $6, $1)
+    match $2 with
+    | Ast.VarDeclStm v_decl -> Ast.BlockStm (Ast.StmsBlock ([$2; Ast.ForStm (None, $3, Some $5, $6, $1)], Ast.block_endline $6))
+    | _ -> Ast.ForStm (Some $2, $3, Some $5, $6, $1)
   }
   | FOR SEMICOLON exp? SEMICOLON simple_statement body {
     Ast.ForStm (None, $3, Some $5, $6, $1)
   }
   | FOR simple_statement exp? SEMICOLON SEMICOLON body {
-    Ast.ForStm (Some $2, $3, None, $6, $1)
+    match $2 with
+    | Ast.VarDeclStm v_decl -> Ast.BlockStm (Ast.StmsBlock ([$2; Ast.ForStm (None, $3, None, $6, $1)], Ast.block_endline $6))
+    | _ -> Ast.ForStm (Some $2, $3, None, $6, $1)
   }
   | FOR SEMICOLON exp? SEMICOLON SEMICOLON body {
     Ast.ForStm (None, $3, None, $6, $1)
