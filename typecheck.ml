@@ -5,7 +5,7 @@ open Ast
 (* Ge the underlying type of defined types *)
 let rec resolve_type t =
   match t with
-  | DefinedType (_, None, _) -> failwith "Defined type was never resolved during weeding"
+  | DefinedType (_, None, l) -> failwith ("Line " ^ string_of_int l ^ "\nDefined type'" ^ Prettyp.typeT_str t 0 ^ "' was never resolved during weeding")
   | DefinedType (_, Some t', _) -> resolve_type t'
   | _ -> t
 ;;
