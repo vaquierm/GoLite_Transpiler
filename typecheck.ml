@@ -277,9 +277,10 @@ let typecheck_var_decl v_decl env =
       | None -> raise (Exceptions.TypeError ("Type mismatch. Expression '" ^ Prettyp.exp_str e 0 ^ "' is not of type '" ^ Prettyp.typeT_str t 0 ^ "'", l))
       | Some t -> t
       end in
-        if t = e_t then ()
-        else
-          raise (Exceptions.TypeError ("Type mismatch. Expression '" ^ Prettyp.exp_str e 0 ^ "' should be type '" ^ Prettyp.typeT_str t 0 ^ "'. Got '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
+        let t = if is_literal e then resolve_type t else t in
+          if t = e_t then ()
+          else
+            raise (Exceptions.TypeError ("Type mismatch. Expression '" ^ Prettyp.exp_str e 0 ^ "' should be type '" ^ Prettyp.typeT_str t 0 ^ "'. Got '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
   | VarDeclNoTypeInit (_, _, l) -> failwith ("Line " ^ string_of_int l ^ "\nDeclaration '" ^ Prettyp.var_decl_str v_decl 0 ^ "' never got its type resolved at weeding time")
   | VarDeclTypeNoInit _ -> ()
 ;;
@@ -332,7 +333,7 @@ let rec typecheck_stm stm env return_t_op =
       let rhs_t_op = type_exp rhs env in
         let lhs_t = begin match lhs_t_op with
         | None -> failwith "The left hand side should never be void since we chench for assignability"
-        | Some t -> t
+        | Some t -> if is_literal rhs then resolve_type t else t
         end in
           let rhs_t = begin match rhs_t_op with
           | None -> raise (Exceptions.TypeError ("Cannot use '" ^ Prettyp.exp_str rhs 0 ^ "' as a value", l))
