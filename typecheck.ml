@@ -435,11 +435,33 @@ let typecheck_func f_decl env =
         end
 ;;
 
+(*
+Builds the top level environement
+Typechecks the variable declarations
+*)
+let build_top_level_env top_decls =
+  let env = Env.empty_env () in
+    let rec declare decls =
+      match decls with
+      | [] -> ()
+      | d::decls' ->
+        begin match d with
+        | TopVarDecl v_decl -> typecheck_var_decl v_decl env
+        | TopTypeDecl t_decl -> Env.type_decl env t_decl
+        | TopFuncDecl f_decl -> Env.func_decl env f_decl
+        end;
+        declare decls'
+    in
+    declare top_decls;
+    env
+;;
+
+(* Typecheck the entire program *)
 let typecheck_program prog =
   match prog with
   | Program (_, decl_list) ->
-    let env = Env.build_top_level_env decl_list in
-      let rec typecheck_funcs decl_list =
+    let env = build_top_level_env decl_list in
+      let rec typecheck_func_bodies decl_list =
         match decl_list with
         | [] -> ()
         | d::decls' ->
@@ -447,7 +469,7 @@ let typecheck_program prog =
           | TopFuncDecl f_decl -> typecheck_func f_decl env
           | _ -> ()
           end;
-          typecheck_funcs decls'
+          typecheck_func_bodies decls'
       in
-        typecheck_funcs decl_list
+        typecheck_func_bodies decl_list
 ;;

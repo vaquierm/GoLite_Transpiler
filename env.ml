@@ -296,22 +296,3 @@ let func_decl env f_decl =
     check_exists s id l;
     s.f <- (f_tup :: s.f)
 ;;
-
-let build_top_level_env top_decls =
-  let env = empty_env () in
-    let rec declare decls =
-      match decls with
-      | [] -> ()
-      | d::decls' ->
-        begin match d with
-        | TopVarDecl v_decl -> var_decl env v_decl
-        | TopTypeDecl t_decl -> type_decl env t_decl
-        | TopFuncDecl f_decl -> func_decl env f_decl
-        end;
-        declare decls'
-    in
-    declare top_decls;
-    env
-;;
-
-  
