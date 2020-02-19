@@ -83,10 +83,10 @@ type statement =
   | VarDeclStm of variable_decl
   (* Return statement (expression, line number) *)
   | Return of (exp option) * int
-  (* Break statement *)
-  | Break
-  (* Continue statement *)
-  | Continue
+  (* Break statement with line number*)
+  | Break of int
+  (* Continue statement with line number *)
+  | Continue of int
   (* Expression statement (exp, line number) *)
   | ExpStm of exp * int
   (* Assgnment statement (LHS, RHS, line number) *)

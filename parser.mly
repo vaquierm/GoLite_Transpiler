@@ -26,9 +26,9 @@
 
 %token<int> IF FOR STRUCT
 %token<int> IMPORT INTERFACE CHAN
-%token BREAK DEFAULT FUNC SELECT CASE DEFER GO
+%token DEFAULT FUNC SELECT CASE DEFER GO CONTINUE BREAK
 %token MAP ELSE GOTO PACKAGE SWITCH CONS FALLTHROUGH
-%token RANGE TYPE CONTINUE RETURN VAR
+%token RANGE TYPE RETURN VAR
 %token <int>PRINT PRINTLN APPEND LEN CAP
 
 %token <string>COMMENT
@@ -153,6 +153,7 @@ typeT
   | FLOATTYPE                                     { Ast.FloatType }
   | STRINGTYPE                                    { Ast.StrType }
   | RUNETYPE                                      { Ast.RuneType }
+  | BOOLTYPE                                      { Ast.BoolType }
 
 field_decls
   :                                               { [] }
@@ -261,8 +262,8 @@ statement_list
   | statement_list type_decls                     { (List.map (fun d -> Ast.TypeDeclStm d) $2) @ $1 }
   | statement_list GO exp SEMICOLON               { raise (Exceptions.UnsuportedError ("go statements are unsuported in GoLite", $4, None)) }
   | statement_list RETURN exp? SEMICOLON          { Ast.Return ($3, $4) :: $1 }
-  | statement_list BREAK SEMICOLON                { Ast.Break :: $1 }
-  | statement_list CONTINUE SEMICOLON             { Ast.Continue :: $1 }
+  | statement_list BREAK SEMICOLON                { (Ast.Break $3) :: $1 }
+  | statement_list CONTINUE SEMICOLON             { (Ast.Continue $3) :: $1 }
   | statement_list GOTO IDENTIFIER SEMICOLON      { raise (Exceptions.UnsuportedError ("goto statements are unsuported in GoLite", $4, None)) }
   | statement_list FALLTHROUGH SEMICOLON          { raise (Exceptions.UnsuportedError ("fallthrough statements are unsuported in GoLite", $3, None)) }
   | statement_list simple_statement               { $2 :: $1 }

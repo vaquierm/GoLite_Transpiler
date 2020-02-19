@@ -151,8 +151,8 @@ and stm_str stm n =
   | Return (exp_op, _) ->
     let return_str = begin match exp_op with None -> "" | Some e -> " " ^ exp_str e n end in
       indents n ^ "return" ^ return_str ^ ";\n"
-  | Break -> indents n ^ "break;\n"
-  | Continue -> indents n ^ "continue;\n"
+  | Break _ -> indents n ^ "break;\n"
+  | Continue _ -> indents n ^ "continue;\n"
   | ExpStm (e, _) -> indents n ^ exp_str e n ^ ";\n"
   | AssignStm (lhs, rhs, _) -> indents n ^ exp_str lhs n ^ " = " ^ exp_str rhs n ^ ";\n"
   | IfStm (cond, if_b, else_b_opt, _) ->

@@ -323,8 +323,8 @@ let rec typecheck_stm stm env return_t_op =
       else
        raise (Exceptions.TypeError ("Expected return type '" ^ Prettyp.typeT_str return_t 0 ^ "'. Got '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
     end
-  | Break -> false
-  | Continue -> false
+  | Break _ -> false
+  | Continue _ -> false
   | ExpStm (e, l) ->
     let e_t_op = type_exp e env in
     begin match e with

@@ -135,8 +135,13 @@ let weed_func_decl d env =
   weeded_decl
 ;;
 
-(* Weed the statement. Resolve any underlying types and make sure variables are referenced after init *)
-let rec weed_statement stm env return_t_op =
+(*
+Weed the statement.
+Resolve any underlying types and make sure variables are referenced after init
+The argument 'return_t_op' is the return type of the scope
+The argument 'in_loop' is a bool that indicates if the statement is part of a loop or not. (To know if continue and break statements are allowed)
+*)
+let rec weed_statement stm env return_t_op in_loop =
   match stm with
   | TypeDeclStm t_decl -> TypeDeclStm (weed_type_decl t_decl env)
   | VarDeclStm v_decl -> VarDeclStm (weed_var_decl v_decl env)
@@ -144,22 +149,22 @@ let rec weed_statement stm env return_t_op =
   | ExpStm (e, l) -> ExpStm (weed_exp e env, l)
   | AssignStm (lhs, rhs, l) -> AssignStm (weed_exp lhs env, weed_exp rhs env, l)
   | Print (e, new_l, l) -> Print (weed_exp e env, new_l, l)
-  | BlockStm block -> BlockStm (weed_block block env return_t_op)
+  | BlockStm block -> BlockStm (weed_block block env return_t_op in_loop)
   | IfStm (cond, b, e_b_opt, l) ->
     begin match e_b_opt with
-    | None -> IfStm (weed_exp cond env, weed_block b env return_t_op, None, l)
-    | Some e_b -> IfStm (weed_exp cond env, weed_block b env return_t_op, Some (weed_block e_b env return_t_op), l)
+    | None -> IfStm (weed_exp cond env, weed_block b env return_t_op in_loop, None, l)
+    | Some e_b -> IfStm (weed_exp cond env, weed_block b env return_t_op in_loop, Some (weed_block e_b env return_t_op in_loop), l)
     end
   | WhileStm (cond_opt, b, l) ->
     begin match cond_opt with
-    | None -> WhileStm (None, weed_block b env return_t_op, l)
-    | Some cond -> WhileStm (Some (weed_exp cond env), weed_block b env return_t_op, l)
+    | None -> WhileStm (None, weed_block b env return_t_op true, l)
+    | Some cond -> WhileStm (Some (weed_exp cond env), weed_block b env return_t_op true, l)
     end
   | ForStm (init_opt, cond_opt, inc_opt, b, l) ->
     let new_env = Env.push_scope env in
     let weeded_init = begin match init_opt with
     | None -> None
-    | Some init -> Some (weed_statement init new_env return_t_op)
+    | Some init -> Some (weed_statement init new_env return_t_op false)
     end in
     let weeded_cond = begin match cond_opt with
     | None -> None
@@ -167,25 +172,31 @@ let rec weed_statement stm env return_t_op =
     end in
     let weeded_inc = begin match inc_opt with
     | None -> None
-    | Some inc -> Some (weed_statement inc new_env return_t_op)
+    | Some inc -> Some (weed_statement inc new_env return_t_op false)
     end in
-    let weeded_for_stm = ForStm(weeded_init, weeded_cond, weeded_inc, weed_block b new_env return_t_op, l) in
+    let weeded_for_stm = ForStm(weeded_init, weeded_cond, weeded_inc, weed_block b new_env return_t_op true, l) in
       Env.pop_scope new_env;
       weeded_for_stm
-  | Return (None, _) | Break | Continue -> stm
-and weed_block b env return_t_op =
+  | Break l ->
+    if in_loop then stm
+    else raise (Exceptions.SyntaxError ("Break statement not in loop", Some l))
+  | Continue l ->
+    if in_loop then stm
+    else raise (Exceptions.SyntaxError ("Continue statement not in loop", Some l))
+  | Return (None, _) -> stm
+and weed_block b env return_t_op in_loop =
   match b with
   | StmsBlock (stms, b_line) ->
     let new_scope = Env.push_scope env in
-      let weeded_block = StmsBlock (weed_statements stms new_scope return_t_op, b_line) in
+      let weeded_block = StmsBlock (weed_statements stms new_scope return_t_op in_loop, b_line) in
         Env.pop_scope new_scope;
         weeded_block
-and weed_statements stms env return_t_op =
+and weed_statements stms env return_t_op in_loop =
   match stms with
   | [] -> []
   | s::stms' ->
     let copied_env = Env.copy_env env in
-    let weeded_statement = (weed_statement s env return_t_op) in
+    let weeded_statement = (weed_statement s env return_t_op in_loop) in
       let stm_returns = Typecheck.typecheck_stm weeded_statement copied_env return_t_op in
       begin match stm_returns with
       | true ->
@@ -193,7 +204,7 @@ and weed_statements stms env return_t_op =
         if remain_len > 0 then
           Exceptions.new_warning (Exceptions.Warning ("Unreachable statement(s) in this scope after this line", Ast.stm_endline s));
         [weeded_statement]
-      | false -> weeded_statement::(weed_statements stms' env return_t_op)
+      | false -> weeded_statement::(weed_statements stms' env return_t_op in_loop)
       end
       
 ;;
@@ -207,7 +218,7 @@ let weed_func_body f env =
   match f with
   | FuncDecl (name, in_list, out_opt, StmsBlock (stms, b_line), l) ->
     let func_env = Env.open_function_scope env f in
-      let weeded_func = FuncDecl (name, in_list, out_opt, StmsBlock (weed_statements stms func_env out_opt, b_line), l) in
+      let weeded_func = FuncDecl (name, in_list, out_opt, StmsBlock (weed_statements stms func_env out_opt false, b_line), l) in
       Env.pop_scope func_env;
       weeded_func
 ;;

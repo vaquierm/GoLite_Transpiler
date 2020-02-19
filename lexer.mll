@@ -184,6 +184,7 @@ rule token = parse
   | "float32"                   { update_pos lexbuf; return FLOATTYPE }
   | "rune"                      { update_pos lexbuf; return RUNETYPE }
   | "string"                    { update_pos lexbuf; return STRINGTYPE }
+  | "bool"                      { update_pos lexbuf; return BOOLTYPE }
   | unsuportedType              { update_pos lexbuf; raise (Exceptions.UnsuportedError (("The type '" ^ get lexbuf ^ "' is unsuported in GoLite"), get_line_num lexbuf, Some (get_char_start lexbuf, get_char_end lexbuf))) }
 
   | ("//"_*eol)                 { update_pos lexbuf; let c = get lexbuf in return (COMMENT (String.trim(String.sub c 2 ((String.length c) - 2)))) }
