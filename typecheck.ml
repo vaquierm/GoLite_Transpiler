@@ -43,15 +43,20 @@ let can_reference e =
   | _ -> false 
 ;;
 
-(* True if the binary operator is compatible with the type t *)
-let op_compatible b_op t =
+(*
+Check the compatibility of the operator with the type t
+Return the return type of the oeration if compatible.
+If not compatible, return None
+*)
+let op_compatible_return b_op t =
   let u_t = resolve_type t in
   match b_op with
-  | BPlus -> (is_numeric u_t || u_t = StrType)
-  | BMinus | Mult | Div -> is_numeric u_t
-  | BinAND | BinOR | BinXOR | Rshift | Lshift | Mod -> is_whole_num u_t
-  | BoolAND | BoolOR -> u_t = BoolType
-  | _ -> true
+  | BPlus -> if (is_numeric u_t || u_t = StrType) then Some t else None
+  | BMinus | Mult | Div -> if is_numeric u_t then Some t else None
+  | BinAND | BinOR | BinXOR | Rshift | Lshift | Mod -> if is_whole_num u_t then Some t else None
+  | BoolAND | BoolOR -> if u_t = BoolType then Some t else None
+  | GT | LT | GEQ | LEQ -> if is_numeric u_t then Some BoolType else None
+  | EQ | NEQ -> Some BoolType
 ;;
 
 (* Checks if the rexpresison can be assigned to *)
@@ -60,6 +65,8 @@ let is_assignable e =
   | PrimExp (Var _) | PrimExp (SelectExp _) | PrimExp (IndexExp _) -> true
   | _ -> false
 ;;
+
+(* Check the compatibility of binary operators with  *)
 
 let rec type_exp exp env =
   match exp with
@@ -240,7 +247,7 @@ and type_binop b_exp env =
     end in
     let e1_t_u = resolve_type e1_t in
     let e2_t_u = resolve_type e2_t in
-    if not (op_compatible op e1_t_u) then
+    if op_compatible_return op e1_t_u = None then
       raise (Exceptions.TypeError ("Invalid operation '" ^ Prettyp.binop_str op ^ "' (operator not defined on type '" ^ Prettyp.typeT_str e1_t 0 ^ "')", l))
     else
       if has_literal then
@@ -248,15 +255,15 @@ and type_binop b_exp env =
           raise (Exceptions.TypeError ("Invalid operation '" ^ Prettyp.binop_str op ^ "' (mismatched types '" ^ Prettyp.typeT_str e1_t 0 ^ "' and '" ^ Prettyp.typeT_str e2_t 0 ^ "')", l))
         else
           begin match e1_lit, e2_lit with
-          | true, false -> Some e2_t
-          | false, true -> Some e1_t
-          | _ -> Some e2_t
+          | true, false -> op_compatible_return op e2_t
+          | false, true -> op_compatible_return op e1_t
+          | _ -> op_compatible_return op e1_t
           end
       else
         if not (e1_t = e2_t) then
           raise (Exceptions.TypeError ("Invalid operation '" ^ Prettyp.binop_str op ^ "' (mismatched types '" ^ Prettyp.typeT_str e1_t 0 ^ "' and '" ^ Prettyp.typeT_str e2_t 0 ^ "')", l))
         else
-          Some e1_t
+          op_compatible_return op e1_t
   | _ -> failwith ("'" ^ (Prettyp.exp_str b_exp 0) ^ "' is not a binop expression")
 ;;
 

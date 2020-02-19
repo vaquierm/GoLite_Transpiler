@@ -278,7 +278,15 @@ let type_decl env t_decl =
       
 let func_decl env f_decl =
   let f_tup = match f_decl with
-  | FuncDecl (id, inputs, out_opt, _, l) -> (id, List.map snd inputs, out_opt, false, l)
+  | FuncDecl (id, inputs, out_opt, _, l) ->
+    match out_opt with
+    | Some (DefinedType (_, None, l)) -> failwith ("Line " ^ string_of_int l ^ "\nDefined type in function sig output not resolved at weeding time")
+    | _ ->
+      (id, List.map (fun (_, t) ->
+        match t with
+        | DefinedType (_, None, l) -> failwith ("Line " ^ string_of_int l ^ "\nDefined type in function sig inputs not resolved at weeding time")
+        | _ -> t
+      ) inputs, out_opt, false, l)
   in
   let (id, _, _, _, l) = f_tup in
   if List.length env = 0 then
