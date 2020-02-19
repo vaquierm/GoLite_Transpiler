@@ -104,11 +104,19 @@ and type_prim_exp p_exp env =
       | None -> raise (Exceptions.TypeError ("Cannot index expression '" ^ Prettyp.prim_exp_str p_exp 0 ^ "'", l))
       | Some t -> t
       end in
-        begin match p_t with
-        | SliceType e_t -> Some e_t
-        | ArrayType (e_t, _) -> Some e_t
-        | _ -> raise (Exceptions.TypeError ("Cannot index type '" ^ Prettyp.typeT_str p_t 0 ^ "'", l))
-        end
+        let e_t_op = type_exp e env in
+          let e_t = begin match e_t_op with
+          | None -> raise (Exceptions.TypeError ("Non interger array index '" ^ Prettyp.exp_str e 0 ^ "'", l))
+          | Some t -> t
+          end in
+            if is_whole_num e_t then
+              begin match p_t with
+              | SliceType e_t -> Some e_t
+              | ArrayType (e_t, _) -> Some e_t
+              | _ -> raise (Exceptions.TypeError ("Cannot index type '" ^ Prettyp.typeT_str p_t 0 ^ "'", l))
+              end
+            else
+              raise (Exceptions.TypeError ("Non interger array index '" ^ Prettyp.exp_str e 0 ^ "' of type '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
   | FuncCall (name, in_l, l) ->
       let (in_t_l, out_t) = Env.get_func name env l in
         let rec check_input_types in_l in_t_l =
