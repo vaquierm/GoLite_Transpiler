@@ -56,3 +56,9 @@ let lhs_short_id _ =
   let f = fun () -> Ast_build.build_ast "test/test_programs/parsing/lhs_short_id.go" in
   assert_raises (SyntaxError ("The left hand side of a short hand assignment must be an id", Some 3)) f
 ;;
+
+let all_features _ =
+  let ast = Ast_build.build_ast "test/test_programs/parsing/all_features.go" in
+  let expected = "import test;\nvar x = 4;\nvar x int;\nvar x int = 4;\ntype x x;\ntype x int;\ntype x [1]int;\ntype x []int;\ntype x *int;\ntype x struct {\n    b struct {\n        a []int;\n    };\n    a int;\n};\nfunc foo() int {\n    var x int = 3;\n    var y int = 4;\n    {\n        type x int;\n        return;\n        return 3;\n        (3 + 4);\n        var x = foo();\n        x = x.a.s[4];\n        x = s[3:4:5;\n        x = int(4.5);\n        x = a(3);\n        x = bar(4, 5, \"hi\");\n    }\n}\nfunc bar(a int, b int, c string) {\n    if true {\n    }\n    else {\n        if false {\n        }\n        else {\n            if true {\n            }\n        }\n    }\n    for  {\n        continue;\n    }\n    {\n        var i = 0;\n        for ; (i < 4); i = (i + 1); {\n            var x = (!3);\n        }\n    }\n}\nfunc main() {\n}\n\n" in
+  assert_equal (Prettyp.program_str ast) expected
+;;

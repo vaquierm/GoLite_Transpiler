@@ -12,7 +12,7 @@ let suite =
     "Parsing/unsupported map" >:: Parsing_test.unsupported_map;
     "Parsing/unsupported interface" >:: Parsing_test.unsupported_interface;
     "Parsing/left hand side of short assign must be ID" >:: Parsing_test.lhs_short_id;
-
+    "Parsing/all features" >:: Parsing_test.all_features;
   ]
 
 let () =
