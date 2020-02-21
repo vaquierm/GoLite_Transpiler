@@ -142,7 +142,7 @@ func_params
 
 typeT
   : IDENTIFIER                                    { Ast.DefinedType ((fst $1), None, (snd $1)) }
-  | LSQUARE exp RSQUARE typeT                     { Ast.ArrayType ($4, $2) }
+  | LSQUARE exp RSQUARE typeT                     { Ast.ArrayType ($4, $2, $1) }
   | LSQUARE RSQUARE typeT                         { Ast.SliceType $3 }
   | MULT typeT                                    { Ast.PointerType $2 }
   | MAP RSQUARE typeT RSQUARE typeT               { raise (Exceptions.UnsuportedError ("Map types are unsuported in GoLite", $2, None)) }
