@@ -14,8 +14,8 @@ type unary_op =
 type typeT =
   (* Type from identifier: string of type, underlying type, line *)
   | DefinedType of string * (typeT option) * int
-  (* Array type: Element type, experession for size of array *)
-  | ArrayType of typeT * exp
+  (* Array type: Element type, experession for size of array, line *)
+  | ArrayType of typeT * exp * int
   (* Slice type: type of element *)
   | SliceType of typeT
   (* Pointer type: type pointing to *)

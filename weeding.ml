@@ -21,7 +21,11 @@ open Typecheck
 let rec weed_type t env =
   match t with
   | DefinedType (id, None, l) -> Env.get_type id env l
-  | ArrayType (t', e) -> ArrayType (weed_type t' env, weed_exp e env)
+  | ArrayType (t', e, l) -> let weeded_exp = weed_exp e env in
+    begin match weeded_exp with
+    | PrimExp (IntLit _) -> ArrayType (weed_type t' env, weeded_exp, l)
+    | _ -> raise (Exceptions.SyntaxError ("The size of the array must be an integer literal", Some l))
+    end
   | SliceType t' -> SliceType (weed_type t' env)
   | PointerType t' -> PointerType (weed_type t' env)
   | StructType (fields, l) ->
@@ -172,6 +176,7 @@ let rec weed_statement stm env return_t_op in_loop =
     end in
     let weeded_inc = begin match inc_opt with
     | None -> None
+    | Some (VarDeclStm _) -> raise (Exceptions.SyntaxError ("Cannot have short assign statement in loop increment statement", Some l))
     | Some inc -> Some (weed_statement inc new_env return_t_op false)
     end in
     let weeded_for_stm = ForStm(weeded_init, weeded_cond, weeded_inc, weed_block b new_env return_t_op true, l) in

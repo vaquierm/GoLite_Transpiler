@@ -112,7 +112,7 @@ and type_prim_exp p_exp env =
             if is_whole_num e_t then
               begin match p_t with
               | SliceType e_t -> Some e_t
-              | ArrayType (e_t, _) -> Some e_t
+              | ArrayType (e_t, _, _) -> Some e_t
               | _ -> raise (Exceptions.TypeError ("Cannot index type '" ^ Prettyp.typeT_str p_t 0 ^ "'", l))
               end
             else
