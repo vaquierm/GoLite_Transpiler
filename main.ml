@@ -1,6 +1,9 @@
-let lexbuf = Lexing.from_channel stdin in
 try
-  let program = print_endline "Parsing..."; Parser.start Lexer.token lexbuf in 
+    if not (Array.length Sys.argv = 2) then
+      failwith "There must be exaclty one command line argument which is the file path of the file to be compiled";
+    (* Read the file *)
+    let filename = Sys.argv.(1) in
+    let program = Ast_build.build_ast filename in
     print_endline "\nOriginal program";
     print_string (Prettyp.program_str program);
     let weeded_prog = print_endline "\nWeeding..."; Weeding.weed_program program in

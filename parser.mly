@@ -120,12 +120,12 @@ var_spec
     if List.length $1 != List.length $4 then
       raise (Exceptions.SyntaxError ("Assignment mismatch. " ^ (string_of_int (List.length $1)) ^ " variables but " ^ (string_of_int (List.length $4)) ^ " values", Some $5))
     else
-      List.map2 (fun iden exp -> Ast.VarDeclTypeInit ($2, iden, exp, $5)) $1 $4 }
+      List.map2 (fun iden exp -> Ast.VarDeclTypeInit ($2, iden, exp, $5)) $1 (List.rev $4) }
   | ident_list ASSIGN exp_list SEMICOLON            {
     if List.length $1 != List.length $3 then
       raise (Exceptions.SyntaxError ("Assignment mismatch. " ^ (string_of_int (List.length $1)) ^ " variables but " ^ (string_of_int (List.length $3)) ^ " values", Some $4))
     else
-      List.map2 (fun iden exp -> Ast.VarDeclNoTypeInit (iden, exp, $4)) $1 $3 }
+      List.map2 (fun iden exp -> Ast.VarDeclNoTypeInit (iden, exp, $4)) $1 (List.rev $3) }
 
 func_decl
   : FUNC IDENTIFIER LPAR func_params? RPAR typeT? body              { 
@@ -145,7 +145,7 @@ typeT
   | LSQUARE exp RSQUARE typeT                     { Ast.ArrayType ($4, $2, $1) }
   | LSQUARE RSQUARE typeT                         { Ast.SliceType $3 }
   | MULT typeT                                    { Ast.PointerType $2 }
-  | MAP RSQUARE typeT RSQUARE typeT               { raise (Exceptions.UnsuportedError ("Map types are unsuported in GoLite", $2, None)) }
+  | MAP LSQUARE typeT RSQUARE typeT               { raise (Exceptions.UnsuportedError ("Map types are unsupported in GoLite", $2, None)) }
   | INTERFACE                                     { raise (Exceptions.UnsuportedError ("Interface types are unsupported in GoLite", $1, None)) }
   | CHAN RECEIVE?                                 { raise (Exceptions.UnsuportedError ("Channel types are unsupported in GoLite", $1, None)) }
   | STRUCT LCURLY field_decls RCURLY              { Ast.StructType ($3, $1) }
