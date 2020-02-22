@@ -6,9 +6,11 @@ try
     let program = Ast_build.build_ast filename in
     print_endline "\nOriginal program";
     print_string (Prettyp.program_str program);
+    print_endline (Ast.program_ast_str program);
     let weeded_prog = print_endline "\nWeeding..."; Weeding.weed_program program in
     print_endline "\nWeeded program";
     print_string (Prettyp.program_str weeded_prog);
+    print_endline (Ast.program_ast_str weeded_prog);
     print_endline "\nTypechecking...";
     Typecheck.typecheck_program weeded_prog;
     Exceptions.print_warnings ();

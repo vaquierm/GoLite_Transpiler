@@ -3,9 +3,6 @@ open Exceptions
 open Weeding
 open Ast
 
-let get_test_ast top_decls main_stms main_l main_endl =
-  Program (Package "test", top_decls @ [TopFuncDecl (FuncDecl ("main", [], None, StmsBlock (main_stms, main_endl), main_l))])
-
 let non_constant_array_size _ =
   let ast = Ast_build.build_ast "test/test_programs/weeding/non_constant_array_size.go" in
   let f () = weed_program ast in
@@ -57,29 +54,53 @@ let continue_not_in_loop _ =
 let unreachable_after_return _ =
   let ast = Ast_build.build_ast "test/test_programs/weeding/unreachable_after_return.go" in
   let weeded_prog = weed_program ast in
-  assert_equal (Prettyp.program_str weeded_prog) "import test;\nfunc main() {\n    return;\n}\n\n"
+  assert_equal weeded_prog (Program (Package "test", [TopFuncDecl (FuncDecl ("main", [], None, StmsBlock ([Return (None, 3); ], 6), 2)); ]))
 ;;
 
 let unreachable_after_return_block _ =
   let ast = Ast_build.build_ast "test/test_programs/weeding/unreachable_after_return_block.go" in
   let weeded_prog = weed_program ast in
-  assert_equal (Prettyp.program_str weeded_prog) "import test;\nfunc main() {\n    {\n        return;\n    }\n}\n\n"
+  assert_equal weeded_prog (Program (Package "test", [TopFuncDecl (FuncDecl ("main", [], None, StmsBlock ([BlockStm (StmsBlock ([Return (None, 4); ], 5)); ], 8), 2)); ]))
 ;;
 
 let unreachable_after_return_if _ =
   let ast = Ast_build.build_ast "test/test_programs/weeding/unreachable_after_return_if.go" in
   let weeded_prog = weed_program ast in
-  assert_equal (Prettyp.program_str weeded_prog) "import test;\nfunc main() {\n    if true {\n        return;\n    }\n    else {\n        return;\n    }\n}\n\n"
+  assert_equal weeded_prog (Program (Package "test", [TopFuncDecl (FuncDecl ("main", [], None, StmsBlock ([IfStm (PrimExp (BoolLit true), StmsBlock ([Return (None, 4); ], 5), Some (StmsBlock ([Return (None, 6); ], 7)), 3); ], 10), 2)); ]))
 ;;
 
 let unreachable_after_return_while_true _ =
   let ast = Ast_build.build_ast "test/test_programs/weeding/unreachable_after_return_while_true.go" in
   let weeded_prog = weed_program ast in
-  assert_equal (Prettyp.program_str weeded_prog) "import test;\nfunc main() {\n    for  {\n        return;\n    }\n}\n\n"
+  assert_equal weeded_prog (Program (Package "test", [TopFuncDecl (FuncDecl ("main", [], None, StmsBlock ([WhileStm (None, StmsBlock ([Return (None, 4); ], 5), 3); ], 8), 2)); ]))
+;;
+
+let unreachable_after_return_for_true _ =
+  let ast = Ast_build.build_ast "test/test_programs/weeding/unreachable_after_return_for_true.go" in
+  let weeded_prog = weed_program ast in
+  assert_equal weeded_prog (Program (Package "test", [TopFuncDecl (FuncDecl ("main", [], None, StmsBlock ([BlockStm (StmsBlock ([VarDeclStm (VarDeclTypeInit (IntType, "x", PrimExp (IntLit ("0", Dec)), 3)); ForStm (None, None, Some (AssignStm (PrimExp (Var ("x", 3)), Binop (PrimExp (Var ("x", 3)), BPlus, PrimExp (IntLit ("1", Dec)), 3), 3)), StmsBlock ([Return (None, 4); ], 5), 3); ], 5)); ], 8), 2)); ]))
 ;;
 
 let resolve_definedT_var_decl _ =
   let ast = Ast_build.build_ast "test/test_programs/weeding/resolve_definedT_var_decl.go" in
   let weeded_prog = weed_program ast in
-  assert_equal weeded_prog (get_test_ast [TopTypeDecl (TypeDecl (DefinedType ("a", Some BoolType, 2), "a", 2)); TopVarDecl (VarDeclTypeInit (DefinedType ("a", Some BoolType, 2), "x", PrimExp (BoolLit true), 3)); TopVarDecl (VarDeclTypeNoInit (DefinedType ("a", Some BoolType, 2), "y", 4)); TopVarDecl (VarDeclTypeInit (DefinedType ("a", Some BoolType, 2), "z", PrimExp (Var ("y", 5)), 5))] [] 4 5)
+  assert_equal weeded_prog (Program (Package "test", [TopTypeDecl (TypeDecl (BoolType, "a", 2)); TopVarDecl (VarDeclTypeInit (DefinedType ("a", Some (BoolType), 2), "x", PrimExp (BoolLit true), 3)); TopVarDecl (VarDeclTypeNoInit (DefinedType ("a", Some (BoolType), 2), "y", 4)); TopVarDecl (VarDeclTypeInit (DefinedType ("a", Some (BoolType), 2), "z", PrimExp (Var ("y", 5)), 5)); TopFuncDecl (FuncDecl ("main", [], None, StmsBlock ([VarDeclStm (VarDeclTypeInit (DefinedType ("a", Some (BoolType), 2), "x", PrimExp (BoolLit true), 7)); VarDeclStm (VarDeclTypeNoInit (DefinedType ("a", Some (BoolType), 2), "y", 8)); VarDeclStm (VarDeclTypeInit (DefinedType ("a", Some (BoolType), 2), "z", PrimExp (Var ("y", 9)), 9)); ], 10), 6)); ]))
+;;
+
+let resolve_definedT_struct _ =
+  let ast = Ast_build.build_ast "test/test_programs/weeding/resolve_definedT_struct.go" in
+  let weeded_prog = weed_program ast in
+  assert_equal weeded_prog (Program (Package "test", [TopTypeDecl (TypeDecl (IntType, "a", 2)); TopTypeDecl (TypeDecl (StructType ([("y", StructType ([("z", DefinedType ("a", Some (IntType), 2)); ], 5)); ("x", DefinedType ("a", Some (IntType), 2)); ], 3), "b", 3)); TopFuncDecl (FuncDecl ("main", [], None, StmsBlock ([], 10), 9)); ]))
+;;
+
+let resolve_definedT_func _ =
+  let ast = Ast_build.build_ast "test/test_programs/weeding/resolve_definedT_func.go" in
+  let weeded_prog = weed_program ast in
+  assert_equal weeded_prog (Program (Package "test", [TopTypeDecl (TypeDecl (IntType, "a", 2)); TopFuncDecl (FuncDecl ("foo", [("x", DefinedType ("a", Some (IntType), 2)); ], Some (DefinedType ("a", Some (IntType), 2)), StmsBlock ([], 4), 3)); TopFuncDecl (FuncDecl ("main", [], None, StmsBlock ([], 6), 5)); ]))
+;;
+
+let resolve_definedT_cast _ =
+  let ast = Ast_build.build_ast "test/test_programs/weeding/resolve_definedT_cast.go" in
+  let weeded_prog = weed_program ast in
+  assert_equal weeded_prog (Program (Package "test", [TopTypeDecl (TypeDecl (IntType, "a", 2)); TopFuncDecl (FuncDecl ("main", [], None, StmsBlock ([VarDeclStm (VarDeclTypeInit (DefinedType ("a", Some (IntType), 2), "x", PrimExp (CastExp (DefinedType ("a", Some (IntType), 2), PrimExp (IntLit ("1", Dec)), 4)), 4)); ], 5), 3)); ]))
 ;;

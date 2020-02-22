@@ -26,6 +26,10 @@ let suite =
     "Weeding/unreachable after return if" >:: Weeding_test.unreachable_after_return_if;
     "Weeding/unreachable after return while true" >:: Weeding_test.unreachable_after_return_while_true;
     "Weeding/resolve defined type var decl" >:: Weeding_test.resolve_definedT_var_decl;
+    "Weeding/resolve defined type in struct" >:: Weeding_test.resolve_definedT_struct;
+    "Weeding/resolve defined type in func" >:: Weeding_test.resolve_definedT_func;
+    "Weeding/resolve defined type in cast" >:: Weeding_test.resolve_definedT_cast;
+
   ]
 
 let () =

@@ -286,7 +286,7 @@ and stm_ast_str stm =
     let init_str = match init_opt with None -> "None" | Some init -> "Some (" ^ stm_ast_str init ^ ")" in
     let update_str = match update_opt with None -> "None" | Some update -> "Some (" ^ stm_ast_str update ^ ")" in
     let cond_str = match cond_opt with None -> "None" | Some cond -> "Some (" ^ exp_ast_str cond ^ ")" in
-      "ForStm (" ^ init_str ^ ", " ^ cond_str ^ ", " ^ update_str ^ ", " ^ string_of_int l ^ ")"
+      "ForStm (" ^ init_str ^ ", " ^ cond_str ^ ", " ^ update_str ^ ", " ^ block_ast_str b ^ ", " ^ string_of_int l ^ ")"
   | Print (e, nl, l) -> "Print (" ^ exp_ast_str e ^ ", " ^ string_of_bool nl ^ ", " ^ string_of_int l ^ ")"
 ;;
 
