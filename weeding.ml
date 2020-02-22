@@ -211,7 +211,6 @@ and weed_statements stms env return_t_op in_loop =
         [weeded_statement]
       | false -> weeded_statement::(weed_statements stms' env return_t_op in_loop)
       end
-      
 ;;
 
 (*

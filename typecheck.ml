@@ -438,9 +438,8 @@ let typecheck_func f_decl env =
     let func_env = Env.open_function_scope env f_decl in
       let ret = type_stms_list stms func_env out_opt in
         begin match ret, out_opt with
-        | false, None | true, Some _ -> ()
         | false, Some t -> raise (Exceptions.TypeError ("Not all code paths return type '" ^ Prettyp.typeT_str t 0 ^ "' in function '" ^ name ^ "'", l))
-        | true, None -> failwith ("Line " ^ string_of_int l ^ "\nTypecheckof body did not catch incorrect non void return")
+        | _ -> ()
         end
 ;;
 
