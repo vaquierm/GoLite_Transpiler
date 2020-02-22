@@ -112,7 +112,7 @@ var_decls
 
 var_specs
   : var_spec                                        { $1 }
-  | var_specs var_spec                              { $2 @ $1 }
+  | var_specs var_spec                              { $1 @ $2 }
 
 var_spec
   : ident_list typeT SEMICOLON                      { List.map (fun iden -> Ast.VarDeclTypeNoInit ($2, iden, $3)) $1 }

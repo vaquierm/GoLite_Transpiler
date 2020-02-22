@@ -8,10 +8,17 @@ let suite =
     "Parsing/unsupported imports" >:: Parsing_test.unsupported_imports;
     "Parsing/unsupported type alias" >:: Parsing_test.unsupported_type_alias;
     "Parsing/assignment mismatch" >:: Parsing_test.assignment_mismatch;
-    "Parsing/assignment match" >:: Parsing_test.assignment_match;
     "Parsing/unsupported map" >:: Parsing_test.unsupported_map;
     "Parsing/unsupported interface" >:: Parsing_test.unsupported_interface;
     "Parsing/left hand side of short assign must be ID" >:: Parsing_test.lhs_short_id;
+    "Parsing/var decl" >:: Parsing_test.var_decl;
+    "Parsing/type decl" >:: Parsing_test.type_decl;
+    "Parsing/func decl" >:: Parsing_test.func_decl;
+    "Parsing/all types" >:: Parsing_test.all_types;
+    "Parsing/bin exp" >:: Parsing_test.bin_exp;
+    "Parsing/unary exp" >:: Parsing_test.unary_exp;
+
+    
     "Weeding/non constant array size" >:: Weeding_test.non_constant_array_size;
     "Weeding/same field name struct" >:: Weeding_test.same_field_names_struct;
     "Weeding/cast none" >:: Weeding_test.cast_none;

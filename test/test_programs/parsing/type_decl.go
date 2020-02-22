@@ -1,5 +1,7 @@
 package test
-
+type (
+	c int
+	d c
+)
 func main() {
-	var a, b = true, false
 }
