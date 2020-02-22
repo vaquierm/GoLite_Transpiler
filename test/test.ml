@@ -12,7 +12,6 @@ let suite =
     "Parsing/unsupported map" >:: Parsing_test.unsupported_map;
     "Parsing/unsupported interface" >:: Parsing_test.unsupported_interface;
     "Parsing/left hand side of short assign must be ID" >:: Parsing_test.lhs_short_id;
-    "Parsing/all features" >:: Parsing_test.all_features;
     "Weeding/non constant array size" >:: Weeding_test.non_constant_array_size;
     "Weeding/same field name struct" >:: Weeding_test.same_field_names_struct;
     "Weeding/cast none" >:: Weeding_test.cast_none;
@@ -29,6 +28,7 @@ let suite =
     "Weeding/resolve defined type in struct" >:: Weeding_test.resolve_definedT_struct;
     "Weeding/resolve defined type in func" >:: Weeding_test.resolve_definedT_func;
     "Weeding/resolve defined type in cast" >:: Weeding_test.resolve_definedT_cast;
+    "Weeding/resolve defined type in slices, arrays, pointers" >:: Weeding_test.resolve_definedT_types;
 
   ]
 

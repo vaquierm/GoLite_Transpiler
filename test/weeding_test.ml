@@ -104,3 +104,9 @@ let resolve_definedT_cast _ =
   let weeded_prog = weed_program ast in
   assert_equal weeded_prog (Program (Package "test", [TopTypeDecl (TypeDecl (IntType, "a", 2)); TopFuncDecl (FuncDecl ("main", [], None, StmsBlock ([VarDeclStm (VarDeclTypeInit (DefinedType ("a", Some (IntType), 2), "x", PrimExp (CastExp (DefinedType ("a", Some (IntType), 2), PrimExp (IntLit ("1", Dec)), 4)), 4)); ], 5), 3)); ]))
 ;;
+
+let resolve_definedT_types _ =
+  let ast = Ast_build.build_ast "test/test_programs/weeding/resolve_definedT_types.go" in
+  let weeded_prog = weed_program ast in
+  assert_equal weeded_prog (Program (Package "test", [TopTypeDecl (TypeDecl (IntType, "t", 2)); TopVarDecl (VarDeclTypeNoInit (ArrayType (DefinedType ("t", Some (IntType), 2), PrimExp (IntLit ("1", Dec)), 3), "a", 3)); TopVarDecl (VarDeclTypeNoInit (SliceType (DefinedType ("t", Some (IntType), 2)), "b", 4)); TopVarDecl (VarDeclTypeNoInit (PointerType (DefinedType ("t", Some (IntType), 2)), "c", 5)); TopFuncDecl (FuncDecl ("main", [], None, StmsBlock ([], 7), 6)); ]))
+;;
