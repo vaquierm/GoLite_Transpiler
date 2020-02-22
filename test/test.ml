@@ -25,7 +25,7 @@ let suite =
     "Weeding/unreachable after return block" >:: Weeding_test.unreachable_after_return_block;
     "Weeding/unreachable after return if" >:: Weeding_test.unreachable_after_return_if;
     "Weeding/unreachable after return while true" >:: Weeding_test.unreachable_after_return_while_true;
-
+    "Weeding/resolve defined type var decl" >:: Weeding_test.resolve_definedT_var_decl;
   ]
 
 let () =

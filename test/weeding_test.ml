@@ -3,6 +3,9 @@ open Exceptions
 open Weeding
 open Ast
 
+let get_test_ast top_decls main_stms main_l main_endl =
+  Program (Package "test", top_decls @ [TopFuncDecl (FuncDecl ("main", [], None, StmsBlock (main_stms, main_endl), main_l))])
+
 let non_constant_array_size _ =
   let ast = Ast_build.build_ast "test/test_programs/weeding/non_constant_array_size.go" in
   let f () = weed_program ast in
@@ -75,3 +78,8 @@ let unreachable_after_return_while_true _ =
   assert_equal (Prettyp.program_str weeded_prog) "import test;\nfunc main() {\n    for  {\n        return;\n    }\n}\n\n"
 ;;
 
+let resolve_definedT_var_decl _ =
+  let ast = Ast_build.build_ast "test/test_programs/weeding/resolve_definedT_var_decl.go" in
+  let weeded_prog = weed_program ast in
+  assert_equal weeded_prog (get_test_ast [TopTypeDecl (TypeDecl (DefinedType ("a", Some BoolType, 2), "a", 2)); TopVarDecl (VarDeclTypeInit (DefinedType ("a", Some BoolType, 2), "x", PrimExp (BoolLit true), 3)); TopVarDecl (VarDeclTypeNoInit (DefinedType ("a", Some BoolType, 2), "y", 4)); TopVarDecl (VarDeclTypeInit (DefinedType ("a", Some BoolType, 2), "z", PrimExp (Var ("y", 5)), 5))] [] 4 5)
+;;
