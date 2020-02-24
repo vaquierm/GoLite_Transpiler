@@ -61,7 +61,7 @@ let unop_str u_op =
 let base_str b =
   match b with
   | Dec -> ""
-  | Oct -> "0o"
+  | Oct -> "0"
   | Bin -> "0b"
   | Hex -> "0x"
 

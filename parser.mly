@@ -309,11 +309,11 @@ simple_statement
 
 if_statement
   : IF simple_statement exp body ELSE if_statement {
-    let inner_else = Ast.StmsBlock ([$6], Ast.if_stm_endline $6)
+    let inner_else = Ast.StmsBlock ([$6], Ast.stm_endline $6)
     in
     let inner = Ast.IfStm ($3, $4, Some inner_else, $1)
     in
-    Ast.BlockStm (Ast.StmsBlock ([$2; inner], Ast.if_stm_endline $6))
+    Ast.BlockStm (Ast.StmsBlock ([$2; inner], Ast.stm_endline $6))
   }
   | IF simple_statement exp body ELSE body {
     let inner = Ast.IfStm ($3, $4, Some $6, $1)
@@ -321,7 +321,7 @@ if_statement
     Ast.BlockStm (Ast.StmsBlock ([$2; inner], Ast.block_endline $6))
   }
   | IF exp body ELSE if_statement {
-    let b = Ast.StmsBlock ([$5], Ast.if_stm_endline $5)
+    let b = Ast.StmsBlock ([$5], Ast.stm_endline $5)
     in
     Ast.IfStm ($2, $3, Some b, $1) 
   }

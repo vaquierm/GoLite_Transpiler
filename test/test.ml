@@ -17,7 +17,14 @@ let suite =
     "Parsing/all types" >:: Parsing_test.all_types;
     "Parsing/bin exp" >:: Parsing_test.bin_exp;
     "Parsing/unary exp" >:: Parsing_test.unary_exp;
-
+    "Parsing/literal exp" >:: Parsing_test.literal_exp;
+    "Parsing/select index" >:: Parsing_test.select_index;
+    "Parsing/cast func call" >:: Parsing_test.cast_func_call;
+    "Parsing/body stm" >:: Parsing_test.body_stm;
+    "Parsing/tag stm" >:: Parsing_test.tag_stm;
+    "Parsing/if stm" >:: Parsing_test.if_stm;
+    "Parsing/for stm" >:: Parsing_test.for_stm;
+    "Parsing/simple stm" >:: Parsing_test.simple_stm;
     
     "Weeding/non constant array size" >:: Weeding_test.non_constant_array_size;
     "Weeding/same field name struct" >:: Weeding_test.same_field_names_struct;
