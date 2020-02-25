@@ -1,5 +1,5 @@
 _build/
 parser.automaton
 goLite_compiler
-goLite_complier.byte
+*.byte
 *.go

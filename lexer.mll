@@ -52,7 +52,7 @@
     | DECINTLITERAL _ | BININTLITERAL _ | OCTINTLITERAL _ | HEXINTLITERAL _
     | BOOLLITERAL _ | FLOATLITERAL _ | RUNELITERAL _ | STRINGLITERAL _ | RAWSTRINGLITERAL _ 
     | PLUSPLUS _ | MINUSMINUS _ | IDENTIFIER _
-    | INTTYPE | FLOATTYPE | STRINGTYPE | RUNETYPE -> true
+    | INTTYPE | FLOATTYPE | STRINGTYPE | RUNETYPE | BOOLTYPE -> true
     | _ -> false
 }
 
@@ -81,7 +81,7 @@
 
   let decIntLiteral    = '0' | (['1'-'9'] decDigit*)
   let binIntLiteral    = "0b" ('0' | ('1' binDigit*))
-  let octIntLiteral    = "0o" ('0' | (['1'-'7'] octDigit*))
+  let octIntLiteral    = "0" ('0' | (['1'-'7'] octDigit*))
   let hexIntLiteral    = "0x" ('0' | (['1'-'7'] hexDigit*))
 
   let floatLiteral     = ('0' | (['1'-'9'] decDigit*))?'.'decDigit*

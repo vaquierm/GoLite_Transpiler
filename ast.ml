@@ -149,3 +149,170 @@ let stm_endline s =
   | _ -> failwith "Unexpected expression last line query"
 ;;
 
+let binop_ast_str b_op =
+  match b_op with
+  | BPlus -> "BPlus"
+  | BMinus -> "BMinus"
+  | Mult -> "Mult"
+  | Div -> "Div"
+  | BinAND -> "BinAND"
+  | BinOR -> "BinOR"
+  | BinXOR -> "BinXOR"
+  | Rshift -> "Rshift"
+  | Lshift -> "Lshift"
+  | Mod -> "Mod"
+  | BoolAND -> "BoolAND"
+  | BoolOR -> "BoolOR"
+  | EQ -> "EQ"
+  | GT -> "GT"
+  | LT -> "LT"
+  | GEQ -> "GEQ"
+  | LEQ -> "LEQ"
+  | NEQ -> "NEQ"
+;;
+
+let unop_ast_str u_op =
+  match u_op with
+  | UMinus -> "UMinus"
+  | UBinNOT -> "UBinNOT"
+  | BoolNOT -> "BoolNOT"
+  | Ref -> "Ref"
+  | DeRef -> "DeRef"
+;;
+
+let base_ast_str b =
+  match b with
+  | Dec -> "Dec"
+  | Oct -> "Oct"
+  | Bin -> "Bin"
+  | Hex -> "Hex"
+
+let rec typeT_ast_str t =
+  match t with
+  | DefinedType (name, t_opt, l) ->
+    let t_str = match t_opt with
+    | None -> "None"
+    | Some t -> "Some (" ^ typeT_ast_str t ^ ")"
+    in
+      "DefinedType (\"" ^ name ^ "\", " ^ t_str ^ ", " ^ string_of_int l ^ ")"
+  | ArrayType (t', e, l) -> "ArrayType (" ^ typeT_ast_str t' ^ ", " ^ exp_ast_str e ^ ", " ^ string_of_int l ^ ")"
+  | SliceType t' -> "SliceType (" ^ typeT_ast_str t' ^ ")"
+  | PointerType t' -> "PointerType (" ^ typeT_ast_str t' ^ ")"
+  | StructType (f_list, l) ->
+    let f_str = List.fold_right (
+      fun (id, t') acc -> "(\"" ^ id ^ "\", " ^ typeT_ast_str t' ^ "); " ^ acc) f_list ""
+    in
+      "StructType ([" ^ f_str ^ "], " ^ string_of_int l ^ ")"
+  | IntType -> "IntType"
+  | FloatType -> "FloatType"
+  | StrType -> "StrType"
+  | RuneType -> "RuneType"
+  | BoolType -> "BoolType"
+and exp_ast_str exp =
+  match exp with
+  | Binop (e1, op, e2, l) -> "Binop (" ^ exp_ast_str e1 ^ ", " ^ binop_ast_str op ^ ", " ^ exp_ast_str e2 ^ ", " ^ string_of_int l ^ ")"
+  | Unary (op, e, l) -> "Unary (" ^ unop_ast_str op ^ ", " ^ exp_ast_str e ^ ", " ^ string_of_int l ^ ")"
+  | PrimExp p_exp -> "PrimExp (" ^ prim_exp_ast_str p_exp ^ ")"
+and prim_exp_ast_str p_exp =
+  match p_exp with
+  | Var (name, l) -> "Var (\"" ^ name ^ "\", " ^ string_of_int l ^ ")"
+  | FloatLit f -> "FloatLit " ^ string_of_float f
+  | RuneLit r -> "RuneLit \"" ^ r ^ "\""
+  | IntLit (i, b) -> "IntLit (\"" ^ i ^ "\", " ^ base_ast_str b ^ ")"
+  | StrLit (s, raw) -> "StrLit (\"" ^ s ^ "\", " ^ string_of_bool raw ^ ")"
+  | BoolLit b -> "BoolLit " ^ string_of_bool b
+  | CastExp (t, e, l) -> "CastExp (" ^ typeT_ast_str t ^ ", " ^ exp_ast_str e ^ ", " ^ string_of_int l ^ ")"
+  | SelectExp (p_exp', field, l) -> "SelectExp (" ^ prim_exp_ast_str p_exp' ^ ", \"" ^ field ^ "\", " ^ string_of_int l ^ ")"
+  | IndexExp (p_exp', e, l) -> "IndexExp (" ^ prim_exp_ast_str p_exp' ^ ", " ^ exp_ast_str e ^ ", " ^ string_of_int l ^ ")"
+  | FuncCall (name, e_list, l) ->
+    "FuncCall (\"" ^ name ^ "\", [" ^ (List.fold_right (fun e acc -> exp_ast_str e ^ "; " ^ acc) e_list "") ^ "], " ^ string_of_int l ^ ")"
+  | SliceExp (p_exp, b_exp, e_exp, c_exp_opt, l) ->
+    let p_exp_str = prim_exp_ast_str p_exp in
+      let b_exp_str = exp_ast_str b_exp in
+        let e_exp_str = exp_ast_str e_exp in
+          let c_exp_str = match c_exp_opt with | None -> "None" | Some e -> "Some (" ^ exp_ast_str e ^ ")" in
+            "SliceExp (" ^ p_exp_str ^ ", " ^ b_exp_str ^ ", " ^ e_exp_str ^ ", " ^ c_exp_str ^ ", " ^ string_of_int l ^ ")"
+  | UnsureTypeFuncCall (name, e, l) -> "UnsureTypeFuncCall (\"" ^ name ^ "\", " ^ exp_ast_str e ^ ", " ^ string_of_int l ^ ")"
+  | AppendExp (e1, e2, l) -> "AppendExp (" ^ prim_exp_ast_str e1 ^ ", " ^ exp_ast_str e2 ^ ", " ^ string_of_int l ^ ")"
+  | LenExp (p_exp, l) -> "LenExp (" ^ prim_exp_ast_str p_exp ^ ", " ^ string_of_int l ^ ")"
+  | CapExp (p_exp, l) -> "CapExp (" ^ prim_exp_ast_str p_exp ^ ", " ^ string_of_int l ^ ")"
+;;
+
+let type_decl_ast_str decl =
+  match decl with
+  | TypeDecl (t, name, l) -> "TypeDecl (" ^ typeT_ast_str t ^ ", \"" ^ name ^ "\", " ^ string_of_int l ^ ")"
+;;
+
+let var_decl_ast_str decl =
+  match decl with
+  | VarDeclTypeInit (t, id, e, l) -> "VarDeclTypeInit (" ^ typeT_ast_str t ^ ", \"" ^ id ^ "\", " ^ exp_ast_str e ^ ", " ^ string_of_int l ^ ")"
+  | VarDeclNoTypeInit (id, e, l) -> "VarDeclNoTypeInit (\"" ^ id ^ "\", " ^ exp_ast_str e ^ ", " ^ string_of_int l ^ ")"
+  | VarDeclTypeNoInit (t, id, l) -> "VarDeclTypeNoInit (" ^ typeT_ast_str t ^ ", \"" ^ id ^ "\", " ^ string_of_int l ^ ")"
+;;
+
+let rec block_ast_str b =
+  match b with
+  | StmsBlock (stm_list, l) -> "StmsBlock ([" ^ (List.fold_right (fun s acc -> stm_ast_str s ^ "; " ^ acc) stm_list "") ^ "], " ^ (string_of_int l) ^ ")"
+and stm_ast_str stm =
+  match stm with
+  | TypeDeclStm decl -> "TypeDeclStm (" ^ type_decl_ast_str decl ^ ")"
+  | VarDeclStm decl -> "VarDeclStm (" ^ var_decl_ast_str decl ^ ")"
+  | Return (exp_op, l) ->
+    let return_str =
+      begin match exp_op with
+      | None -> "None"
+      | Some e -> "Some (" ^ exp_ast_str e ^ ")"
+      end in
+      "Return (" ^ return_str ^ ", " ^ (string_of_int l) ^ ")"
+  | Break l -> "Break " ^ string_of_int l
+  | Continue l -> "Continue " ^ string_of_int l
+  | ExpStm (e, l) -> "ExpStm (" ^ exp_ast_str e ^ ", " ^ string_of_int l ^ ")"
+  | AssignStm (lhs, rhs, l) -> "AssignStm (" ^ exp_ast_str lhs ^ ", " ^ exp_ast_str rhs ^ ", " ^ string_of_int l ^ ")"
+  | IfStm (cond, if_b, else_b_opt, l) ->
+    let else_str =
+      match else_b_opt with
+      | None -> "None"
+      | Some b -> "Some (" ^ block_ast_str b ^ ")"
+      in
+      "IfStm (" ^ exp_ast_str cond ^ ", " ^ block_ast_str if_b ^ ", " ^ else_str ^ ", " ^ string_of_int l ^ ")"
+  | BlockStm b -> "BlockStm (" ^ block_ast_str b ^ ")"
+  | WhileStm (cond_op, b, l) ->
+    let cond_str = match cond_op with
+    | None -> "None"
+    | Some cond -> "Some (" ^ exp_ast_str cond ^ ")"
+    in
+      "WhileStm (" ^ cond_str ^ ", " ^ block_ast_str b ^ ", " ^ string_of_int l ^ ")"
+  | ForStm (init_opt, cond_opt, update_opt, b, l) ->
+    let init_str = match init_opt with None -> "None" | Some init -> "Some (" ^ stm_ast_str init ^ ")" in
+    let update_str = match update_opt with None -> "None" | Some update -> "Some (" ^ stm_ast_str update ^ ")" in
+    let cond_str = match cond_opt with None -> "None" | Some cond -> "Some (" ^ exp_ast_str cond ^ ")" in
+      "ForStm (" ^ init_str ^ ", " ^ cond_str ^ ", " ^ update_str ^ ", " ^ block_ast_str b ^ ", " ^ string_of_int l ^ ")"
+  | Print (e, nl, l) -> "Print (" ^ exp_ast_str e ^ ", " ^ string_of_bool nl ^ ", " ^ string_of_int l ^ ")"
+;;
+
+let func_decl_ast_str decl =
+  match decl with
+  | FuncDecl (name, args, t_opt, b, l) ->
+    let t_opt_str = begin match t_opt with
+    | None -> "None"
+    | Some t -> "Some (" ^ typeT_ast_str t ^ ")"
+    end in
+    "FuncDecl (\"" ^ name ^ "\", [" ^ (List.fold_right (fun (id, t) acc -> "(\"" ^ id ^ "\", " ^ typeT_ast_str t ^ "); " ^ acc) args "") ^ "], " ^ t_opt_str ^ ", " ^ block_ast_str b ^ ", " ^ (string_of_int l) ^ ")"
+;;
+
+let top_decl_ast_str decl =
+  match decl with
+  | TopTypeDecl type_decl -> "TopTypeDecl (" ^ type_decl_ast_str type_decl ^ ")"
+  | TopVarDecl var_decl -> "TopVarDecl (" ^ var_decl_ast_str var_decl ^ ")"
+  | TopFuncDecl func_decl -> "TopFuncDecl (" ^ func_decl_ast_str func_decl ^ ")"
+;;
+
+let package_ast_str pkg =
+  match pkg with
+  | Package str -> "Package \"" ^ str ^ "\""
+;;
+
+let program_ast_str program =
+  match program with
+  | Program (pkg, decls) -> "Program (" ^ package_ast_str pkg ^ ", [" ^ (List.fold_right (fun d acc -> top_decl_ast_str d ^ "; " ^ acc) decls "") ^ "])"
+;;

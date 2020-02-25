@@ -112,7 +112,7 @@ var_decls
 
 var_specs
   : var_spec                                        { $1 }
-  | var_specs var_spec                              { $2 @ $1 }
+  | var_specs var_spec                              { $1 @ $2 }
 
 var_spec
   : ident_list typeT SEMICOLON                      { List.map (fun iden -> Ast.VarDeclTypeNoInit ($2, iden, $3)) $1 }
@@ -120,12 +120,12 @@ var_spec
     if List.length $1 != List.length $4 then
       raise (Exceptions.SyntaxError ("Assignment mismatch. " ^ (string_of_int (List.length $1)) ^ " variables but " ^ (string_of_int (List.length $4)) ^ " values", Some $5))
     else
-      List.map2 (fun iden exp -> Ast.VarDeclTypeInit ($2, iden, exp, $5)) $1 $4 }
+      List.map2 (fun iden exp -> Ast.VarDeclTypeInit ($2, iden, exp, $5)) $1 (List.rev $4) }
   | ident_list ASSIGN exp_list SEMICOLON            {
     if List.length $1 != List.length $3 then
       raise (Exceptions.SyntaxError ("Assignment mismatch. " ^ (string_of_int (List.length $1)) ^ " variables but " ^ (string_of_int (List.length $3)) ^ " values", Some $4))
     else
-      List.map2 (fun iden exp -> Ast.VarDeclNoTypeInit (iden, exp, $4)) $1 $3 }
+      List.map2 (fun iden exp -> Ast.VarDeclNoTypeInit (iden, exp, $4)) $1 (List.rev $3) }
 
 func_decl
   : FUNC IDENTIFIER LPAR func_params? RPAR typeT? body              { 
@@ -145,7 +145,7 @@ typeT
   | LSQUARE exp RSQUARE typeT                     { Ast.ArrayType ($4, $2, $1) }
   | LSQUARE RSQUARE typeT                         { Ast.SliceType $3 }
   | MULT typeT                                    { Ast.PointerType $2 }
-  | MAP RSQUARE typeT RSQUARE typeT               { raise (Exceptions.UnsuportedError ("Map types are unsuported in GoLite", $2, None)) }
+  | MAP LSQUARE typeT RSQUARE typeT               { raise (Exceptions.UnsuportedError ("Map types are unsupported in GoLite", $2, None)) }
   | INTERFACE                                     { raise (Exceptions.UnsuportedError ("Interface types are unsupported in GoLite", $1, None)) }
   | CHAN RECEIVE?                                 { raise (Exceptions.UnsuportedError ("Channel types are unsupported in GoLite", $1, None)) }
   | STRUCT LCURLY field_decls RCURLY              { Ast.StructType ($3, $1) }
@@ -309,11 +309,11 @@ simple_statement
 
 if_statement
   : IF simple_statement exp body ELSE if_statement {
-    let inner_else = Ast.StmsBlock ([$6], Ast.if_stm_endline $6)
+    let inner_else = Ast.StmsBlock ([$6], Ast.stm_endline $6)
     in
     let inner = Ast.IfStm ($3, $4, Some inner_else, $1)
     in
-    Ast.BlockStm (Ast.StmsBlock ([$2; inner], Ast.if_stm_endline $6))
+    Ast.BlockStm (Ast.StmsBlock ([$2; inner], Ast.stm_endline $6))
   }
   | IF simple_statement exp body ELSE body {
     let inner = Ast.IfStm ($3, $4, Some $6, $1)
@@ -321,7 +321,7 @@ if_statement
     Ast.BlockStm (Ast.StmsBlock ([$2; inner], Ast.block_endline $6))
   }
   | IF exp body ELSE if_statement {
-    let b = Ast.StmsBlock ([$5], Ast.if_stm_endline $5)
+    let b = Ast.StmsBlock ([$5], Ast.stm_endline $5)
     in
     Ast.IfStm ($2, $3, Some b, $1) 
   }

@@ -59,13 +59,6 @@ let op_compatible_return b_op t =
   | EQ | NEQ -> Some BoolType
 ;;
 
-(* Checks if the rexpresison can be assigned to *)
-let is_assignable e =
-  match e with
-  | PrimExp (Var _) | PrimExp (SelectExp _) | PrimExp (IndexExp _) -> true
-  | _ -> false
-;;
-
 (* Check the compatibility of binary operators with  *)
 
 let rec type_exp exp env =
@@ -88,7 +81,7 @@ and type_prim_exp p_exp env =
     | Some t -> t
     end in
     let t_u = resolve_type t in
-    let field_not_found () = raise (Exceptions.TypeError ("The type '" ^ Prettyp.typeT_str t 0 ^ "' doe not have any field '" ^ field ^ "'", l)) in
+    let field_not_found () = raise (Exceptions.TypeError ("The type '" ^ Prettyp.typeT_str t 0 ^ "' does not have any field '" ^ field ^ "'", l)) in
       begin match t_u with
       | StructType (f_l, _) ->
         let field_type = ref IntType in
@@ -159,15 +152,16 @@ and type_prim_exp p_exp env =
       | Some e_m -> check_int_type e_m
       end;
       Some p_exp_t
-  | LenExp (p_exp, l) | CapExp (p_exp, l) ->
-    let p_exp_t_op = type_prim_exp p_exp env in
+  | LenExp (p_exp', l) | CapExp (p_exp', l) ->
+    let fun_name = match p_exp with | LenExp _ -> "len" | CapExp _ -> "cap" | _ -> failwith "should never happen" in
+    let p_exp_t_op = type_prim_exp p_exp' env in
     let p_exp_t = begin match p_exp_t_op with
-    | None -> raise (Exceptions.TypeError ("Invalid argument type 'None' for len", l))
+    | None -> raise (Exceptions.TypeError ("Invalid argument type 'None' for " ^ fun_name, l))
     | Some t -> t
     end in
       begin match p_exp_t with
       | SliceType _ | ArrayType _ -> Some IntType
-      | _ -> raise (Exceptions.TypeError ("Invalid argument type '" ^ Prettyp.typeT_str p_exp_t 0 ^ "' for len", l))
+      | _ -> raise (Exceptions.TypeError ("Invalid argument type '" ^ Prettyp.typeT_str p_exp_t 0 ^ "' for " ^ fun_name, l))
       end
   | AppendExp (p_exp, e, l) ->
     let p_exp_t_op = type_prim_exp p_exp env in
@@ -182,7 +176,7 @@ and type_prim_exp p_exp env =
             if t = e_t then
               Some (SliceType t)
             else
-              raise (Exceptions.TypeError ("Type mismatch. Element to be appended myst be of type '" ^ Prettyp.typeT_str t 0 ^ "'. Got '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
+              raise (Exceptions.TypeError ("Type mismatch. Element to be appended must be of type '" ^ Prettyp.typeT_str t 0 ^ "'. Got '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
         | Some t -> raise (Exceptions.TypeError ("Expression '" ^ Prettyp.prim_exp_str p_exp 0 ^ "' must be of type slice. Got '" ^ Prettyp.typeT_str t 0 ^ "'", l))
         end
   | CastExp (t, e, l) ->
@@ -336,8 +330,7 @@ let rec typecheck_stm stm env return_t_op =
       end
     end
   | AssignStm (lhs, rhs, l) ->
-  if is_assignable lhs then
-    (let lhs_t_op = type_exp lhs env in
+    let lhs_t_op = type_exp lhs env in
       let rhs_t_op = type_exp rhs env in
         let lhs_t = begin match lhs_t_op with
         | None -> failwith ("Line " ^ string_of_int l ^ "\nThe left hand side should never be void since we chench for assignability")
@@ -349,9 +342,6 @@ let rec typecheck_stm stm env return_t_op =
           end in
           if lhs_t = rhs_t then false
           else raise (Exceptions.TypeError ("Type mismatch. Cannot assign type '" ^ Prettyp.typeT_str rhs_t 0 ^ "' to '" ^ Prettyp.typeT_str lhs_t 0 ^ "'", l))
-    )
-  else
-    raise (Exceptions.SyntaxError ("The expression '" ^ Prettyp.exp_str lhs 0 ^ "' is not assignable", Some l))
   | Print (e, _ , l) ->
     let e_t_op = type_exp e env in
       let _ = begin match e_t_op with
@@ -438,9 +428,8 @@ let typecheck_func f_decl env =
     let func_env = Env.open_function_scope env f_decl in
       let ret = type_stms_list stms func_env out_opt in
         begin match ret, out_opt with
-        | false, None | true, Some _ -> ()
         | false, Some t -> raise (Exceptions.TypeError ("Not all code paths return type '" ^ Prettyp.typeT_str t 0 ^ "' in function '" ^ name ^ "'", l))
-        | true, None -> failwith ("Line " ^ string_of_int l ^ "\nTypecheckof body did not catch incorrect non void return")
+        | _ -> ()
         end
 ;;
 

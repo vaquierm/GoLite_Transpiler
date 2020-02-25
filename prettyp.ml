@@ -61,7 +61,7 @@ let unop_str u_op =
 let base_str b =
   match b with
   | Dec -> ""
-  | Oct -> "0o"
+  | Oct -> "0"
   | Bin -> "0b"
   | Hex -> "0x"
 
@@ -116,7 +116,7 @@ and prim_exp_str p_exp n =
       let b_exp_str = exp_str b_exp n in
         let e_exp_str = exp_str e_exp n in
           let c_exp_str = match c_exp_opt with | None -> "" | Some e -> ":" ^ exp_str e n in
-            p_exp_str ^ "[" ^ (if b_exp_str = "0" then "" else b_exp_str) ^ ":" ^ e_exp_str ^ c_exp_str
+            p_exp_str ^ "[" ^ (if b_exp_str = "0" then "" else b_exp_str) ^ ":" ^ e_exp_str ^ c_exp_str ^ "]"
   | UnsureTypeFuncCall (name, e, _) -> name ^ "(" ^ exp_str e n ^ ")"
   | AppendExp (e1, e2, _) -> "append(" ^ prim_exp_str e1 n ^ ", " ^ exp_str e2 n ^ ")"
   | LenExp (p_exp, _) -> "len(" ^ prim_exp_str p_exp n ^ ")"
