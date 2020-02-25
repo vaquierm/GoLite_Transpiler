@@ -6,7 +6,7 @@ open Ast
 let non_constant_array_size _ =
   let ast = Ast_build.build_ast "test/test_programs/weeding/non_constant_array_size.go" in
   let f () = weed_program ast in
-  assert_raises (SyntaxError ("The size of the array must be an integer literal", Some 3)) f
+  assert_raises (SyntaxError ("The size of the array must be an integer literal", Some 4)) f
 ;;
 
 let same_field_names_struct _ =
