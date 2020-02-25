@@ -51,6 +51,12 @@ let continue_not_in_loop _ =
   assert_raises (SyntaxError ("Continue statement not in loop", Some 3)) f
 ;;
 
+let lhs_not_assignable _ =
+  let ast = Ast_build.build_ast "test/test_programs/weeding/lhs_not_assignable.go" in
+  let f () = weed_program ast in
+  assert_raises (SyntaxError ("The expression '1' is not assignable", Some 3)) f
+;;
+
 let unreachable_after_return _ =
   let ast = Ast_build.build_ast "test/test_programs/weeding/unreachable_after_return.go" in
   let weeded_prog = weed_program ast in

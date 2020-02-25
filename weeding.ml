@@ -17,6 +17,13 @@ Finally, this also resolves the underlying type of defined types
 open Ast
 open Typecheck
 
+(* Checks if the rexpresison can be assigned to *)
+let is_assignable e =
+  match e with
+  | PrimExp (Var _) | PrimExp (SelectExp _) | PrimExp (IndexExp _) -> true
+  | _ -> false
+;;
+
 (* Weed the type and resolve Underlying defined types *)
 let rec weed_type t env =
   match t with
@@ -151,7 +158,11 @@ let rec weed_statement stm env return_t_op in_loop =
   | VarDeclStm v_decl -> VarDeclStm (weed_var_decl v_decl env)
   | Return (Some e, l) -> Return (Some (weed_exp e env), l)
   | ExpStm (e, l) -> ExpStm (weed_exp e env, l)
-  | AssignStm (lhs, rhs, l) -> AssignStm (weed_exp lhs env, weed_exp rhs env, l)
+  | AssignStm (lhs, rhs, l) ->
+    if is_assignable lhs then
+      AssignStm (weed_exp lhs env, weed_exp rhs env, l)
+    else
+      raise (Exceptions.SyntaxError ("The expression '" ^ Prettyp.exp_str lhs 0 ^ "' is not assignable", Some l))
   | Print (e, new_l, l) -> Print (weed_exp e env, new_l, l)
   | BlockStm block -> BlockStm (weed_block block env return_t_op in_loop)
   | IfStm (cond, b, e_b_opt, l) ->
