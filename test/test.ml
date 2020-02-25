@@ -85,6 +85,19 @@ let suite =
     "Typecheck/not all code paths return in for stm" >:: Typecheck_test.not_all_paths_return_for;
     "Typecheck/all code paths return" >:: Typecheck_test.all_code_paths_return;
 
+    "Env/type never defined" >:: Env_test.type_never_defined;
+    "Env/var never defined" >:: Env_test.var_never_defined;
+    "Env/func never defined" >:: Env_test.func_never_defined;
+    "Env/many func args with same name" >:: Env_test.many_func_args_same_name;
+    "Env/id already exists in scope" >:: Env_test.id_already_exists_in_scope;
+    "Env/id already exists in scope because of func args" >:: Env_test.id_already_exists_in_scope_func;
+    "Env/var misused for something else" >:: Env_test.misuse_var;
+    "Env/type misused for something else" >:: Env_test.misuse_type;
+    "Env/func misused for something else" >:: Env_test.misuse_func;
+    "Env/shadowing wrong" >:: Env_test.incorrect_shadow;
+    "Env/correct shadowing" >:: Env_test.correct_env_use;
+
+
   ]
 
 let () =
