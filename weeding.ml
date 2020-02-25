@@ -246,18 +246,15 @@ Finally weed inside the function bodies
 *)
 let weed_top_decls decls =
   let env = Env.empty_env () in
-  let rec weed_top_decls' decls =
+  let rec weed_top_type_decls decls =
     match decls with
     | [] -> []
     | d::decls' ->
       begin match d with
-      | TopVarDecl v_decl ->
-        let weeded_decl = weed_var_decl v_decl env in
-          (TopVarDecl weeded_decl)::(weed_top_decls' decls')
       | TopTypeDecl t_decl ->
         let weeded_decl = weed_type_decl t_decl env in
-          (TopTypeDecl weeded_decl)::(weed_top_decls' decls')
-      | _ -> d::(weed_top_decls' decls')
+          (TopTypeDecl weeded_decl)::(weed_top_type_decls decls')
+      | _ -> d::(weed_top_type_decls decls')
       end;
   in
   let rec weed_top_func_decls decls = 
@@ -271,6 +268,17 @@ let weed_top_decls decls =
       | _ -> d::(weed_top_func_decls decls')
       end;
   in
+  let rec weed_top_var_decls decls =
+    match decls with
+    | [] -> []
+    | d::decls' ->
+      begin match d with
+      | TopVarDecl v_decl ->
+        let weeded_decl = weed_var_decl v_decl env in
+          (TopVarDecl weeded_decl)::(weed_top_var_decls decls')
+      | _ -> d::(weed_top_var_decls decls')
+      end;
+  in
   let rec weed_func_bodies decls =
     match decls with
     | [] -> []
@@ -281,14 +289,15 @@ let weed_top_decls decls =
       | _ -> d::(weed_func_bodies decls')
       end;
   in
-  let weeded_decls = weed_top_decls' decls in
-    let weeded_all_decls = weed_top_func_decls weeded_decls in
-      let weeded_func_bodies = weed_func_bodies weeded_all_decls in
-        if List.length env != 1 then
-          failwith ("The environement must be of length 1 after weeding top level. Instead is is of length " ^ string_of_int (List.length env))
-        else
-          Env.warn_unused (List.hd env);
-          weeded_func_bodies
+  let weeded_top_type_decls = weed_top_type_decls decls in
+    let weeded_top_type_func_decls = weed_top_func_decls weeded_top_type_decls in
+      let weeded_all_top_decls = weed_top_var_decls weeded_top_type_func_decls in
+        let weeded_all = weed_func_bodies weeded_all_top_decls in
+          if List.length env != 1 then
+            failwith ("The environement must be of length 1 after weeding top level. Instead is is of length " ^ string_of_int (List.length env))
+          else
+            Env.warn_unused (List.hd env);
+            weeded_all
 ;;
 
 let weed_program prog =
