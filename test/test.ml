@@ -65,6 +65,25 @@ let suite =
     "Typecheck/len and cap append functions correct" >:: Typecheck_test.len_cap_append_correct;
     "Typecheck/cannot cast type" >:: Typecheck_test.cannot_cast_type;
     "Typecheck/correct cast" >:: Typecheck_test.correct_cast;
+    "Typecheck/non numeric unary minus" >:: Typecheck_test.non_numeric_u_minus;
+    "Typecheck/non whole number bitwise not" >:: Typecheck_test.non_wholenum_u_bnot;
+    "Typecheck/reference non variable" >:: Typecheck_test.reference_non_var;
+    "Typecheck/dereference non pointer" >:: Typecheck_test.deref_non_pointer;
+    "Typecheck/correct unary" >:: Typecheck_test.correct_unary;
+    "Typecheck/incompatible binop" >:: Typecheck_test.incompatible_binop;
+    "Typecheck/mismatched typed in binop" >:: Typecheck_test.mismatched_types;
+    "Typecheck/correct binop" >:: Typecheck_test.correct_binop;
+    "Typecheck/ var declarations type mismatch" >:: Typecheck_test.var_decl_type_mismatch;
+    "Typecheck/correct var decl" >:: Typecheck_test.correct_var_decl;
+    "Typecheck/return val when void" >:: Typecheck_test.return_val_when_void;
+    "Typecheck/return type mismatch" >:: Typecheck_test.return_mismatch_type;
+    "Typecheck/correct return" >:: Typecheck_test.correct_return;
+    "Typecheck/expression evaluated and not used" >:: Typecheck_test.expression_evaluated_not_used;
+    "Typecheck/type mismatch in assignment" >:: Typecheck_test.cannot_assignT;
+    "Typecheck/condition not bool" >:: Typecheck_test.condition_not_bool;
+    "Typecheck/not all code paths return in if stm" >:: Typecheck_test.not_all_paths_return;
+    "Typecheck/not all code paths return in for stm" >:: Typecheck_test.not_all_paths_return_for;
+    "Typecheck/all code paths return" >:: Typecheck_test.all_code_paths_return;
 
   ]
 
