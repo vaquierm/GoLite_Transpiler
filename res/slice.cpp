@@ -6,9 +6,7 @@ using namespace std;
 template<class T> class Slice {
 public:
     Slice() {
-        start = 0;
         end = 0;
-        capacity = 0;
     }
     ~Slice() {
         if (new_itms != nullptr) {
@@ -26,24 +24,21 @@ public:
         return new Slice(val, this);
     }
     T& operator[] (int x) {
-        int index = x + this->start;
         if (x < 0 || x > len()) {
             cerr << "Index " << x << " out of bounds" << endl;
             exit(0);
         }
-        return *(this->v[index]);
+        return *(this->v[x]);
     }
     int len() {
-        return end - start;
+        return end;
     }
     int cap() {
-        return this->capacity - this->start;
+        return this->v.size();
     }
 private:
     T* new_itms = nullptr;
-    int start;
     int end;
-    int capacity;
     vector<T*> v;
     void copy_vec(vector<T*> v, int start, int n) {
         for (int i = start; i < n+start; i++) {
@@ -51,44 +46,38 @@ private:
         }
     }
     Slice(T new_val, Slice *old) {
-        copy_vec(old->v, old->start, old->capacity);
-        this->start = 0;
-        this->end = old->end + 1 - old->start;
-        if (old->capacity == 0) {
-            this->capacity = 2;
+        copy_vec(old->v, 0, old->cap());
+        this->end = old->end + 1;
+        if (old->cap() == 0) {
             this->new_itms = new T[2];
             this->new_itms[0] = new_val;
             this->new_itms[1] = new_val;
             this->v.push_back(&(this->new_itms[0]));
             this->v.push_back(&(this->new_itms[1])); // Should be default val
         }
-        else if (old->end == old->capacity) {
-            this->capacity = old->capacity * 2 - old->start;
-            this->new_itms = new T[old->capacity];
-            for (int i = old->end; i < this->capacity; i++) {
+        else if (old->end == old->cap()) {
+            this->new_itms = new T[old->cap()];
+            for (int i = old->end; i < old->cap() * 2; i++) {
                 this->new_itms[i - old->end] = new_val;
                 this->v.push_back(&(this->new_itms[i - old->end])); // Should be default val
             }
         }
         else {
-            this->capacity = old->capacity;
             *(this->v[old->end]) = new_val;
         }
 
     }
     Slice(Slice *old, int start, int end) {
-        copy_vec(old->v, start, old->capacity - start);
+        copy_vec(old->v, start, old->cap() - start);
         if (start < 0) {
             cerr << "Start index must be greater than 0" << endl;
             exit(0);
         }
-        this->start = 0;
         if (end > old->cap()) {
             cerr << "End index must be less than the capacity" << endl;
             exit(0);
         }
         this->end = end - start;
-        this->capacity = old->capacity - start;
     }
     Slice(Slice *old, int start, int end, int max) {
         copy_vec(old->v, start, max - start);
@@ -96,7 +85,6 @@ private:
             cerr << "All indices must be greater than 0" << endl;
             exit(0);
         }
-        this->start = 0;
         if (end > old->cap()) {
             cerr << "End index must be less than the capacity" << endl;
             exit(0);
@@ -110,7 +98,6 @@ private:
             cerr << "The new capacity cannot be larger than the old capacity" << endl;
             exit(0);
         }
-        this->capacity = max - start;
     }
 };
 
@@ -143,8 +130,11 @@ int main() {
 	s("x", x);
 	
 	z = z->append(7);
+    s("z", z);
 	z = z->append(8);
+    s("z", z);
 	z = z->append(9);
+    s("z", z);
 	z = z->slice(0,6);
 	s("z", z);
 }
