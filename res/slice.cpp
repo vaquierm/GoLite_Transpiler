@@ -2,7 +2,6 @@
 #include <iostream>
 #include <vector>
 #include <cstdlib>
-using namespace std;
 template<class T> class Slice {
 public:
     Slice() {
@@ -25,7 +24,7 @@ public:
     }
     T& operator[] (int x) {
         if (x < 0 || x > len()) {
-            cerr << "Index " << x << " out of bounds" << endl;
+            std::cerr << "Index " << x << " out of bounds" << std::endl;
             exit(0);
         }
         return *(this->v[x]);
@@ -39,8 +38,8 @@ public:
 private:
     T* new_itms = nullptr;
     int end;
-    vector<T*> v;
-    void copy_vec(vector<T*> v, int start, int n) {
+    std::vector<T*> v;
+    void copy_vec(std::vector<T*> v, int start, int n) {
         for (int i = start; i < n+start; i++) {
             this->v.push_back(v[i]);
         }
@@ -70,11 +69,11 @@ private:
     Slice(Slice *old, int start, int end) {
         copy_vec(old->v, start, old->cap() - start);
         if (start < 0) {
-            cerr << "Start index must be greater than 0" << endl;
+            std::cerr << "Start index must be greater than 0" << std::endl;
             exit(0);
         }
         if (end > old->cap()) {
-            cerr << "End index must be less than the capacity" << endl;
+            std::cerr << "End index must be less than the capacity" << std::endl;
             exit(0);
         }
         this->end = end - start;
@@ -82,59 +81,21 @@ private:
     Slice(Slice *old, int start, int end, int max) {
         copy_vec(old->v, start, max - start);
         if (start < 0 || end < 0 || max < 0) {
-            cerr << "All indices must be greater than 0" << endl;
+            std::cerr << "All indices must be greater than 0" << std::endl;
             exit(0);
         }
         if (end > old->cap()) {
-            cerr << "End index must be less than the capacity" << endl;
+            std::cerr << "End index must be less than the capacity" << std::endl;
             exit(0);
         }
         this->end = end - start;
         if (max < end) {
-            cerr << "The max index must be greater or equal to the end" << endl;
+            std::cerr << "The max index must be greater or equal to the end" << std::endl;
             exit(0);
         }
         if (max > old->cap()) {
-            cerr << "The new capacity cannot be larger than the old capacity" << endl;
+            std::cerr << "The new capacity cannot be larger than the old capacity" << std::endl;
             exit(0);
         }
     }
 };
-
-void s(string name, Slice<int>* slice) {
-    cout << name << endl;
-    cout << "len: " << slice->len() << endl;
-    cout << "cap: " << slice->cap() << endl;
-    for (int i = 0; i < slice->len(); i++) {
-        cout << (*slice)[i] << ", ";
-    }
-    cout << endl << endl;
-}
-
-int main() {
-    Slice<int>* x = new Slice<int>();
-    x = x->append(1);
-    x = x->append(2);
-    x = x->append(3);
-    x = x->append(4);
-    x = x->append(5);
-    x = x->slice(0, x->len(), 5);
-    s("x", x);
-
-    Slice<int>* y = x->slice(2, 4);
-	s("y", y);
-	Slice<int>* z = x->slice(2, 4, 4);
-	s("z", z);
-	x = x->append(6);
-
-	s("x", x);
-	
-	z = z->append(7);
-    s("z", z);
-	z = z->append(8);
-    s("z", z);
-	z = z->append(9);
-    s("z", z);
-	z = z->slice(0,6);
-	s("z", z);
-}

@@ -20,7 +20,7 @@ open Typecheck
 (* Checks if the rexpresison can be assigned to *)
 let is_assignable e =
   match e with
-  | PrimExp (Var _) | PrimExp (SelectExp _) | PrimExp (IndexExp _) -> true
+  | PrimExp (Var _) | PrimExp (SelectExp _) | PrimExp (IndexExp _) | Unary (_, PrimExp (Var _), _) -> true
   | _ -> false
 ;;
 

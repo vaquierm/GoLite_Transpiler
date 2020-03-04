@@ -14,6 +14,8 @@ try
     print_endline "\nTypechecking...";
     Typecheck.typecheck_program weeded_prog;
     Exceptions.print_warnings ();
+    print_endline("\nC++ Program");
+    print_endline (Emit.program_emit weeded_prog);
 with
   | Failure msg -> print_endline ("Unexpected error: " ^ msg)
   | Exceptions.LexerError msg -> print_endline msg
