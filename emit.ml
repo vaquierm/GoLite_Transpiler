@@ -18,7 +18,37 @@ let read_whole_file filename =
 ;;
 
 (* Ref holding all the struct types used in the ast *)
-let structs = ref (Hashtbl.create 100);;
+let structs = ref [];;
+
+let find_struct_name s =
+  let rec find_struct_name' structs =
+    match structs with
+    | [] -> None
+    | (s', name)::structs' ->
+      begin match s, s' with
+      | (StructType (fs, _), StructType (fs', _)) when fs = fs' ->
+        Some name
+      | _ -> find_struct_name' structs'
+      end
+  in
+  find_struct_name' !structs
+;;
+
+let struct_exists s =
+  match find_struct_name s with
+  | None -> false
+  | Some _ -> true
+;;
+
+let struct_name_exists name =
+  let rec struct_name_exists' structs = 
+    match structs with
+    | [] -> false
+    | (s', name')::structs' when name = name' -> true
+    | _::structs' -> struct_name_exists' structs'
+  in
+  struct_name_exists' !structs
+;;
 
 let rec resolve_type t =
   match t with
@@ -104,12 +134,15 @@ let rec typeT_emit t n =
   | SliceType t' -> slice_needed := true; "Slice<" ^ typeT_emit t' n ^ ">"
   | PointerType t' -> typeT_emit t' n ^ "*"
   | StructType (f_list, _) ->
-    Hashtbl.add !structs "a" "b";
-    let f_emit = List.fold_right (
-      fun (id, t') acc ->
-        acc ^ indents (n+1) ^ typeT_emit t' (n+1) ^ " " ^ id ^ ";\n") f_list ""
+    let resolved_struct = resolve_type t in
+    let type_name = match find_struct_name resolved_struct with
+    | None ->
+      let new_struct_name = "struct_" ^ string_of_int (Random.bits ()) in
+        structs := (resolved_struct, new_struct_name)::(!structs);
+        "struct " ^ new_struct_name
+    | Some n -> "struct " ^ n
     in
-      "struct {\n" ^ f_emit ^ indents n ^ "}"
+    type_name
   | IntType -> "int"
   | FloatType -> "float"
   | StrType -> "string"
@@ -161,7 +194,19 @@ and prim_exp_emit p_exp n =
 let type_decl_emit decl n =
   match decl with
   | TypeDecl (t, name, _) ->
-    ""(*indents n ^ "using " ^ name ^ " = " ^ typeT_emit t n ^";\n"*)
+    begin match t with
+    | StructType (_, _) ->
+      let resolved_struct = resolve_type t in
+      begin if not (struct_exists t) then
+        begin if not (struct_name_exists name) then
+          structs := (resolved_struct, name)::(!structs)
+        else
+          structs := (resolved_struct, name ^ "_" ^ string_of_int (Random.bits ()))::(!structs)
+        end;
+      end;
+        ""
+    | _ -> ""
+    end
 ;;
 
 let var_decl_emit decl n =
@@ -175,8 +220,12 @@ let var_decl_emit decl n =
 let rec block_emit b n =
   match b with
   | StmsBlock (stm_list, _) ->
-    let stms_emit = List.fold_right (fun s acc -> stm_emit s (n+1) ^ acc) stm_list "" in
-      "{\n" ^ stms_emit ^ indents n ^ "}\n"
+    let stms_str = stms_emit stm_list (n+1) in
+      "{\n" ^ stms_str ^ indents n ^ "}\n"
+and stms_emit stms n =
+  match stms with
+  | [] -> ""
+  | s::stms' -> let s_str = stm_emit s n in s_str ^ stms_emit stms' n
 and stm_emit stm n =
   match stm with
   | TypeDeclStm decl -> type_decl_emit decl n
@@ -232,9 +281,15 @@ let top_level_decl_emit decl =
 let rec top_level_decls_emit decls =
   match decls with
   | [] -> ""
-  | d::decls' -> top_level_decl_emit d ^ top_level_decls_emit decls'
+  | d::decls' -> let decl_str = top_level_decl_emit d in
+    decl_str ^ top_level_decls_emit decls'
 ;;
 
+(*
+Generate the function signatures at the top of the file to allow
+mutially recursive functions
+ex: int foo(int a);
+*)
 let rec top_func_sig_emit decls =
   match decls with
   | [] -> ""
@@ -253,6 +308,21 @@ let rec top_func_sig_emit decls =
   | d::decls' -> top_func_sig_emit decls'
 ;;
 
+(* Generate structures needed for struct definitions *)
+let struct_definitions_emit () =
+  let gen_struct (s, name) acc =
+    match s with
+    | StructType (fields, _) ->
+      let gen_field (field, t) acc =
+        acc ^ indents 1 ^ typeT_emit t 1 ^ " " ^ field ^ ";\n"
+      in
+      let fields_str = List.fold_right gen_field fields "" in
+      acc ^ "struct " ^ name ^ " {\n" ^ fields_str ^ "} " ^ name ^ ";\n"
+    | _ -> failwith "Struct array contains a non struct key"
+  in
+  List.fold_right gen_struct !structs ""
+;;
+
 let program_emit program =
   match program with
   | Program (_, top_decls) ->
@@ -261,7 +331,7 @@ let program_emit program =
     slice_needed := false;
     array_needed := false;
     io_str_needed := false;
-    structs := Hashtbl.create 100;
+    structs := [];
     let string_prog = ref (top_level_decls_emit top_decls) in
       string_prog := (top_func_sig_emit top_decls) ^ !string_prog;
       if !cap_needed && !array_needed then
@@ -274,6 +344,8 @@ let program_emit program =
         string_prog := read_whole_file "./res/len_slice.cpp" ^ !string_prog;
       if !slice_needed then
         string_prog := read_whole_file "./res/slice.cpp" ^ !string_prog;
+      (* Generate all struct definitions *)
+      string_prog := struct_definitions_emit () ^ !string_prog;
       if !io_str_needed && not (!slice_needed) then
         string_prog := "#include <iostream>\n" ^ !string_prog;
       if !array_needed then
