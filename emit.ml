@@ -17,6 +17,9 @@ let read_whole_file filename =
   s
 ;;
 
+(* Ref holding all the struct types used in the ast *)
+let structs = ref (Hashtbl.create 100);;
+
 let rec resolve_type t =
   match t with
   | DefinedType (_, None, l) -> failwith ("Line " ^ string_of_int l ^ "\nDefined type'" ^ Prettyp.typeT_str t 0 ^ "' was never resolved during weeding")
@@ -101,6 +104,7 @@ let rec typeT_emit t n =
   | SliceType t' -> slice_needed := true; "Slice<" ^ typeT_emit t' n ^ ">"
   | PointerType t' -> typeT_emit t' n ^ "*"
   | StructType (f_list, _) ->
+    Hashtbl.add !structs "a" "b";
     let f_emit = List.fold_right (
       fun (id, t') acc ->
         acc ^ indents (n+1) ^ typeT_emit t' (n+1) ^ " " ^ id ^ ";\n") f_list ""
@@ -231,6 +235,24 @@ let rec top_level_decls_emit decls =
   | d::decls' -> top_level_decl_emit d ^ top_level_decls_emit decls'
 ;;
 
+let rec top_func_sig_emit decls =
+  match decls with
+  | [] -> ""
+  | (TopFuncDecl (FuncDecl (name, args, t_opt, _, _)))::decls' ->
+    let arg_emit = if List.length args = 0 then "" else
+      let ((id_l, t_l), rest) = get_last args in
+        List.fold_left (fun acc (id, t) -> typeT_emit t 0 ^ " " ^ id ^ ", " ^ acc) (typeT_emit t_l 0 ^ " " ^ id_l) rest
+      in
+      let ret_emit = match (name, t_opt) with
+      | (name, None) when name = "main" -> "int"
+      | (_, None) -> "void"
+      | (_, Some t) -> typeT_emit t 0
+      in
+      let func_sig = indents 0 ^ ret_emit ^ " " ^ name ^ "(" ^ arg_emit ^ ");\n" in
+        func_sig ^ (top_func_sig_emit decls')
+  | d::decls' -> top_func_sig_emit decls'
+;;
+
 let program_emit program =
   match program with
   | Program (_, top_decls) ->
@@ -239,7 +261,9 @@ let program_emit program =
     slice_needed := false;
     array_needed := false;
     io_str_needed := false;
+    structs := Hashtbl.create 100;
     let string_prog = ref (top_level_decls_emit top_decls) in
+      string_prog := (top_func_sig_emit top_decls) ^ !string_prog;
       if !cap_needed && !array_needed then
         string_prog := read_whole_file "./res/cap_arr.cpp" ^ !string_prog;
       if !len_needed && !array_needed then
