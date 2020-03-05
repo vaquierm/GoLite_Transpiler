@@ -4,7 +4,7 @@ SRC_DIR := .
 BUILD_DIR := _build
 TEST_DIR := test
 
-OCAMLBUILD := ocamlbuild -no-links -use-menhir -menhir "menhir -v"
+OCAMLBUILD := ocamlbuild -no-links -use-menhir -menhir "menhir -v --unused-tokens --unused-precedence-levels"
 
 goLite_transpiler:
 	@echo "Building Transpiler..."
