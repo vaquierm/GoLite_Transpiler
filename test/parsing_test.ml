@@ -22,6 +22,11 @@ let missing_main _ =
   assert_raises (SyntaxError ("The program must have a function called main which takes no arguments and returns nothing", None)) f
 ;;
 
+let missing_package _ =
+  let f = fun () -> Ast_build.build_ast "test/test_programs/parsing/missing_package.go" in
+  assert_raises (SyntaxError ("The program is missing a package clause", None)) f
+;;
+
 let unsupported_imports _ =
   let f = fun () -> Ast_build.build_ast "test/test_programs/parsing/unsupported_imports.go" in
   assert_raises (UnsuportedError (("Imports are unsupported in GoLite"), 3, None)) f

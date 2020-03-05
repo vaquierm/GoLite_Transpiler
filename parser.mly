@@ -61,7 +61,7 @@
 %%
 
 /* Productions */
-start : package_clause import_decls top_level_decls EOF       {
+start : package_clause? import_decls top_level_decls EOF       {
     let main = ref (Ast.TopFuncDecl (Ast.FuncDecl ("", [], None, Ast.StmsBlock ([], 0), -1))) in
     let rec extract_main decls =
     match decls with
@@ -78,7 +78,11 @@ start : package_clause import_decls top_level_decls EOF       {
     if List.length witout_main == List.length $3 then
       raise (Exceptions.SyntaxError ("The program must have a function called main which takes no arguments and returns nothing", None))
     else
-      Ast.Program ($1, witout_main @ [!main])
+      let pkg = match $1 with
+      | None -> raise (Exceptions.SyntaxError ("The program is missing a package clause", None))
+      | Some p -> p
+      in
+      Ast.Program (pkg, witout_main @ [!main])
   };
 
 package_clause

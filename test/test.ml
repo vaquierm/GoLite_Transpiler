@@ -6,6 +6,7 @@ let suite =
     "Parsing/Unexpected char" >:: Parsing_test.unexpected_char;
     "Parsing/C++ keyword used" >:: Parsing_test.cpp_keyword;
     "Parsing/missing main" >:: Parsing_test.missing_main;
+    "Parsing/missing package clause" >:: Parsing_test.missing_package;
     "Parsing/unsupported imports" >:: Parsing_test.unsupported_imports;
     "Parsing/unsupported type alias" >:: Parsing_test.unsupported_type_alias;
     "Parsing/assignment mismatch" >:: Parsing_test.assignment_mismatch;
