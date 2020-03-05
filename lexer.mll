@@ -88,6 +88,8 @@
 
   let unsuportedType = ("int8" | "int16" | "int32" | "int64" | "uint" | "uint8" | "uint16" | "uint32" | "uint64" | "uintptr" | "complex64" | "complex128" | "float64")
 
+  let reserved_cpp = ("cout" | "endl" | "Slice")
+
 (* Tokens *)
 
 rule token = parse
@@ -201,6 +203,7 @@ rule token = parse
 
   | runeLiteral                 { update_pos lexbuf; let c = get lexbuf in return (RUNELITERAL (String.sub c 1 ((String.length c) - 2))) }
 
+  | reserved_cpp                { let p = lexbuf.lex_curr_p in raise (Exceptions.LexerError ("Line " ^ (string_of_int p.pos_lnum) ^ ", charachter " ^ (string_of_int (p.pos_cnum - p.pos_bol))  ^ "\nLexer Error: The identifier '" ^ (get lexbuf) ^ "' is a C++ keyword and cannot be used")) }
   | identifier                  { update_pos lexbuf; return (IDENTIFIER (get lexbuf, get_line_num lexbuf)) }
 
   | '`'([^'''] | "\'")*'`'      { update_pos lexbuf; let c = get lexbuf in return (RAWSTRINGLITERAL (String.sub c 1 ((String.length c) - 2))) }

@@ -261,7 +261,7 @@ let func_decl_emit decl n =
   | FuncDecl (name, args, t_opt, b, _) ->
     let arg_emit = if List.length args = 0 then "" else
       let ((id_l, t_l), rest) = get_last args in
-        List.fold_left (fun acc (id, t) -> typeT_emit t n ^ " " ^ id ^ ", " ^ acc) (typeT_emit t_l n ^ " " ^ id_l) rest
+        List.fold_right (fun (id, t) acc -> typeT_emit t n ^ " " ^ id ^ ", " ^ acc) rest (typeT_emit t_l n ^ " " ^ id_l)
       in
       let ret_emit = match (name, t_opt) with
       | (name, None) when name = "main" -> "int"
@@ -296,7 +296,7 @@ let rec top_func_sig_emit decls =
   | (TopFuncDecl (FuncDecl (name, args, t_opt, _, _)))::decls' ->
     let arg_emit = if List.length args = 0 then "" else
       let ((id_l, t_l), rest) = get_last args in
-        List.fold_left (fun acc (id, t) -> typeT_emit t 0 ^ " " ^ id ^ ", " ^ acc) (typeT_emit t_l 0 ^ " " ^ id_l) rest
+        List.fold_right (fun (id, t) acc -> typeT_emit t 0 ^ " " ^ id ^ ", " ^ acc) rest (typeT_emit t_l 0 ^ " " ^ id_l)
       in
       let ret_emit = match (name, t_opt) with
       | (name, None) when name = "main" -> "int"
