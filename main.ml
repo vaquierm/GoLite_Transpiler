@@ -1,19 +1,21 @@
 try
     if not (Array.length Sys.argv = 2) then
       failwith "There must be exaclty one command line argument which is the file path of the file to be compiled";
-    (* Read the file *)
+    (* Read the file name argument *)
     let filename = Sys.argv.(1) in
+    if not (Filename.extension filename = ".go") then
+      failwith "The file name to transpile must be of the extension .go";
     let program = Ast_build.build_ast filename in
-    print_endline "\nOriginal program";
-    print_string (Prettyp.program_str program);
-    print_endline (Ast.program_ast_str program);
-    let weeded_prog = print_endline "\nWeeding..."; Weeding.weed_program program in
-    print_endline "\nWeeded program";
-    print_string (Prettyp.program_str weeded_prog);
-    print_endline (Ast.program_ast_str weeded_prog);
-    print_endline "\nTypechecking...";
+    let weeded_prog = Weeding.weed_program program in
     Typecheck.typecheck_program weeded_prog;
     Exceptions.print_warnings ();
+    let output_to_file prog file_name =
+      let oc = open_out file_name in
+      Printf.fprintf oc "%s" prog;
+      close_out oc;
+    in
+    let cpp_prog_str = Emit.program_emit weeded_prog in
+      output_to_file cpp_prog_str (Filename.remove_extension (Filename.basename filename) ^ ".cpp");
 with
   | Failure msg -> print_endline ("Unexpected error: " ^ msg)
   | Exceptions.LexerError msg -> print_endline msg

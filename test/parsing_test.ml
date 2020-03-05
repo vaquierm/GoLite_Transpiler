@@ -12,9 +12,19 @@ let unexpected_char _ =
   assert_raises (LexerError ("Line 3, charachter 14\nLexer Error: Unexpected char '\\'")) f
 ;;
 
+let cpp_keyword _ =
+  let f = fun () -> Ast_build.build_ast "test/test_programs/parsing/cpp_keyword.go" in
+  assert_raises (LexerError ("Line 3, charachter 9\nLexer Error: The identifier 'cout' is a C++ keyword and cannot be used")) f
+;;
+
 let missing_main _ =
   let f = fun () -> Ast_build.build_ast "test/test_programs/parsing/missing_main.go" in
   assert_raises (SyntaxError ("The program must have a function called main which takes no arguments and returns nothing", None)) f
+;;
+
+let missing_package _ =
+  let f = fun () -> Ast_build.build_ast "test/test_programs/parsing/missing_package.go" in
+  assert_raises (SyntaxError ("The program is missing a package clause", None)) f
 ;;
 
 let unsupported_imports _ =
@@ -59,7 +69,7 @@ let type_decl _ =
 
 let func_decl _ =
   let ast = Ast_build.build_ast "test/test_programs/parsing/func_decl.go" in
-  assert_equal ast (Program (Package "test", [TopFuncDecl (FuncDecl ("foo", [], Some (IntType), StmsBlock ([], 5), 4)); TopFuncDecl (FuncDecl ("bar", [("b", IntType); ("a", IntType); ("c", IntType); ], None, StmsBlock ([], 7), 6)); TopFuncDecl (FuncDecl ("bar", [("b", IntType); ("a", IntType); ("c", IntType); ], Some (IntType), StmsBlock ([], 9), 8)); TopFuncDecl (FuncDecl ("main", [], None, StmsBlock ([], 3), 2)); ]))
+  assert_equal ast (Program (Package "test", [TopFuncDecl (FuncDecl ("foo", [], Some (IntType), StmsBlock ([], 5), 4)); TopFuncDecl (FuncDecl ("bar", [("a", IntType); ("b", IntType); ("c", IntType); ], None, StmsBlock ([], 7), 6)); TopFuncDecl (FuncDecl ("bar", [("a", IntType); ("b", IntType); ("c", IntType); ("d", BoolType); ], Some (IntType), StmsBlock ([], 9), 8)); TopFuncDecl (FuncDecl ("main", [], None, StmsBlock ([], 3), 2)); ]))
 ;;
 
 let all_types _ =

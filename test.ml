@@ -4,7 +4,9 @@ let suite =
   "Tests" >::: [
     "Parsing/Unsupported type" >:: Parsing_test.invalid_comma;
     "Parsing/Unexpected char" >:: Parsing_test.unexpected_char;
+    "Parsing/C++ keyword used" >:: Parsing_test.cpp_keyword;
     "Parsing/missing main" >:: Parsing_test.missing_main;
+    "Parsing/missing package clause" >:: Parsing_test.missing_package;
     "Parsing/unsupported imports" >:: Parsing_test.unsupported_imports;
     "Parsing/unsupported type alias" >:: Parsing_test.unsupported_type_alias;
     "Parsing/assignment mismatch" >:: Parsing_test.assignment_mismatch;
@@ -97,6 +99,10 @@ let suite =
     "Env/shadowing wrong" >:: Env_test.incorrect_shadow;
     "Env/correct shadowing" >:: Env_test.correct_env_use;
 
+    "Emit/bubble sort" >:: Emit_test.bubble_sort;
+    "Emit/binary search" >:: Emit_test.binary_search;
+    "Emit/fibinacci" >:: Emit_test.fibonacci;
+    "Emit/students gpa" >:: Emit_test.students_gpa;
 
   ]
 

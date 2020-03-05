@@ -3,3 +3,6 @@ parser.automaton
 goLite_compiler
 *.byte
 *.go
+*.cpp
+*.out
+.vscode/
