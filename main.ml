@@ -14,7 +14,8 @@ try
       Printf.fprintf oc "%s" prog;
       close_out oc;
     in
-    output_to_file (Emit.program_emit weeded_prog) (Filename.remove_extension (Filename.basename filename) ^ ".cpp");
+    let cpp_prog_str = Emit.program_emit weeded_prog in
+      output_to_file cpp_prog_str (Filename.remove_extension (Filename.basename filename) ^ ".cpp");
 with
   | Failure msg -> print_endline ("Unexpected error: " ^ msg)
   | Exceptions.LexerError msg -> print_endline msg

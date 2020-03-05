@@ -99,6 +99,10 @@ let suite =
     "Env/shadowing wrong" >:: Env_test.incorrect_shadow;
     "Env/correct shadowing" >:: Env_test.correct_env_use;
 
+    "Emit/bubble sort" >:: Emit_test.bubble_sort;
+    "Emit/binary search" >:: Emit_test.binary_search;
+    "Emit/fibinacci" >:: Emit_test.fibonacci;
+    "Emit/students gpa" >:: Emit_test.students_gpa;
 
   ]
 
