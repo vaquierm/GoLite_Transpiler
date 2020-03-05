@@ -3,8 +3,7 @@ try
       failwith "There must be exaclty one command line argument which is the file path of the file to be compiled";
     (* Read the file name argument *)
     let filename = Sys.argv.(1) in
-    let len = String.length filename in
-    if not (String.sub filename (len - 3) 3 = ".go") then
+    if not (Filename.extension filename = ".go") then
       failwith "The file name to transpile must be of the extension .go";
     let program = Ast_build.build_ast filename in
     let weeded_prog = Weeding.weed_program program in
@@ -15,7 +14,7 @@ try
       Printf.fprintf oc "%s" prog;
       close_out oc;
     in
-    output_to_file (Emit.program_emit weeded_prog) ((String.sub filename 0 (len - 3)) ^ ".cpp");
+    output_to_file (Emit.program_emit weeded_prog) (Filename.remove_extension (Filename.basename filename) ^ ".cpp");
 with
   | Failure msg -> print_endline ("Unexpected error: " ^ msg)
   | Exceptions.LexerError msg -> print_endline msg
