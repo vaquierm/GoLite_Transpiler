@@ -30,7 +30,23 @@ let is_literal exp =
     | _ -> false
     end
   | _ -> false
-;; 
+;;
+
+(* Check if two types are equal *)
+let rec type_equal t1 t2 =
+  match t1, t2 with
+  | DefinedType (id1, t_op1, l1), DefinedType (id2, t_op2, l2) -> id1 = id2 && t_op1 = t_op2 && l1 = l2
+  | ArrayType (t1, e1, _), ArrayType (t2, e2, _) -> type_equal t1 t2 && e1 = e2
+  | StructType (fs1, _), StructType (fs2, _) -> List.for_all2 (fun (id1, t1) (id2, t2) -> id1 = id2 && type_equal t1 t2) fs1 fs2
+  | SliceType t1, SliceType t2 -> type_equal t1 t2
+  | PointerType t1, PointerType t2 -> type_equal t1 t2
+  | IntType, IntType
+  | FloatType, FloatType
+  | StrType, StrType
+  | RuneType, RuneType
+  | BoolType, BoolType -> true
+  | _, _ -> false
+;;
 
 (* True if the reference operator '&' can be used un the expression *)
 let can_reference e =
@@ -103,7 +119,7 @@ and type_prim_exp p_exp env =
           | Some t -> t
           end in
             if is_whole_num e_t then
-              begin match p_t with
+              begin match resolve_type p_t with
               | SliceType e_t -> Some e_t
               | ArrayType (e_t, _, _) -> Some e_t
               | _ -> raise (Exceptions.TypeError ("Cannot index type '" ^ Prettyp.typeT_str p_t 0 ^ "'", l))
@@ -122,7 +138,7 @@ and type_prim_exp p_exp env =
                 | None -> raise (Exceptions.TypeError ("In function call '" ^ name ^ "', expression '" ^ Prettyp.exp_str e 0 ^ "' has no type. Expected '" ^ Prettyp.typeT_str t 0 ^ "'", l))
                 | Some t -> t
                 end in
-              if e_t = t then check_input_types in_l' in_t_l'
+              if type_equal e_t t then check_input_types in_l' in_t_l'
               else raise (Exceptions.TypeError ("In function call '" ^ name ^ "', expression '" ^ Prettyp.exp_str e 0 ^ "' has type '" ^ Prettyp.typeT_str e_t 0 ^ "'. Expected '" ^ Prettyp.typeT_str t 0 ^ "'", l))
           | _ -> failwith ("Line " ^ string_of_int l ^ "\nThe the type list length and expression length length do not macth in function '" ^ name ^ "'")
           end
@@ -173,7 +189,7 @@ and type_prim_exp p_exp env =
           | None -> raise (Exceptions.TypeError ("Expression '" ^ Prettyp.exp_str e 0 ^ "' should be of type '" ^ Prettyp.typeT_str t 0 ^ "'", l))
           | Some t -> t
           end in
-            if t = e_t then
+            if type_equal t e_t then
               Some (SliceType t)
             else
               raise (Exceptions.TypeError ("Type mismatch. Element to be appended must be of type '" ^ Prettyp.typeT_str t 0 ^ "'. Got '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
@@ -186,13 +202,13 @@ and type_prim_exp p_exp env =
         | None -> raise (Exceptions.TypeError ("Cannot cast the expression '" ^ Prettyp.exp_str e 0 ^ "' as it has no value", l))
         | Some t -> t
         end in
-          if e_t = t then
+          if type_equal e_t t then
             Exceptions.new_warning (Exceptions.Warning ("The cast to type '" ^ Prettyp.typeT_str t 0 ^ "' is unecessary.", l));
           let t_u = resolve_type t in
           let e_t_u = resolve_type e_t in
           if is_numeric t_u && is_numeric e_t_u then
             Some t
-          else if t_u = e_t_u then
+          else if type_equal t_u e_t_u then
             Some t
           else
             raise (Exceptions.TypeError ("Cannot cast type '" ^ Prettyp.typeT_str e_t 0 ^ "' into '" ^ Prettyp.typeT_str t 0 ^ "'", l))
@@ -217,7 +233,7 @@ and type_unary u env =
       else
         Some e_t
     | BoolNOT ->
-      if not(u_t = BoolType) then
+      if not(type_equal u_t BoolType) then
         raise (Exceptions.TypeError ("The logical NOT operator cannot be applied to type '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
       else
         Some e_t
@@ -253,7 +269,7 @@ and type_binop b_exp env =
       raise (Exceptions.TypeError ("Invalid operation '" ^ Prettyp.binop_str op ^ "' (operator not defined on type '" ^ Prettyp.typeT_str e1_t 0 ^ "')", l))
     else
       if has_literal then
-        if not (e1_t_u = e2_t_u) then
+        if not (type_equal e1_t_u e2_t_u) then
           raise (Exceptions.TypeError ("Invalid operation '" ^ Prettyp.binop_str op ^ "' (mismatched types '" ^ Prettyp.typeT_str e1_t 0 ^ "' and '" ^ Prettyp.typeT_str e2_t 0 ^ "')", l))
         else
           begin match e1_lit, e2_lit with
@@ -262,7 +278,7 @@ and type_binop b_exp env =
           | _ -> op_compatible_return op e1_t
           end
       else
-        if not (e1_t = e2_t) then
+        if not (type_equal e1_t e2_t) then
           raise (Exceptions.TypeError ("Invalid operation '" ^ Prettyp.binop_str op ^ "' (mismatched types '" ^ Prettyp.typeT_str e1_t 0 ^ "' and '" ^ Prettyp.typeT_str e2_t 0 ^ "')", l))
         else
           op_compatible_return op e1_t
@@ -280,7 +296,7 @@ let typecheck_var_decl v_decl env =
       | Some t -> t
       end in
         let t = if is_literal e then resolve_type t else t in
-          if t = e_t then ()
+          if type_equal t e_t then ()
           else
             raise (Exceptions.TypeError ("Type mismatch. Expression '" ^ Prettyp.exp_str e 0 ^ "' should be type '" ^ Prettyp.typeT_str t 0 ^ "'. Got '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
   | VarDeclNoTypeInit (_, _, l) -> failwith ("Line " ^ string_of_int l ^ "\nDeclaration '" ^ Prettyp.var_decl_str v_decl 0 ^ "' never got its type resolved at weeding time")
@@ -312,7 +328,7 @@ let rec typecheck_stm stm env return_t_op =
     | None, _ -> raise (Exceptions.TypeError ("Cannot use '" ^ Prettyp.exp_str e 0 ^ "' as a value", l))
     | Some e_t, None -> raise (Exceptions.TypeError ("Expected no return expression", l))
     | Some e_t, Some return_t ->
-      if e_t = return_t then
+      if type_equal e_t return_t then
         true
       else
        raise (Exceptions.TypeError ("Expected return type '" ^ Prettyp.typeT_str return_t 0 ^ "'. Got '" ^ Prettyp.typeT_str e_t 0 ^ "'", l))
@@ -340,7 +356,7 @@ let rec typecheck_stm stm env return_t_op =
           | None -> raise (Exceptions.TypeError ("Cannot use '" ^ Prettyp.exp_str rhs 0 ^ "' as a value", l))
           | Some t -> t
           end in
-          if lhs_t = rhs_t then false
+          if type_equal lhs_t rhs_t then false
           else raise (Exceptions.TypeError ("Type mismatch. Cannot assign type '" ^ Prettyp.typeT_str rhs_t 0 ^ "' to '" ^ Prettyp.typeT_str lhs_t 0 ^ "'", l))
   | Print (e, _ , l) ->
     let e_t_op = type_exp e env in
@@ -373,7 +389,7 @@ let rec typecheck_stm stm env return_t_op =
           | None -> raise (Exceptions.TypeError ("Expected condition of type bool", l))
           | Some t -> t
           end in
-            if e_t = BoolType then
+            if type_equal e_t BoolType then
               let _ = typecheck_block b env return_t_op in
                 false
             else
@@ -395,7 +411,7 @@ let rec typecheck_stm stm env return_t_op =
           | None -> raise (Exceptions.TypeError ("Expected condition of type bool", l))
           | Some t -> t
           end in
-            if e_t = BoolType then
+            if type_equal e_t BoolType then
               let _ = typecheck_block b env return_t_op in
                 false
             else
