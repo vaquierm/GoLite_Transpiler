@@ -8,6 +8,7 @@ let cap_needed = ref false;;
 let slice_needed = ref false;;
 let array_needed = ref false;;
 let io_str_needed = ref false;;
+let string_needed = ref false;;
 
 (* Function used to read the modules *)
 let read_whole_file filename =
@@ -145,7 +146,7 @@ let rec typeT_emit t n =
     type_name
   | IntType -> "int"
   | FloatType -> "float"
-  | StrType -> "string"
+  | StrType -> string_needed := true; "std::string"
   | RuneType -> "char"
   | BoolType -> "bool"
 and exp_emit exp n =
@@ -162,6 +163,7 @@ and prim_exp_emit p_exp n =
   | RuneLit r -> "'" ^ r ^ "'"
   | IntLit (i, b) -> base_emit b ^ i
   | StrLit (s, raw) ->
+    string_needed := true;
     let s_tick = if raw then "R\"(" else "\"" in
       let e_tick = if raw then ")\"" else "\"" in
         s_tick ^ s ^ e_tick
@@ -255,13 +257,24 @@ and stm_emit stm n =
     indents n ^ "std::cout << " ^ exp_emit e n ^ endl ^ "\n"
 ;;
 
+(* Check if the type needs to be passed by reference *)
+let pass_by_ref t =
+  match resolve_type t with
+  | ArrayType _ | SliceType _ | StructType _ -> true
+  | _ -> false
+;;
+
+let build_func_arg id t n =
+  let by_ref = if pass_by_ref t then "&" else "" in
+  typeT_emit t n ^ " " ^ by_ref ^ id
+;;
 
 let func_decl_emit decl n =
   match decl with
   | FuncDecl (name, args, t_opt, b, _) ->
     let arg_emit = if List.length args = 0 then "" else
       let ((id_l, t_l), rest) = get_last args in
-        List.fold_right (fun (id, t) acc -> typeT_emit t n ^ " " ^ id ^ ", " ^ acc) rest (typeT_emit t_l n ^ " " ^ id_l)
+        List.fold_right (fun (id, t) acc -> build_func_arg id t n ^ ", " ^ acc) rest (build_func_arg id_l t_l n)
       in
       let ret_emit = match (name, t_opt) with
       | (name, None) when name = "main" -> "int"
@@ -296,7 +309,7 @@ let rec top_func_sig_emit decls =
   | (TopFuncDecl (FuncDecl (name, args, t_opt, _, _)))::decls' ->
     let arg_emit = if List.length args = 0 then "" else
       let ((id_l, t_l), rest) = get_last args in
-        List.fold_right (fun (id, t) acc -> typeT_emit t 0 ^ " " ^ id ^ ", " ^ acc) rest (typeT_emit t_l 0 ^ " " ^ id_l)
+      List.fold_right (fun (id, t) acc -> build_func_arg id t 0 ^ ", " ^ acc) rest (build_func_arg id_l t_l 0)
       in
       let ret_emit = match (name, t_opt) with
       | (name, None) when name = "main" -> "int"
@@ -331,8 +344,10 @@ let program_emit program =
     slice_needed := false;
     array_needed := false;
     io_str_needed := false;
+    string_needed := false;
     structs := [];
     let string_prog = ref (top_level_decls_emit top_decls) in
+      let structs_str = struct_definitions_emit () in
       string_prog := (top_func_sig_emit top_decls) ^ !string_prog;
       if !cap_needed && !array_needed then
         string_prog := read_whole_file "./res/cap_arr.cpp" ^ !string_prog;
@@ -342,13 +357,14 @@ let program_emit program =
         string_prog := read_whole_file "./res/cap_slice.cpp" ^ !string_prog;
       if !len_needed && !slice_needed then
         string_prog := read_whole_file "./res/len_slice.cpp" ^ !string_prog;
+      string_prog := structs_str ^ !string_prog;
       if !slice_needed then
         string_prog := read_whole_file "./res/slice.cpp" ^ !string_prog;
-      (* Generate all struct definitions *)
-      string_prog := struct_definitions_emit () ^ !string_prog;
       if !io_str_needed && not (!slice_needed) then
         string_prog := "#include <iostream>\n" ^ !string_prog;
       if !array_needed then
         string_prog := "#include <array>\n" ^ !string_prog;
+      if !string_needed then
+        string_prog := "#include <string>\n" ^ !string_prog;
       !string_prog
 ;;
