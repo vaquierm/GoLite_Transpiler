@@ -98,6 +98,14 @@ package declaration is needed at the start of the program
 package pakage_name
 ````
 
+## Top level declarations
+
+After the package declarations, goLite files contain top level declarations
+
+Top level declarations concists of **Variable Declarations**, **Type Declarations** and **Function Declarations**.
+
+**Import statements are not supported.**
+
 ## Variable declarations
 
 ````go
@@ -238,8 +246,8 @@ method(exp, ...)                // Method call expression (The input expressions
 
 exp.field                       // Select expression. (exp must be of type struct and have a field called fleid)
 
-len(exp)
-cap(exp)
+len(exp)                        // Expression to get array or slice length
+cap(exp)                        // Expression to get slice capacity
 ````
 
 ## Statements
