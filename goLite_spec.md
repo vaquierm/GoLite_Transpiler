@@ -2,7 +2,7 @@
 
 goLite is a strict subset of [golang](https://golang.org/). Any goLite source code is valid golang code.
 
-### Operators
+## Operators
 
 Arithmetic
 
@@ -24,7 +24,7 @@ Comparaison
 == != < > <= >=
 ````
 
-### Comments
+## Comments
 
 _Note: comments are not transfered to the transpiled file_
 
@@ -43,7 +43,7 @@ Block comment
 */
 ````
 
-### Types
+## Types
 
 ````
 int             // integer
@@ -57,7 +57,7 @@ string          // string
 struct {...}    // struct
 ````
 
-### Literals
+## Literals
 
 string
 
@@ -90,7 +90,7 @@ false             // false
 
 Slice and array literals are not supported, they need to be initialized line by line.
 
-### Package declaration
+## Package declaration
 
 package declaration is needed at the start of the program
 
@@ -98,7 +98,7 @@ package declaration is needed at the start of the program
 package pakage_name
 ````
 
-### Variable declarations
+## Variable declarations
 
 ````go
 var x T           // Var decl with type T and no initialisation
@@ -123,7 +123,7 @@ var (                     // The var keyword can be distributed
 
 Constant declarations are not supported.
 
-### Type declarations
+## Type declarations
 
 ````go
 type x T          // Type x now has underlying type T
@@ -136,7 +136,7 @@ type (            // The type keyword can be distributed
 
 Type aliasing not supported
 
-### Function declarations
+## Function declarations
 
 ````go
 /*
@@ -155,7 +155,7 @@ func func_name(x y T1, z T2) T3 {
 ````
 
 
-### Slices
+## Slices
 
 Slices are supported partially.
 Slice literals are not supported but they can be initialized like this
@@ -172,7 +172,7 @@ The sliceing is however supported
 ````go
 var y = x[:2]
 var z = x[1:3:2]
-```
+````
 
 The _len_ and _cap_ functions are supported as well
 
@@ -181,7 +181,7 @@ var slice_length = len(x)
 var slice_capacity = cap(x)
 ````
 
-# Arrays
+## Arrays
 
 Array literals are not supported but they can be initialized line by line
 
@@ -197,6 +197,117 @@ The length of the array can be obtaned using the _len_ function
 ````go
 var array_length = len(x)
 ````
+
+## Structs
+
+Struct literals are not supported, they must also be initialized line by line
+
+````go
+type student struct {
+  id int
+  name string
+}
+var s student
+s.name = "Example student"
+s.id = 123456
+````
+
+## Expressions
+
+````go
+exp1 + exp2                     // Binary expressions (works with all binary operators as long as the types are compatible with the operator)
+!exp                            // Unary expression (works with other unary operators such as * ! ^ as long as the types are compatible with the operator)
+
+1                               // int literal
+1.2                             // float literal
+true                            // bool literal
+"Hello World!"                  // string literal
+'A'                             // rune literal
+
+variable_name                   // variable expression
+
+T(exp)                          // cast expression casts the expression to type T
+
+exp1[exp2]                      // Indexes exp1 at index exp2. (exp1 must be of type array or slice, exp2 must be of type int)
+
+exp1[exp2:exp3:exp4]            // Slice expression. (exp1 must be a slice, the other exp must be of type int)
+
+append(exp1, exp2)              // Appends exp2 to slice exp1 and returns the new slice
+
+method(exp, ...)                // Method call expression (The input expressions depends on the method)
+
+exp.field                       // Select expression. (exp must be of type struct and have a field called fleid)
+
+len(exp)
+cap(exp)
+````
+
+## Statements
+
+Simple statements
+
+````go
+{                         // The block statement
+  // more statements
+}
+var x T                   // Var decl statement (Other types of declarations work too)
+type y T                  // Type declaration statement
+return exp                // Return expression, the type of the return expression must match the one of the method
+continue                  // continue to the next iteration of the loop. (Must be in a for loop)
+break                     // Break out of the for loop (must be in a for loop)
+exp                       // Expression statement (such as method calls...)
+exp1 = exp2               // Assign expression exp2 to exp1 (exp1 must be a variable, a field, an index, or dereference)
+print(exp)                // Print expression
+println(exp)              // Print and new line expression
+````
+
+#### If statements
+
+````go
+// The statement (is optional) can be any short statement such as a short assign x := foo(), condition must be an expression of type bool
+if statement; condition {
+
+} else { // The else is potional
+
+}
+
+// Can also chain else if statements
+if cond1 {
+
+} else if cond2 {
+
+} ... else {
+
+}
+````
+
+#### For and while loops
+
+````go
+// Infinite while loop
+for {
+
+}
+
+// While loop with condition cond
+for cond {
+
+}
+
+/*
+For loop:
+The init is a statements such as a short assign x := 0
+The cond expression is of type bool
+The increment is a statement such as x++
+*/
+for init; cond; increment {
+
+}
+````
+
+#### Switch cases
+
+Switch cases are not supported
 
 
 
