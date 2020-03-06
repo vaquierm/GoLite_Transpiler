@@ -1,6 +1,7 @@
 _build/
 parser.automaton
-goLite_compiler
+goLite_transpiler
+goLite_transpiler_test
 *.byte
 *.go
 *.cpp
