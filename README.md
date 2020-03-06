@@ -1,12 +1,16 @@
-# GoLite Transpiler
+# GoLite Transpiler 💻
+
+<p align="center">
+  <img src="banner.jpg" width="700" />
+</p>
 
 This project is a transpiler that converts goLite (A strict subset of [golang](https://golang.org/)) source code into [C++](http://www.cplusplus.com/) source code.
 
 The transpiler is used in OCaml and the parser was built using **Ocamllex** (which comes with the OCaml distribution) and [**Menhir**](http://gallium.inria.fr/~fpottier/menhir/manual.html) (A scanner generator similar to [bison](https://www.gnu.org/software/bison/manual/bison.html) which is compatible with C)
 
-## GoLite specification
+## GoLite specification 🚀
 
-All supported features for the goLite language are described [here](goLite_spec.md)
+All supported features for the goLite language are described [**here**](goLite_spec.md)
 
 ## Example
 
@@ -91,7 +95,7 @@ int main() {
 
 More complicated example can be found [here](examples.md)
 
-## How to run it!
+## How to run it! 🏃‍
 
 **1. Clone the repo**
 
@@ -119,7 +123,7 @@ $ opam init
 $ opam install ounit2
 ````
 
-**5. Run all tests** (Hopefully they pass)
+**5. Run all tests** (Hopefully they pass 😟)
 
 ````
 $ make test
