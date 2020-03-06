@@ -6,7 +6,7 @@
 
 This project is a transpiler that converts goLite (A strict subset of [golang](https://golang.org/)) source code into [C++](http://www.cplusplus.com/) source code.
 
-The transpiler is used in OCaml and the parser was built using **Ocamllex** (which comes with the OCaml distribution) and [**Menhir**](http://gallium.inria.fr/~fpottier/menhir/manual.html) (A scanner generator similar to [bison](https://www.gnu.org/software/bison/manual/bison.html) which is compatible with C)
+The transpiler is written in OCaml and the parser was built using **Ocamllex** (which comes with the OCaml distribution) and [**Menhir**](http://gallium.inria.fr/~fpottier/menhir/manual.html) (A scanner generator similar to [bison](https://www.gnu.org/software/bison/manual/bison.html) which is compatible with C)
 
 ## GoLite specification 🚀
 
@@ -14,7 +14,7 @@ All supported features for the goLite language are described [**here**](goLite_s
 
 ## Example
 
-The simple binary search golang program
+The simple binary search goLite program
 
 ````go
 package main
