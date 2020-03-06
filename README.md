@@ -4,6 +4,10 @@ This project is a transpiler that converts goLite (A strict subset of [golang](h
 
 The transpiler is used in OCaml and the parser was built using **Ocamllex** (which comes with the OCaml distribution) and [**Menhir**](http://gallium.inria.fr/~fpottier/menhir/manual.html) (A scanner generator similar to [bison](https://www.gnu.org/software/bison/manual/bison.html) which is compatible with C)
 
+## GoLite specification
+
+All supported features for the goLite language are described [here](goLite_spec.md)
+
 ## Example
 
 The simple binary search golang program
@@ -85,7 +89,7 @@ int main() {
 
 ````
 
-More complicated examples can be found [here]()
+More complicated example can be found [here](examples.md)
 
 ## How to run it!
 
@@ -148,14 +152,4 @@ $ ./<goLite_file>.out
 ````
 $ make clean
 ````
-
-### GoLite
-GoLite is a strict subset of the [golang](https://golang.org/) language.
-
-Supported types:
-- int
-- float32
-- bool
-- rune
-- string
 
