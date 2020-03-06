@@ -100,7 +100,7 @@ More complicated example can be found [here](examples.md)
 **1. Clone the repo**
 
 ````
-$ git clone https://github.com/vaquierm/GoLite_Compiler.git
+$ git clone https://github.com/vaquierm/GoLite_Transpiler.git
 ````
 
 **2. Install OCaml**
