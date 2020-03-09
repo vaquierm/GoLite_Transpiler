@@ -183,8 +183,8 @@ rule token = parse
   | "bool"                      { update_pos lexbuf; return BOOLTYPE }
   | unsuportedType              { update_pos lexbuf; raise (Exceptions.UnsuportedError (("The type '" ^ get lexbuf ^ "' is unsuported in GoLite"), get_line_num lexbuf, Some (get_char_start lexbuf, get_char_end lexbuf))) }
 
-  | ("//"_*eol)                 { update_pos lexbuf; let c = get lexbuf in return (COMMENT (String.trim(String.sub c 2 ((String.length c) - 2)))) }
-  | ("/*"_*"*/")                { update_pos lexbuf; let c = get lexbuf in return (BLOCKCOMMENT (String.sub c 2 ((String.length c) - 4))) }
+  | ("//"[^'\n' '\r']*eol)      { token lexbuf }
+  | ("/*"_*"*/")                { token lexbuf }
 
   | decIntLiteral               { update_pos lexbuf; return (DECINTLITERAL (get lexbuf)) }
   | binIntLiteral               { update_pos lexbuf; let c = get lexbuf in return (BININTLITERAL (String.sub c 2 ((String.length c) - 2))) }
