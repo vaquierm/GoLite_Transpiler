@@ -31,9 +31,6 @@
 %token RANGE TYPE RETURN VAR
 %token <int>PRINT PRINTLN APPEND LEN CAP
 
-%token <string>COMMENT
-%token <string>BLOCKCOMMENT
-
 %token <string>DECINTLITERAL
 %token <string>OCTINTLITERAL
 %token <string>BININTLITERAL
